@@ -702,6 +702,15 @@ std::vector<std::string> TrojanMap::Autocomplete(std::string name){
  */
 std::pair<double, double> TrojanMap::GetPosition(std::string name) {
   std::pair<double, double> results(-1, -1);
+  std::unordered_map<std::string, std::string> usenamegetID;
+  for(auto &item : data){
+    if(data[id].name=name){
+      usernameID[name]=id;
+    }
+  results=usernameID[name];
+  // double result1 =data[name].lat;
+  // double result2 =data[name].lon;
+  // result[result1]=result2;
   return results;
 }
 
