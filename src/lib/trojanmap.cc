@@ -752,9 +752,73 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford(
  * @param  {std::vector<std::string>} input : a list of locations needs to visit
  * @return {std::pair<double, std::vector<std::vector<std::string>>} : a pair of total distance and the all the progress to get final path
  */
+
+/**
+ * use the backtracking to slove the TSP
+ * 
+ *
+ * @param  {const std::vector<std::vector<double>>&} adjacent_matrix : adjacent matrix of the nodes
+ * @param  {std::vector<std::vector<std::string>>&} paths : store all the paths
+ * @return {std::pair<double, std::vector<std::vector<std::string>>} : a pair of total distance and the all the progress to get final path (ids)
+ */
+void TrojanMap::Backtracking(const std::vector<std::vector<double>> &adjacent_matrix, std::vector<std::vector<std::string>> &paths, std::vector<std::string> &path, std::vector<bool> &visit, double &mincost, double cost, int current, const std::vector<std::string> &location_ids){
+	if(path.size() == adjacent_matrix.size()){
+		cost += adjacent_matrix[0][current];
+		if(cost < mincost){
+			mincost = cost;
+			path.emplace_back(location_ids[0]);
+			paths.emplace_back(path);
+			path.pop_back();
+		} 
+		return;
+	}
+	for(int i = 0; i < adjacent_matrix.size(); ++i){
+		if(!visit[i]){
+			if(cost + adjacent_matrix[i][current] > mincost) return; // 
+			visit[i] = true;
+			path.emplace_back(location_ids[i]);
+			Backtracking(adjacent_matrix, paths, path, visit, mincost, cost + adjacent_matrix[i][current], i, location_ids);
+			visit[i] = false;
+			path.pop_back();
+		}
+	}
+}
+
 std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan(
                                     std::vector<std::string> &location_ids) {
   std::pair<double, std::vector<std::vector<std::string>>> results;
+  
+  //creat a matrix to store the distance betwwen evey node
+  int n = location_ids.size();
+  // use a map to transform the location_id to index
+  std::unordered_map<std::string, int> id2index;
+  for(int i = 0; i < n; ++i){
+    id2index[location_ids[i]] = i;
+  }
+  // initialize a matrix with infinity
+  std::vector<std::vector<double>> adjacent_matrix(n, std::vector<double>(n, std::numeric_limits<double>::max()));
+  for(int i  = 0; i < n; ++i){
+		std::string source_loc = location_ids[i];
+    // std::vector<std::string> neighbor_ids = GetNeighborIDs(source_loc); 
+    // for(auto &neighbor : neighbor_ids){
+		// 	if(id2index.count(neighbor)){
+		// 		adjacent_matrix[i][id2index[neighbor]] = adjacent_matrix[id2index[neighbor]][i] = CalculateDistance(source_loc, neighbor);
+		// 	}
+    // }
+		for(int j = i + 1; j < n; ++j){
+			std::string destination_loc = location_ids[j];
+			adjacent_matrix[i][j] = adjacent_matrix[j][i] = CalculateDistance(source_loc, destination_loc);
+		}
+  }
+
+	std::vector<bool> visit(n);
+	visit[0] = true;
+	std::vector<std::vector<std::string>> paths;
+	std::vector<std::string> path;
+	path.emplace_back(location_ids[0]);
+	double mincost = std::numeric_limits<double>::max();
+	Backtracking(adjacent_matrix, paths, path, visit, mincost, 0, 0, location_ids);
+	results = make_pair(mincost, paths);
   return results;
 }
 
