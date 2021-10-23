@@ -587,7 +587,7 @@ std::pair<double, double> TrojanMap::GetPlotLocation(double lat, double lon) {
  * @return {double}         : latitude
  */
 double TrojanMap::GetLat(std::string id) {
-    return 0;
+  return data[id].lat;
 }
 
 
@@ -598,7 +598,7 @@ double TrojanMap::GetLat(std::string id) {
  * @return {double}         : longitude
  */
 double TrojanMap::GetLon(std::string id) { 
-    return 0;
+  return data[id].lon;
 }
 
 /**
@@ -608,7 +608,7 @@ double TrojanMap::GetLon(std::string id) {
  * @return {std::string}    : name
  */
 std::string TrojanMap::GetName(std::string id) { 
-    return "";
+  return data[id].name;
 }
 
 /**
@@ -618,7 +618,8 @@ std::string TrojanMap::GetName(std::string id) {
  * @return {std::vector<std::string>}  : neighbor ids
  */
 std::vector<std::string> TrojanMap::GetNeighborIDs(std::string id) {
-    return {};
+  return data[id].neighbors;
+
 }
 
 /**
@@ -670,10 +671,28 @@ double TrojanMap::CalculatePathLength(const std::vector<std::string> &path) {
  * @param  {std::string} name          : partial name
  * @return {std::vector<std::string>}  : a vector of full names
  */
-std::vector<std::string> TrojanMap::Autocomplete(std::string name){
-  std::vector<std::string> results;
-  return results;
+bool TrojanMap::match(std::string str, std::string target){
+  int n = target.size();
+  if(n > str.size()) return false;
+  for(int i = 0; i < n; ++i){
+    if(std::tolower(str[i]) != std::tolower(target[i])){
+      return false;
+    }
+  }
+  return true;
 }
+
+std::vector<std::string> TrojanMap::Autocomplete(std::string name){
+  std::vector<std::string> res;
+  for(auto &item : data){
+    std::string result = GetName(item.first);
+    if(match(result, name)){
+      res.push_back(result);
+    }
+  }
+  return res;
+}
+
 
 /**
  * GetPosition: Given a location name, return the position.

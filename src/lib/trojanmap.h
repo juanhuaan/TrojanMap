@@ -88,6 +88,7 @@ class TrojanMap {
   double CalculatePathLength(const std::vector<std::string> &path);
 
   // Returns a vector of names given a partial name.
+  bool match(std::string str, std::string target);
   std::vector<std::string> Autocomplete(std::string name);
 
   // Returns lat and long of the given the name.
