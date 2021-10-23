@@ -353,7 +353,7 @@ void TrojanMap::CreateGraphFromCSVFile() {
 
     Node n;
     int count = 0;
-    while (getline(s, word, ',')) {
+    while (getline(s, word, ',')) { //using comma to seperate
       word.erase(std::remove(word.begin(), word.end(), '\''), word.end());
       word.erase(std::remove(word.begin(), word.end(), '"'), word.end());
       word.erase(std::remove(word.begin(), word.end(), '['), word.end());
