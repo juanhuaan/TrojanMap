@@ -704,16 +704,17 @@ std::pair<double, double> TrojanMap::GetPosition(std::string name) {
   std::pair<double, double> results(-1, -1);
   std::unordered_map<std::string, std::string> usenamegetID;
   for(auto &item : data){
-    if(data[id].name=name){
-      usernameID[name]=id;
-    }
-  results=usernameID[name];
-  // double result1 =data[name].lat;
-  // double result2 =data[name].lon;
-  // result[result1]=result2;
+    usenamegetID[item.second.name]=item.first;
+  }
+  
+  std::string ID=usenamegetID[name];
+  results.first=data[ID].lat;
+  results.second=data[ID].lon;
+  
   return results;
 }
 
+  
 /**
  * GetID: Given a location name, return the id. 
  * If the node does not exist, return an empty string. 
@@ -722,7 +723,12 @@ std::pair<double, double> TrojanMap::GetPosition(std::string name) {
  * @return {int}  : id
  */
 std::string TrojanMap::GetID(std::string name) {
-  std::string res = "";
+  std::unordered_map<std::string, std::string> usenamegetID;
+  for(auto &item : data){
+    usenamegetID[item.second.name]=item.first;
+  }
+  
+  std::string res = usenamegetID[name];
   return res;
 }
 
