@@ -38,6 +38,7 @@ new_local_repository(
 )
 new_local_repository(
     name = "ncurses",
-    path = "/usr/", # Use this for Ubuntu
+    #path = "/usr/", # Use this for Ubuntu
+    path = "/opt/homebrew/opt/ncurses",# for m1 macbook
     build_file = "ncurses.BUILD",
 )
