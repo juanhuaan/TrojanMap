@@ -111,6 +111,8 @@ class TrojanMap {
 
   // Given a vector of location names, it should return a sorting of nodes
   // that satisfies the given dependencies.
+  void TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::vector<bool> &visit, int cur, std::vector<int> &topo_list);
+
   std::vector<std::string> DeliveringTrojan(std::vector<std::string> &location_names,
                                             std::vector<std::vector<std::string>> &dependencies);
 

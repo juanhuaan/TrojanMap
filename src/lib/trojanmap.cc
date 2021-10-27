@@ -852,6 +852,16 @@ std::pair<double, std::vector<std::vector<std::string>>> TravellingTrojan_2opt(
  */
 std::vector<std::string> TrojanMap::ReadLocationsFromCSVFile(std::string locations_filename){
   std::vector<std::string> location_names_from_csv;
+  std::fstream fin;
+  fin.open(locations_filename, std::ios::in);
+  std::string line, word;
+
+  getline(fin, line);
+  while(getline(fin, line)){
+    line.erase(line.end() - 1);
+    location_names_from_csv.emplace_back(line);
+  }
+  fin.close();
   return location_names_from_csv;
 }
 
@@ -864,6 +874,21 @@ std::vector<std::string> TrojanMap::ReadLocationsFromCSVFile(std::string locatio
  */
 std::vector<std::vector<std::string>> TrojanMap::ReadDependenciesFromCSVFile(std::string dependencies_filename){
   std::vector<std::vector<std::string>> dependencies_from_csv;
+  std::fstream fin;
+  fin.open(dependencies_filename, std::ios::in);
+  std::string line, word;
+
+  getline(fin, line);
+  while(getline(fin, line)){
+    std::stringstream s(line);
+    int count = 0;
+    std::vector<std::string> dependency;
+    while(getline(s, word, ',')){
+      dependency.emplace_back(word);
+    }
+    dependencies_from_csv.emplace_back(dependency);
+  }
+  fin.close();
   return dependencies_from_csv;
 }
 
@@ -878,7 +903,47 @@ std::vector<std::vector<std::string>> TrojanMap::ReadDependenciesFromCSVFile(std
 std::vector<std::string> TrojanMap::DeliveringTrojan(std::vector<std::string> &locations,
                                                      std::vector<std::vector<std::string>> &dependencies){
   std::vector<std::string> result;
+  int n = locations.size();
+  std::unordered_map<std::string, int> loc2index;
+  for(int i = 0; i < n; ++i) loc2index[locations[i]] = i;
+
+  std::unordered_map<int, std::vector<int>> DAG;
+  std::vector<bool> visit(n);
+
+  for(auto &dependency : dependencies){
+    int i = loc2index[dependency[0]], j = loc2index[dependency[1]];
+    DAG[i].emplace_back(j); // construst the DAG
+    visit[j] = true; // mark j has dependency
+  }
+
+  std::vector<int> start_locations;
+  for(int i = 0; i < n; ++i){
+    if(!visit[i]){
+      start_locations.emplace_back(i); // get the locations which has no dependency
+    }
+    if(start_locations.size() == 0) return result; // if cannot find the start location return empty;
+  }
+  visit.assign(n, false); // clear visit
+  std::vector<int> topo_list;
+  for(auto &start_loc : start_locations){
+    if(!visit[start_loc]){
+      visit[start_loc] = true;
+      TopoSort(DAG, visit, start_loc, topo_list);
+    }
+  } 
+  if(topo_list.size() != n) return result; // if no feasible route exists
+  for(int i = n-1; i >= 0; --i) result.emplace_back(locations[topo_list[i]]);
   return result;                                                     
+}
+
+void TrojanMap::TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::vector<bool> &visit, int cur, std::vector<int> &topo_list){
+  for(auto &loc : DAG[cur]){
+    if(!visit[loc]){
+      visit[loc] = true;
+      TopoSort(DAG, visit, loc, topo_list);
+    }
+  }
+  topo_list.emplace_back(cur);
 }
 
 /**
