@@ -958,23 +958,22 @@ bool TrojanMap::CycleDetection(std::vector<double> &square) {
 std:vector<std::vector<std::string>> adj;
 for(auto &item:data){
   if(item.second.lon>=square[0] &&item.second.lon<=square[1]&&item.second.lat<=square[2]&&item.second.lat>=square[3]){
-    adj.push_pack(item.fisrt);
-    adj[item.first].push_pack(item.second.neighbors);
+    adj.push_back(item.first);
+    adj[item.first].push_back(item.second.neighbors);
   }
 }
-  IsCyclicUtil(std::string u,vector<bool>&visited,std::string parent){
-    visited[u]=true;
-    for(int i=0;i<adj[u].size();i++){
-      if(!=visted[adj[u][i]]){
-        if(IsCyclicUtil(adj[u][i],visited,u)=true) return true;
+//the function is to check if there is a cycle in the square area
+bool IsCyclicUtil(std::string u,vector<bool>&visited,std::string parent){
+  visited[u]=true;
+  for(int i=0;i<adj[u].size();i++){
+    if(!=visted[adj[u][i]]){
+      if(IsCyclicUtil(adj[u][i],visited,u)=true) return true;
       }
-      if(visited[adj[u][i]]&& adj[u][i]!=parent) return true;
-    }
-    return false;
+    if(visited[adj[u][i]]&& adj[u][i]!=parent) return true;
   }
-
-
   return false;
+}
+
 }
 
 /**
