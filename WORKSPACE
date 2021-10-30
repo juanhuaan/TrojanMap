@@ -36,9 +36,3 @@ new_local_repository(
 	path = "opencv/install",
 	build_file = "opencv.BUILD",
 )
-new_local_repository(
-    name = "ncurses",
-    #path = "/usr/", # Use this for Ubuntu
-    path = "/opt/homebrew/opt/ncurses",# for m1 macbook
-    build_file = "ncurses.BUILD",
-)

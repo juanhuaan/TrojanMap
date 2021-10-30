@@ -954,6 +954,12 @@ void TrojanMap::TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::ve
  * @return {bool}: whether there is a cycle or not
  */
 bool TrojanMap::CycleDetection(std::vector<double> &square) {
+
+  IsCyclicUtil(Node,std::map<Node,int>visited,parent){
+
+  }
+
+
   return false;
 }
 
