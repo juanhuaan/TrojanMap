@@ -122,13 +122,17 @@ class TrojanMap {
   // and the second member is the reordered vector of points.
   // (Notice that we don't find the optimal answer. You can return an estimated
   // path.)
+  std::vector<std::vector<double>> CreateAdjMatrix(std::vector<std::string> &location_ids);
   void Backtracking(const std::vector<std::vector<double>> &adjacent_matrix, std::vector<std::vector<std::string>> &paths, std::vector<std::string> &path, std::vector<bool> &visit, double &mincost, double cost, int current, const std::vector<std::string> &location_ids);
   std::pair<double, std::vector<std::vector<std::string>>> TravellingTrojan(
       std::vector<std::string> &location_ids);
 
+  double CalculatePathDis(const std::vector<std::vector<double>> &adjacent_matrix, std::unordered_map<std::string, int> &id2index, std::vector<std::string> &path);
   
-  std::pair<double, std::vector<std::vector<std::string>>> TravellingTrojan_2opt(
-      std::vector<std::string> &location_ids);
+  void TPS_2opt(const std::vector<std::vector<double>> &adjacent_matrix, 
+              double &mincost, std::vector<std::vector<std::string>> &paths, 
+              std::vector<std::string> &path_start, std::unordered_map<std::string, int> &id2index);
+  std::pair<double, std::vector<std::vector<std::string>>> TravellingTrojan_2opt(std::vector<std::string> &location_ids);
 
   // Given a subgraph specified by a square-shape area, determine whether there is a
   // cycle or not in this subgraph.
