@@ -743,6 +743,11 @@ std::string TrojanMap::GetID(std::string name) {
 std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
     std::string location1_name, std::string location2_name) {
   std::vector<std::string> path;
+  std::string a_id=GetID(location1_name);
+  std::string b_id=GetID(location2_name);
+  Node a=data[a_id];
+  Node b=data[b_id];
+
   return path;
 }
 
@@ -953,28 +958,46 @@ void TrojanMap::TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::ve
  * @param {std::vector<double>} square: four vertexes of the square area
  * @return {bool}: whether there is a cycle or not
  */
+std::unordered_map<std::string,std::vector<std::string>> adj;
 bool TrojanMap::CycleDetection(std::vector<double> &square) {
-//establish an adjacency list with all node in square
-std:vector<std::vector<std::string>> adj;
+//establish an map with all node in square
+//std::unordered_map<std::string,std::vector<std::string>> adj;
 for(auto &item:data){
-  if(item.second.lon>=square[0] &&item.second.lon<=square[1]&&item.second.lat<=square[2]&&item.second.lat>=square[3]){
-    adj.push_back(item.first);
-    adj[item.first].push_back(item.second.neighbors);
+  if(item.second.lon>=square[0] && item.second.lon<=square[1] && item.second.lat<=square[2] && item.second.lat>=square[3]){
+    adj[item.first]=item.second.neighbors;
   }
 }
-//the function is to check if there is a cycle in the square area
-bool IsCyclicUtil(std::string u,vector<bool>&visited,std::string parent){
-  visited[u]=true;
+//see the node on the map
+std::vector<std::string>local_ids;
+for(auto items:adj){
+  local_ids.push_back(items.first);
+}
+PlotPointsandEdges(local_ids,square);
+for(auto &node:adj){
+  std::string u=node.first;
+  std::map<std::string,int>visited;
+  visited.clear();
+  std::string parent;
+  if(IsCyclicUtil(u,visited,parent)==true){
+    return true;
+    break;
+  }
+}
+return false;
+}
+//using DFS to find cycle
+ bool TrojanMap::IsCyclicUtil(std::string u,std::map<std::string,int>&visited,std::string parent){
+  visited[u]=1;
   for(int i=0;i<adj[u].size();i++){
-    if(!=visted[adj[u][i]]){
-      if(IsCyclicUtil(adj[u][i],visited,u)=true) return true;
+    if(visited.count(adj[u][i])==0){
+      if(IsCyclicUtil(adj[u][i],visited,u)==true) return true;
       }
-    if(visited[adj[u][i]]&& adj[u][i]!=parent) return true;
+    if(visited.count(adj[u][i])==1 && adj[u][i]!=parent) return true;
   }
   return false;
-}
+ }
 
-}
+
 
 /**
  * FindKClosetPoints: Given a location id and k, find the k closest points on the map

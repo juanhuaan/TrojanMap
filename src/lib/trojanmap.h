@@ -138,6 +138,7 @@ class TrojanMap {
   // cycle or not in this subgraph.
   // vector square has 4 elements: left/right/top/bottom bound in order.
   bool CycleDetection(std::vector<double> &square);
+  bool IsCyclicUtil(std::string u,std::map<std::string,int>&visited,std::string parent);
 
   // Given a location id and k, find the k closest points on the map
   std::vector<std::string> FindKClosestPoints(std::string name, int k);
