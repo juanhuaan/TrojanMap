@@ -170,16 +170,11 @@ void TrojanMap::PrintMenu() {
     for (int i = 0; i < num; i++)
       locations.push_back(keys[rand() % keys.size()]);
     PlotPoints(locations);
-    std::cout << "Calculating (using Backtracking)..." << std::endl;
+    std::cout << "Calculating ..." << std::endl;
     auto start = std::chrono::high_resolution_clock::now();
     auto results = TravellingTrojan(locations);
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-    std::cout << "Calculating (using 2-opt)..." << std::endl;
-    start = std::chrono::high_resolution_clock::now();
-    auto results_2opt = TravellingTrojan_2opt(locations);
-    stop = std::chrono::high_resolution_clock::now();
-    auto duration_2opt = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     CreateAnimation(results.second);
     menu = "*************************Results******************************\n";
     std::cout << menu;
@@ -188,8 +183,6 @@ void TrojanMap::PrintMenu() {
       menu = "**************************************************************\n";
       std::cout << menu;
       std::cout << "The distance of the path is:" << results.first << " miles" << std::endl;
-      std::cout << "The distance of the path is(2-opt):" << results_2opt.first << " miles" << std::endl;
-
       PlotPath(results.second[results.second.size()-1]);
     } else {
       std::cout << "The size of the path is 0" << std::endl;
@@ -198,7 +191,6 @@ void TrojanMap::PrintMenu() {
            "You could find your animation at src/lib/output.avi.          \n";
     std::cout << menu;
     std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl << std::endl;
-    std::cout << "Time taken by function(2-opt): " << duration_2opt.count() << " microseconds" << std::endl << std::endl;
     PrintMenu();
     break;
   }
@@ -784,29 +776,6 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford(
  * @param  {std::vector<std::vector<std::string>>&} paths : store all the paths
  * @return {std::pair<double, std::vector<std::vector<std::string>>} : a pair of total distance and the all the progress to get final path (ids)
  */
-
-/**
- * use the index in the location_ids, creat a matrix to store the distance between every two locations
- * 
- * @param {std::vector<std::string> &} location_ids : input
- * @return {std::vector<std::vector<double>>} adjacent_matrix : 
- */
-std::vector<std::vector<double>> TrojanMap::CreateAdjMatrix(std::vector<std::string> &location_ids){
-  // initialize a matrix with infinity
-  int n = location_ids.size();
-  std::vector<std::vector<double>> adjacent_matrix(n, std::vector<double>(n, std::numeric_limits<double>::max()));
-
-  // creat a matrix to store the distance betwwen evey node
-  for(int i  = 0; i < n; ++i){
-		std::string source_loc = location_ids[i];
-		for(int j = i + 1; j < n; ++j){
-			std::string destination_loc = location_ids[j];
-			adjacent_matrix[i][j] = adjacent_matrix[j][i] = CalculateDistance(source_loc, destination_loc);
-		}
-  }
-  return adjacent_matrix;
-}
-
 void TrojanMap::Backtracking(const std::vector<std::vector<double>> &adjacent_matrix, std::vector<std::vector<std::string>> &paths, std::vector<std::string> &path, std::vector<bool> &visit, double &mincost, double cost, int current, const std::vector<std::string> &location_ids){
 	if(path.size() == adjacent_matrix.size()){
 		cost += adjacent_matrix[0][current];
@@ -830,16 +799,32 @@ void TrojanMap::Backtracking(const std::vector<std::vector<double>> &adjacent_ma
 	}
 }
 
-std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan(std::vector<std::string> &location_ids) {
+std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan(
+                                    std::vector<std::string> &location_ids) {
   std::pair<double, std::vector<std::vector<std::string>>> results;
   
+  //creat a matrix to store the distance betwwen evey node
   int n = location_ids.size();
   // use a map to transform the location_id to index
   std::unordered_map<std::string, int> id2index;
-  for(int i = 0; i < n; ++i) id2index[location_ids[i]] = i;
-
+  for(int i = 0; i < n; ++i){
+    id2index[location_ids[i]] = i;
+  }
   // initialize a matrix with infinity
-  std::vector<std::vector<double>> adjacent_matrix = CreateAdjMatrix(location_ids);
+  std::vector<std::vector<double>> adjacent_matrix(n, std::vector<double>(n, std::numeric_limits<double>::max()));
+  for(int i  = 0; i < n; ++i){
+		std::string source_loc = location_ids[i];
+    // std::vector<std::string> neighbor_ids = GetNeighborIDs(source_loc); 
+    // for(auto &neighbor : neighbor_ids){
+		// 	if(id2index.count(neighbor)){
+		// 		adjacent_matrix[i][id2index[neighbor]] = adjacent_matrix[id2index[neighbor]][i] = CalculateDistance(source_loc, neighbor);
+		// 	}
+    // }
+		for(int j = i + 1; j < n; ++j){
+			std::string destination_loc = location_ids[j];
+			adjacent_matrix[i][j] = adjacent_matrix[j][i] = CalculateDistance(source_loc, destination_loc);
+		}
+  }
 
 	std::vector<bool> visit(n);
 	visit[0] = true;
@@ -852,63 +837,10 @@ std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTr
   return results;
 }
 
-double TrojanMap::CalculatePathDis(const std::vector<std::vector<double>> &adjacent_matrix, 
-                        std::unordered_map<std::string, int> &id2index, std::vector<std::string> &path){
-  double distance = 0.0;
-  int n = path.size();
-  int locA, locB;
-  for(int i = 0; i < n - 1; ++i){
-    locA = id2index[path[i]];
-    locB = id2index[path[i+1]];
-    distance += adjacent_matrix[locA][locB];
-  }
-  return distance;
-}
-
-std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan_2opt(
+std::pair<double, std::vector<std::vector<std::string>>> TravellingTrojan_2opt(
       std::vector<std::string> &location_ids){
   std::pair<double, std::vector<std::vector<std::string>>> results;
-  int n = location_ids.size();
-  std::unordered_map<std::string, int> id2index;
-  for(int i = 0; i < n; ++i) id2index[location_ids[i]] = i;
-  std::vector<std::vector<double>> adjacent_matrix = CreateAdjMatrix(location_ids);
-
-  std::vector<std::string> path_start = location_ids;
-  path_start.emplace_back(location_ids[0]);
-  results.first = CalculatePathDis(adjacent_matrix, id2index, path_start);
-  results.second.emplace_back(path_start);
-
-  TPS_2opt(adjacent_matrix, results.first, results.second, path_start, id2index);
   return results;
-}
-
-void TrojanMap::TPS_2opt(const std::vector<std::vector<double>> &adjacent_matrix, 
-                        double &mincost, std::vector<std::vector<std::string>> &paths, 
-                        std::vector<std::string> &path_start, std::unordered_map<std::string, int> &id2index){
-
-  int count = 0, n = path_start.size();
-  std::vector<std::string> path_copy;
-  int MAXNUM = 10 * n; // set the max iteration times
-
-  while(count < MAXNUM){
-    path_copy.assign(path_start.begin(), path_start.end());
-    int start = std::rand() % (n - 3) + 1;
-    int end;
-    while(true){
-      end = std::rand() % (n - 3) + 2;
-      if(end - start >= 1) break;
-    }
-    
-    std::reverse(path_copy.begin() + start, path_copy.begin() + end);
-    double cost = CalculatePathDis(adjacent_matrix, id2index, path_copy);
-    if(cost < mincost){
-      mincost = cost;
-      paths.emplace_back(path_copy);
-      path_start.assign(path_copy.begin(), path_copy.end());
-      count = 0;
-    }else ++count;
-  }
-            
 }
 
 /**
@@ -1022,9 +954,23 @@ void TrojanMap::TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::ve
  * @return {bool}: whether there is a cycle or not
  */
 bool TrojanMap::CycleDetection(std::vector<double> &square) {
-
-  IsCyclicUtil(Node,std::map<Node,int>visited,parent){
-
+//establish an adjacency list with all node in square
+std:vector<std::vector<std::string>> adj;
+for(auto &item:data){
+  if(item.second.lon>=square[0] &&item.second.lon<=square[1]&&item.second.lat<=square[2]&&item.second.lat>=square[3]){
+    adj.push_pack(item.fisrt);
+    adj[item.first].push_pack(item.second.neighbors);
+  }
+}
+  IsCyclicUtil(std::string u,vector<bool>&visited,std::string parent){
+    visited[u]=true;
+    for(int i=0;i<adj[u].size();i++){
+      if(!=visted[adj[u][i]]){
+        if(IsCyclicUtil(adj[u][i],visited,u)=true) return true;
+      }
+      if(visited[adj[u][i]]&& adj[u][i]!=parent) return true;
+    }
+    return false;
   }
 
 
