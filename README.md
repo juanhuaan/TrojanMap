@@ -9,17 +9,17 @@ Code submission: Monday, December 5 by 23:59 pm
 ## Task List
 | Task Name | Functions | Tests |
 | :--- | :---: | :---: |
-| 1. `Autocomplete` | Done | <font color="#dd0000">To Be Added</font> | 
-| 2. `GetPosition` | Done | <font color="#dd0000">To Be Added</font> | 
-| 3.1 `CalculateShortestPath_Dijkstra` | <font color="#dd0000">To Be Done</font> | <font color="#dd0000">To Be Added</font> | 
-| 3.2 `CalculateShortestPath_Bellman_Ford` | <font color="#dd0000">To Be Done</font> | <font color="#dd0000">To Be Added</font> | 
-| 4.1 `TravellingTrojan` | Done | <font color="#dd0000">To Be Added</font> | 
-| 4.2 `TravellingTrojan_2opt` | Done | <font color="#dd0000">To Be Added</font> | 
-| 5. `CycleDetection` | <font color="#dd0000">To Be Done</font> | <font color="#dd0000">To Be Added</font> | 
-| 6. `DeliveringTrojan` | Done | <font color="#dd0000">To Be Added</font> | 
-| 7. `FindKClosestPoints` | <font color="#dd0000">To Be Done</font> | <font color="#dd0000">To Be Added</font> | 
-| 8. `Video presentation and report` | <font color="#dd0000">To Be Done</font> | <font color="#dd0000">To Be Added</font> | 
-| 8. `Extra credit items` | <font color="#dd0000">To Be Done</font> | <font color="#dd0000">To Be Added</font> | 
+| 1. `Autocomplete` | Done :white_check_mark: | To Be Added :heavy_exclamation_mark: | 
+| 2. `GetPosition` | Done :white_check_mark: | To Be Added :heavy_exclamation_mark: | 
+| 3.1 `CalculateShortestPath_Dijkstra` | Done :white_check_mark: | To Be Added :heavy_exclamation_mark: | 
+| 3.2 `CalculateShortestPath_Bellman_Ford` | To Be Done :golf: | To Be Added :heavy_exclamation_mark: | 
+| 4.1 `TravellingTrojan` | Done :white_check_mark: | To Be Added :heavy_exclamation_mark: | 
+| 4.2 `TravellingTrojan_2opt` | Done :white_check_mark: | To Be Added :heavy_exclamation_mark: | 
+| 5. `CycleDetection` | To Be Done :golf: | To Be Added :heavy_exclamation_mark: | 
+| 6. `DeliveringTrojan` | Done :white_check_mark: | To Be Added :heavy_exclamation_mark: | 
+| 7. `FindKClosestPoints` | To Be Done :golf: | To Be Added :heavy_exclamation_mark: | 
+| 8. `Video presentation and report` | To Be Done :golf: | To Be Added :heavy_exclamation_mark: | 
+| 8. `Extra credit items` | To Be Done :golf: | To Be Added :heavy_exclamation_mark: | 
 
 
 ## TrojanMap
