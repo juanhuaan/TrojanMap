@@ -742,14 +742,66 @@ std::string TrojanMap::GetID(std::string name) {
  */
 std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
     std::string location1_name, std::string location2_name) {
-  std::vector<std::string> path;
-  std::string a_id=GetID(location1_name);
-  std::string b_id=GetID(location2_name);
-  Node a=data[a_id];
-  Node b=data[b_id];
-
-  return path;
+  // std::vector<std::string> path;
+  // std::string a_id=GetID(location1_name);
+  // std::string b_id=GetID(location2_name);
+  // // Node a=data[a_id];
+  // // Node b=data[b_id];
+  // //using DFS to find the graph from location1 to location2;
+  // std::string temp=a_id;
+  // std::string temp2=b_id;
+  // std::map<std::string,int>nodestore;
+  // std::map<std::string,Node>graph;
+  // FindGraph(temp,temp2,nodestore,graph);
+  // //creat a matrix to store the distance between evey node
+  // int n = graph.size();
+  // // use a map to transform the location_id to index
+  // std::unordered_map<std::string, int> id2index;
+  // for(int i = 0; i < n; ++i){
+  //   id2index[graph[i].first] = i;
+  // }
+  // // initialize a matrix with infinity
+  // std::vector<std::vector<double>> adjacent_matrix(n, std::vector<double>(n, std::numeric_limits<double>::max()));
+  // for(int i=0;i<n;i++){
+  //   for(j=0;j<n;j++)
+  //   adjacent_matrix[i][id2index[graph[i].second.neighors[j]]]=CalculateDistance(graph[i].first,graph[i].second.neigbors[j]);
+  // }
+  // //using Dijkstra to calculate the shortest path
+  // int source=id2index[location1_name];
+  // std::unordered_set<int>visited;
+  // std::vector<long>d(adjacent_matrix.size());
+  // for(int i=0;i<adjacent_matrix.size();i++){
+  //   d[i]=adjacent_matrix[source][i];
+  // }
+  // visited.insert(source);
+  // while(visited.size()<adjacent_matrix.size()){
+  //   int u=FindMinIndButNotVisited(d,visited);
+  //   visited.insert(u);
+  //   for(int i=0;i<adjacent_matrix.size();i++){
+  //     d[i]=std::min(d[i],d[u]+adjacent_matrix[u][i]);
+  //   }
+  // }
+  // return path;
 }
+//using DFS to find the graph 
+void TrojanMap::FindGraph_helper(std::string temp,std::map<std::string,int>&nodestore){
+  for(const std::string child: data[temp].neighbors){
+    if(nodestore[child]!=1){
+      nodestore[temp]=1;
+      FindGraph_helper(child,nodestore);
+    }
+  }
+}
+void TrojanMap::FindGraph(std::string temp,std::string temp2,std::map<std::string,int>&nodestore,std::map<std::string,Node>&graph){
+  nodestore[temp]=1;
+  FindGraph_helper(temp,nodestore);
+  if(nodestore.count(temp2)>0){
+    for(auto e:nodestore){
+      graph[e.first]=data[e.first];
+    }
+  }                                    
+}
+
 
 /**
  * CalculateShortestPath_Bellman_Ford: Given 2 locations, return the shortest path which is a
@@ -808,7 +860,7 @@ std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTr
                                     std::vector<std::string> &location_ids) {
   std::pair<double, std::vector<std::vector<std::string>>> results;
   
-  //creat a matrix to store the distance betwwen evey node
+  //creat a matrix to store the distance between evey node
   int n = location_ids.size();
   // use a map to transform the location_id to index
   std::unordered_map<std::string, int> id2index;

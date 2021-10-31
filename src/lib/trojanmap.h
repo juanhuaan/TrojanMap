@@ -94,6 +94,10 @@ class TrojanMap {
   // Returns lat and long of the given the name.
   std::pair<double, double> GetPosition(std::string name);
 
+  //Given the name of one locaion, find the grapgh, and judge if location2 is in the graph
+  void FindGraph_helper(std::string temp,std::map<std::string,int>&nodestore);
+  void FindGraph(std::string temp,std::string temp2,std::map<std::string,int>&nodestore,std::map<std::string,Node>&graph);
+
   // Given the name of two locations, it should return the **ids** of the nodes
   // on the shortest path.
   std::vector<std::string> CalculateShortestPath_Dijkstra(std::string location1_name,
