@@ -175,11 +175,19 @@ void TrojanMap::PrintMenu() {
     auto results = TravellingTrojan(locations);
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
     std::cout << "Calculating (using 2-opt)..." << std::endl;
     start = std::chrono::high_resolution_clock::now();
     auto results_2opt = TravellingTrojan_2opt(locations);
     stop = std::chrono::high_resolution_clock::now();
     auto duration_2opt = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+    std::cout << "Calculating (using 3-opt)..." << std::endl;
+    start = std::chrono::high_resolution_clock::now();
+    auto results_3opt = TravellingTrojan_3opt(locations);
+    stop = std::chrono::high_resolution_clock::now();
+    auto duration_3opt = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
     CreateAnimation(results.second);
     menu = "*************************Results******************************\n";
     std::cout << menu;
@@ -189,6 +197,7 @@ void TrojanMap::PrintMenu() {
       std::cout << menu;
       std::cout << "The distance of the path is:" << results.first << " miles" << std::endl;
       std::cout << "The distance of the path is(2-opt):" << results_2opt.first << " miles" << std::endl;
+      std::cout << "The distance of the path is(3-opt):" << results_3opt.first << " miles" << std::endl;
       PlotPath(results.second[results.second.size()-1]);
     } else {
       std::cout << "The size of the path is 0" << std::endl;
@@ -198,6 +207,7 @@ void TrojanMap::PrintMenu() {
     std::cout << menu;
     std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl << std::endl;
     std::cout << "Time taken by function(2-opt): " << duration_2opt.count() << " microseconds" << std::endl << std::endl;
+    std::cout << "Time taken by function(3-opt): " << duration_3opt.count() << " microseconds" << std::endl << std::endl;
     PrintMenu();
     break;
   }
@@ -948,8 +958,8 @@ void TrojanMap::TPS_2opt(const std::vector<std::vector<double>> &adjacent_matrix
       end = std::rand() % (n - 3) + 2;
       if(end - start >= 1) break;
     }
-    
-    std::reverse(path_copy.begin() + start, path_copy.begin() + end);
+
+    std::reverse(path_copy.begin() + start, path_copy.begin() + end + 1);
     double cost = CalculatePathDis(adjacent_matrix, id2index, path_copy);
     if(cost < mincost){
       mincost = cost;
@@ -959,6 +969,61 @@ void TrojanMap::TPS_2opt(const std::vector<std::vector<double>> &adjacent_matrix
     }else ++count;
   }
             
+}
+
+std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan_3opt(
+      std::vector<std::string> &location_ids){
+  std::pair<double, std::vector<std::vector<std::string>>> results;
+  int n = location_ids.size();
+  std::unordered_map<std::string, int> id2index;
+  for(int i = 0; i < n; ++i) id2index[location_ids[i]] = i;
+  std::vector<std::vector<double>> adjacent_matrix = CreateAdjMatrix(location_ids);
+
+  std::vector<std::string> path_start = location_ids;
+  path_start.emplace_back(location_ids[0]);
+  results.first = CalculatePathDis(adjacent_matrix, id2index, path_start);
+  results.second.emplace_back(path_start);
+
+  TPS_3opt(adjacent_matrix, results.first, results.second, path_start, id2index);
+  return results;
+}
+
+void TrojanMap::TPS_3opt(const std::vector<std::vector<double>> &adjacent_matrix, 
+                        double &mincost, std::vector<std::vector<std::string>> &paths, 
+                        std::vector<std::string> &path_start, std::unordered_map<std::string, int> &id2index){
+
+  int count = 0, n = path_start.size();
+  int MAXNUM = 10 * n; // set the max iteration times
+
+  while(count < MAXNUM){
+    int start = std::rand() % (n - 4) + 1;
+    int mid, end;
+    while(true){
+      mid = std::rand() % (n - 4) + 2;
+      end = std::rand() % (n - 4) + 3;
+      if(mid - start >= 1 && end - mid >= 1) break;
+    }
+    std::vector<std::vector<std::string>> path_copys {path_start, path_start, path_start, path_start};
+    std::reverse(path_copys[0].begin() + start, path_copys[0].begin() + mid + 1);
+    std::reverse(path_copys[1].begin() + start, path_copys[1].begin() + end + 1);
+    std::reverse(path_copys[2].begin() + mid, path_copys[2].begin() + end + 1);
+    std::reverse(path_copys[3].begin() + start, path_copys[3].begin() + mid + 1);
+    std::reverse(path_copys[3].begin() + mid, path_copys[3].begin() + end + 1);
+    std::reverse(path_copys[3].begin() + start, path_copys[3].begin() + end + 1);
+
+    double cost;
+    int index = -1;
+    for(int i = 0; i < 4; ++i){
+      cost = CalculatePathDis(adjacent_matrix, id2index, path_copys[i]);
+      if(cost < mincost){
+        mincost = cost;
+        index = i;
+      }
+    }
+    if(index != -1){
+      path_start.assign(path_copys[index].begin(), path_copys[index].end()); // index != -1 means find a shorter path
+    }else ++count;   
+  }   
 }
 
 /**
