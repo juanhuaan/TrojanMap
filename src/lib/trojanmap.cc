@@ -373,6 +373,7 @@ void TrojanMap::CreateGraphFromCSVFile() {
       count++;
     }
     data[n.id] = n;
+    name2id[n.name]=n.id;
   }
   fin.close();
 }
@@ -702,12 +703,8 @@ std::vector<std::string> TrojanMap::Autocomplete(std::string name){
  */
 std::pair<double, double> TrojanMap::GetPosition(std::string name) {
   std::pair<double, double> results(-1, -1);
-  std::unordered_map<std::string, std::string> usenamegetID;
-  for(auto &item : data){
-    usenamegetID[item.second.name]=item.first;
-  }
   
-  std::string ID=usenamegetID[name];
+  std::string ID=GetID(name);
   results.first=data[ID].lat;
   results.second=data[ID].lon;
   
@@ -723,12 +720,7 @@ std::pair<double, double> TrojanMap::GetPosition(std::string name) {
  * @return {int}  : id
  */
 std::string TrojanMap::GetID(std::string name) {
-  std::unordered_map<std::string, std::string> usenamegetID;
-  for(auto &item : data){
-    usenamegetID[item.second.name]=item.first;
-  }
-  
-  std::string res = usenamegetID[name];
+  std::string res = name2id[name];
   return res;
 }
 
@@ -742,64 +734,96 @@ std::string TrojanMap::GetID(std::string name) {
  */
 std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
     std::string location1_name, std::string location2_name) {
-  // std::vector<std::string> path;
-  // std::string a_id=GetID(location1_name);
-  // std::string b_id=GetID(location2_name);
-  // // Node a=data[a_id];
-  // // Node b=data[b_id];
-  // //using DFS to find the graph from location1 to location2;
+  std::vector<std::string> path;
+  std::string a_id=GetID(location1_name);
+  std::string b_id=GetID(location2_name);
+    }
+  //using DFS to find the graph from location1 to location2;
   // std::string temp=a_id;
   // std::string temp2=b_id;
   // std::map<std::string,int>nodestore;
   // std::map<std::string,Node>graph;
   // FindGraph(temp,temp2,nodestore,graph);
   // //creat a matrix to store the distance between evey node
+  // //create a map
+  // std::unordered_map<std::string,std::unordered_map<std::string,int>>weightgra;
+  // for(auto &item:graph){
+  //   item.second.neighbor
+  //   weightgra[item.first]=
+  // }
   // int n = graph.size();
   // // use a map to transform the location_id to index
   // std::unordered_map<std::string, int> id2index;
-  // for(int i = 0; i < n; ++i){
-  //   id2index[graph[i].first] = i;
+  // int i=0;
+  // for(auto &x:graph){
+  //   id2index[x.first]=i;
+  //   i++;
+  // }
+  // std::unordered_map<int,std::string>index2id;
+  // for(auto &y:id2index){
+  //   index2id[id2index.second]=id2index.first;
   // }
   // // initialize a matrix with infinity
   // std::vector<std::vector<double>> adjacent_matrix(n, std::vector<double>(n, std::numeric_limits<double>::max()));
-  // for(int i=0;i<n;i++){
-  //   for(j=0;j<n;j++)
-  //   adjacent_matrix[i][id2index[graph[i].second.neighors[j]]]=CalculateDistance(graph[i].first,graph[i].second.neigbors[j]);
-  // }
-  // //using Dijkstra to calculate the shortest path
-  // int source=id2index[location1_name];
-  // std::unordered_set<int>visited;
-  // std::vector<long>d(adjacent_matrix.size());
-  // for(int i=0;i<adjacent_matrix.size();i++){
-  //   d[i]=adjacent_matrix[source][i];
-  // }
-  // visited.insert(source);
-  // while(visited.size()<adjacent_matrix.size()){
-  //   int u=FindMinIndButNotVisited(d,visited);
-  //   visited.insert(u);
-  //   for(int i=0;i<adjacent_matrix.size();i++){
-  //     d[i]=std::min(d[i],d[u]+adjacent_matrix[u][i]);
+  //   for(int i=0;i<n;i++){
+  //     for(int j=0;j<n;j++){
+  //       std::string item=index2id[i];
+  //       adjacent_matrix[i][id2index[graph[item].neighors[j]]]=CalculateDistance(item,graph[item].neigbors[j]);
+  //     }
   //   }
   // }
-  // return path;
-}
-//using DFS to find the graph 
-void TrojanMap::FindGraph_helper(std::string temp,std::map<std::string,int>&nodestore){
-  for(const std::string child: data[temp].neighbors){
-    if(nodestore[child]!=1){
-      nodestore[temp]=1;
-      FindGraph_helper(child,nodestore);
+    
+  
+//   //using Dijkstra to calculate the shortest path
+//   int source=id2index[location1_name];
+//   std::unordered_set<int>visited;
+//   std::vector<long>d(adjacent_matrix.size());
+//   for(int i=0;i<adjacent_matrix.size();i++){
+//     d[i]=adjacent_matrix[source][i];
+//   }
+//   visited.insert(source);
+//   while(visited.size()<adjacent_matrix.size()){
+//     int u=FindMinIndButNotVisited(d,visited);
+//     visited.insert(u);
+//     for(int i=0;i<adjacent_matrix.size();i++){
+//       d[i]=std::min<unsigned long>(d[i],d[u]+adjacent_matrix[u][i]);
+//     }
+//   }
+
+//   //return path; need to add the shortest path
+// }
+// //using DFS to find the graph 
+// void TrojanMap::FindGraph_helper(std::string temp,std::map<std::string,int>&nodestore){
+//   for(const std::string child: data[temp].neighbors){
+//     if(nodestore[child]!=1){
+//       nodestore[temp]=1;
+//       FindGraph_helper(child,nodestore);
+//     }
+//   }
+// }
+// void TrojanMap::FindGraph(std::string temp,std::string temp2,std::map<std::string,int>&nodestore,std::map<std::string,std::unordered_map<std::string,int>&graph){
+//   nodestore[temp]=1;
+//   FindGraph_helper(temp,nodestore);
+//   if(nodestore.count(temp2)>0){
+//     for(auto &e:nodestore){
+//       graph[e.first]=data[e.first];
+//     }
+//   }                                    
+// }
+//
+int TrojanMap::FindMinIndButNotVisited(std::vector<long>d,std::unordered_set<int>visited){
+  std::unordered_map<int,int>min;
+  int val=MAX_INPUT;
+  for(int i=0;i<d.size();i++){
+    min[d[i]]=i;
+  }
+  for(auto x:min){
+    if(x.first<val && visited.count(x.second)<0){
+      val=x.first;
     }
   }
-}
-void TrojanMap::FindGraph(std::string temp,std::string temp2,std::map<std::string,int>&nodestore,std::map<std::string,Node>&graph){
-  nodestore[temp]=1;
-  FindGraph_helper(temp,nodestore);
-  if(nodestore.count(temp2)>0){
-    for(auto e:nodestore){
-      graph[e.first]=data[e.first];
-    }
-  }                                    
+  return min[val];
+
 }
 
 

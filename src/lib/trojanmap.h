@@ -7,6 +7,7 @@
 #include <map>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 // A Node is the location of one point in the map.
 class Node {
   public:
@@ -23,6 +24,7 @@ class TrojanMap {
  public:
   // A map of ids to Nodes.
   std::unordered_map<std::string, Node> data;
+  std::unordered_map<std::string, std::string> name2id;
   
   //-----------------------------------------------------
   // TODO: You do not and should not change the following functions:
@@ -96,8 +98,9 @@ class TrojanMap {
 
   //Given the name of one locaion, find the grapgh, and judge if location2 is in the graph
   void FindGraph_helper(std::string temp,std::map<std::string,int>&nodestore);
+  //void FindGraph(std::string temp,std::string temp2,std::map<std::string,int>&nodestore,std::map<std::string,std::vector<std::string>>&graph);
   void FindGraph(std::string temp,std::string temp2,std::map<std::string,int>&nodestore,std::map<std::string,Node>&graph);
-
+  int FindMinIndButNotVisited(std::vector<long>d,std::unordered_set<int>visited);
   // Given the name of two locations, it should return the **ids** of the nodes
   // on the shortest path.
   std::vector<std::string> CalculateShortestPath_Dijkstra(std::string location1_name,
