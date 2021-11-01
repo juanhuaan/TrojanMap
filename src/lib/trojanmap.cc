@@ -754,7 +754,47 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
   std::vector<std::string> path;
   std::string a_id=GetID(location1_name);
   std::string b_id=GetID(location2_name);
+  std::unordered_map<std::string,std::map<std::string,Edge>> graph;
+  std::unordered_map<std::string,std::string>prev;
+  std::unordered_set<std::string> visited;
+  std::vector<Edge> edges;
+  std::string temp=a_id;
+  visited.insert(a_id);
+  while(visited.count(b_id)>0){
+    for(auto &nei:data[temp].neighbors){
+      graph[temp][nei]=Edge(temp, nei, CalculateDistance(temp,nei));
+      edges.push_back(graph[temp][nei]);
     }
+    std::sort(edges.begin(),edges.end(),Smaller);
+    while (true){
+      if(visited.count(edges[0].dst)<=0){
+        temp=edges[0].dst;
+        prev[edges[0].dst]=edges[0].src;
+        visited.insert(temp);
+        break;
+      }else{
+        edges.erase(edges.begin());
+        if(edges.empty()) break;
+      }
+    }
+  }
+  temp = b_id;
+  path.push_back(temp);
+  while(temp != a_id){
+    path.push_back(prev[temp]);
+    temp=prev[temp];
+  }
+  std::reverse(path.begin(),path.end());
+  return path; 
+}
+
+bool TrojanMap::Smaller(Edge&a,Edge&b){
+  if(a.dis<b.dis){
+      return true;
+  }
+  return false;
+}
+  
   //using DFS to find the graph from location1 to location2;
   // std::string temp=a_id;
   // std::string temp2=b_id;
