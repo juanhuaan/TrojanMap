@@ -19,14 +19,19 @@ class Node {
     std::string name;  // Name of the location. E.g. "Bank of America".
     std::vector<std::string> neighbors;  // List of the ids of all neighbor points.
 };
-class Edge{
+class DJNode{
   public:
-  std::string src;
-  std::string dst;
-  double dis;
-  Edge(){};
-  Edge(const Edge &n){src=n.src; dst=n.dst; dis=n.dis;}
-  Edge(std::string src_, std::string dst_, double dis_): src(src_), dst(dst_),dis(dis_){}
+  std::string id;
+  double dist;
+  DJNode(){};
+  DJNode(const DJNode &n):id(n.id), dist(n.dist){}
+  DJNode(std::string id, double dist=std::numeric_limits<double>::max()): id(id),dist(dist){}
+  DJNode &operator=(const DJNode&n){
+    if(this==&n) return *this;
+    this->id=n.id;
+    this->dist=n.dist;
+    return *this;
+  }
 };
 
 class TrojanMap {
@@ -34,7 +39,7 @@ class TrojanMap {
   // A map of ids to Nodes.
   std::unordered_map<std::string, Node> data;
   std::unordered_map<std::string, std::string> name2id;
-  std::unordered_map<std::string,std::map<std::string,Edge>> graph;
+  //std::unordered_map<std::string,std::map<std::string,Edge>> graph;
   
   //-----------------------------------------------------
   // TODO: You do not and should not change the following functions:
@@ -113,7 +118,7 @@ class TrojanMap {
   int FindMinIndButNotVisited(std::vector<long>d,std::unordered_set<int>visited);
   // Given the name of two locations, it should return the **ids** of the nodes
   // on the shortest path.
-  static bool Smaller(Edge&a,Edge&b);
+  //static bool Smaller(Edge&a,Edge&b);
   std::vector<std::string> CalculateShortestPath_Dijkstra(std::string location1_name,
                                                  std::string location2_name);
   std::vector<std::string> CalculateShortestPath_Bellman_Ford(std::string location1_name,

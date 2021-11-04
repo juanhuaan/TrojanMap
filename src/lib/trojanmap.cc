@@ -754,46 +754,87 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
   std::vector<std::string> path;
   std::string a_id=GetID(location1_name);
   std::string b_id=GetID(location2_name);
-  std::unordered_map<std::string,std::map<std::string,Edge>> graph;
-  std::unordered_map<std::string,std::string>prev;
-  std::unordered_set<std::string> visited;
-  std::vector<Edge> edges;
-  std::string temp=a_id;
-  visited.insert(a_id);
-  while(visited.count(b_id)>0){
-    for(auto &nei:data[temp].neighbors){
-      graph[temp][nei]=Edge(temp, nei, CalculateDistance(temp,nei));
-      edges.push_back(graph[temp][nei]);
+  std::unordered_map<std::string,double> dist;//inspect if it is the first time to visit  the node
+  std::unordered_map<std::string,std::string>prev;//return the prev node
+  std::unordered_set<std::string> visited;// store the shortest distance in visited
+  auto compare=[](DJNode a,DJNode b){return a.dist > b.dist;};
+  std::priority_queue<DJNode,std::vector<DJNode>,decltype(compare)> dist_heap(compare);
+  dist_heap.emplace(DJNode(a_id,0.0));//the source code setting
+  dist[a_id]=0.0;
+  while (!dist_heap.empty()){
+    DJNode temp=dist_heap.top();
+    dist_heap.pop();
+    while(visited.count(temp.id)>0){
+      temp=dist_heap.top();
+      dist_heap.pop();
+      if(dist_heap.empty()) return path;
     }
-    std::sort(edges.begin(),edges.end(),Smaller);
-    while (true){
-      if(visited.count(edges[0].dst)<=0){
-        temp=edges[0].dst;
-        prev[edges[0].dst]=edges[0].src;
-        visited.insert(temp);
-        break;
-      }else{
-        edges.erase(edges.begin());
-        if(edges.empty()) break;
+   
+    visited.insert(temp.id);
+    if(temp.id==b_id)break;
+    for(auto &neigh : data[temp.id].neighbors){
+      if(visited.count(neigh)<=0){
+        if(dist.count(neigh)<=0){
+          dist[neigh]=std::numeric_limits<double>::max();
+        }
+        double original_dist=dist[neigh];
+        double updated_dist=dist[temp.id]+CalculateDistance(temp.id,neigh);
+        if(original_dist>updated_dist){
+          dist[neigh] =updated_dist;
+          prev[neigh]=temp.id;
+          dist_heap.emplace(DJNode(neigh,dist[neigh]));
+        }
       }
     }
   }
-  temp = b_id;
-  path.push_back(temp);
-  while(temp != a_id){
-    path.push_back(prev[temp]);
-    temp=prev[temp];
+  std::string temp_loc=b_id;
+  while(temp_loc!=a_id){
+    path.emplace_back(temp_loc);
+    temp_loc=prev[temp_loc];
   }
+  path.emplace_back(a_id);
   std::reverse(path.begin(),path.end());
-  return path; 
+  return path;
+
 }
 
-bool TrojanMap::Smaller(Edge&a,Edge&b){
-  if(a.dis<b.dis){
-      return true;
-  }
-  return false;
-}
+//   std::vector<Edge> edges;
+//   std::string temp=a_id;
+//   visited.insert(a_id);
+//   while(visited.count(b_id)>0){
+//     for(auto &nei:data[temp].neighbors){
+//       graph[temp][nei]=Edge(temp, nei, CalculateDistance(temp,nei));
+//       edges.push_back(graph[temp][nei]);
+//     }
+//     std::sort(edges.begin(),edges.end(),Smaller);
+//     while (true){
+//       if(visited.count(edges[0].dst)<=0){
+//         temp=edges[0].dst;
+//         prev[edges[0].dst]=edges[0].src;
+//         visited.insert(temp);
+//         break;
+//       }else{
+//         edges.erase(edges.begin());
+//         if(edges.empty()) break;
+//       }
+//     }
+//   }
+//   temp = b_id;
+//   path.push_back(temp);
+//   while(temp != a_id){
+//     path.push_back(prev[temp]);
+//     temp=prev[temp];
+//   }
+//   std::reverse(path.begin(),path.end());
+//   return path; 
+// }
+
+// bool TrojanMap::Smaller(Edge&a,Edge&b){
+//   if(a.dis<b.dis){
+//       return true;
+//   }
+//   return false;
+// }
   
   //using DFS to find the graph from location1 to location2;
   // std::string temp=a_id;
