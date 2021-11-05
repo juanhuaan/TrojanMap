@@ -976,7 +976,7 @@ void TrojanMap::Backtracking(const std::vector<std::vector<double>> &adjacent_ma
 		cost += adjacent_matrix[0][current];
 		if(cost < mincost){
 			mincost = cost;
-			path.emplace_back(location_ids[0]);
+			path.emplace_back(location_ids[0]); 
 			paths.emplace_back(path);
 			path.pop_back();
 		} 
@@ -1053,7 +1053,7 @@ void TrojanMap::TPS_2opt(const std::vector<std::vector<double>> &adjacent_matrix
 
   int count = 0, n = path_start.size();
   std::vector<std::string> path_copy;
-  int MAXNUM = 10 * n; // set the max iteration times
+  int MAXNUM = 6 * n; // set the max iteration times
 
   while(count < MAXNUM){
     path_copy.assign(path_start.begin(), path_start.end());
@@ -1098,7 +1098,7 @@ void TrojanMap::TPS_3opt(const std::vector<std::vector<double>> &adjacent_matrix
                         std::vector<std::string> &path_start, std::unordered_map<std::string, int> &id2index){
 
   int count = 0, n = path_start.size();
-  int MAXNUM = 10 * n; // set the max iteration times
+  int MAXNUM = 6 * n; // set the max iteration times
 
   while(count < MAXNUM){
     int start = std::rand() % (n - 4) + 1;
@@ -1209,8 +1209,8 @@ std::vector<std::string> TrojanMap::DeliveringTrojan(std::vector<std::string> &l
     if(!visit[i]){
       start_locations.emplace_back(i); // get the locations which has no dependency
     }
-    if(start_locations.size() == 0) return result; // if cannot find the start location return empty;
   }
+  if(start_locations.size() == 0) return result; // if cannot find the start location return empty;
   visit.assign(n, false); // clear visit
   std::vector<int> topo_list;
   for(auto &start_loc : start_locations){
