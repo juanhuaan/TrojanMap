@@ -188,7 +188,10 @@ void TrojanMap::PrintMenu() {
     stop = std::chrono::high_resolution_clock::now();
     auto duration_3opt = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
-    CreateAnimation(results.second);
+    CreateAnimation(results.second, "TSP_output_001");
+    CreateAnimation(results_2opt.second, "TSP_output_002");
+    CreateAnimation(results_3opt.second, "TSP_output_003");
+
     menu = "*************************Results******************************\n";
     std::cout << menu;
     if (results.second.size() != 0) {
@@ -555,8 +558,9 @@ void TrojanMap::PlotPointsLabel(std::vector<std::string> &location_ids, std::str
  * 
  * @param  {std::vector<std::vector<std::string>>} path_progress : the progress to get the path
  */
-void TrojanMap::CreateAnimation(std::vector<std::vector<std::string>> path_progress){
-  cv::VideoWriter video("src/lib/output.avi", cv::VideoWriter::fourcc('M','J','P','G'), 10, cv::Size(1248,992));
+void TrojanMap::CreateAnimation(std::vector<std::vector<std::string>> &path_progress, std::string filename){
+  std::string filepath = "src/lib/" + filename + ".avi"; 
+  cv::VideoWriter video(filepath, cv::VideoWriter::fourcc('M','J','P','G'), 10, cv::Size(1248,992));
   for(auto location_ids: path_progress) {
     std::string image_path = cv::samples::findFile("src/lib/input.jpg");
     cv::Mat img = cv::imread(image_path, cv::IMREAD_COLOR);

@@ -203,5 +203,39 @@ TEST(TrojanMapStudentTest, TopologicalSort2) {
   EXPECT_EQ(flag, true);
 }
 
-
+TEST(TrojanMapStudentTest, TopologicalSort3) {
+  TrojanMap m;
+  m.CreateGraphFromCSVFile();
+  std::vector<std::string> location_names = {"7Eleven", "crosswalk3", "Metro 40", "DASH F", "Driveway", "Ramen KenJo", "PED", "Target", "CVS", "University Park", "Holbox", "Leavey Library"};
+  std::vector<std::vector<std::string>> dependencies = {{"Driveway","Ramen KenJo"}, 
+                                                        {"Driveway","crosswalk3"},
+                                                        {"Driveway","PED"},
+                                                        {"Ramen KenJo","PED"},
+                                                        {"Ramen KenJo","Holbox"},
+                                                        {"Ramen KenJo","Target"},
+                                                        {"crosswalk3","Ramen KenJo"},
+                                                        {"crosswalk3","University Park"},
+                                                        {"PED","DASH F"},
+                                                        {"Target","University Park"},
+                                                        {"University Park","7Eleven"},
+                                                        {"Target","CVS"},
+                                                        {"7Eleven","CVS"},
+                                                        {"DASH F","Leavey Library"},
+                                                        {"DASH F","Holbox"},
+                                                        {"Leavey Library","Holbox"},
+                                                        {"CVS","Metro 40"},
+                                                        {"Holbox","Metro 40"}};
+  auto result = m.DeliveringTrojan(location_names, dependencies);
+  std::vector<std::string> gt1 = {"Driveway", "crosswalk3", "Ramen KenJo", "Target", "University Park", "7Eleven", "CVS", "PED",  "DASH F", "Leavey Library", "Holbox", "Metro 40"};
+  // std::vector<std::string> gt2 ={}; 
+  for(auto &loc : result){
+    std::cout << loc << ", ";
+  }
+  std::cout << std::endl;
+  bool flag = false;
+  if(result == gt1) flag = true;
+  // else if(result == gt2) flag = true;
+  // else flag = false;
+  EXPECT_EQ(flag, true);
+}
 

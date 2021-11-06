@@ -76,7 +76,8 @@ class TrojanMap {
   void PlotPointsLabel(std::vector<std::string> &location_ids, std::string origin);
 
   // Create the videos of the progress to get the path
-  void CreateAnimation(std::vector<std::vector<std::string>>);
+  // void CreateAnimation(std::vector<std::vector<std::string>>);
+  void CreateAnimation(std::vector<std::vector<std::string>> &path_progress, std::string filename);
 
   // Transform the location to the position on the map
   std::pair<double, double> GetPlotLocation(double lat, double lon);
