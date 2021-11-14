@@ -81,11 +81,28 @@ TEST(TrojanMapStudentTest, Autocomplete3) {
   EXPECT_EQ(names.size(), gt1.size());
 }
 
-/**
- * 
- * Test for GetPosition
- * 
- * */
+//Test for GetPosition
+
+TEST(TrojanMapTest, FindPosition) {
+  TrojanMap m;
+  m.CreateGraphFromCSVFile();
+  auto position = m.GetPosition("Tap Two Blue");
+  std::pair<double, double> gt1(34.0311992,-118.2736016); 
+  EXPECT_EQ(position, gt1);
+  // Test Ralphs
+  position = m.GetPosition("37th StreetUSC");
+  std::pair<double, double> gt2(34.0177803,-118.2801096); // groundtruth for "Ralphs"
+  EXPECT_EQ(position, gt2);
+  // Test Target
+  position = m.GetPosition("Security Checkpoint");
+  std::pair<double, double> gt3(34.0257279,-118.2863862); // groundtruth for "Target"
+  EXPECT_EQ(position, gt3);
+  // Test Unknown
+  position = m.GetPosition("XXY");
+  std::pair<double, double> gt4(-1, -1);
+  EXPECT_EQ(position, gt4);
+}
+
 
 
 /**

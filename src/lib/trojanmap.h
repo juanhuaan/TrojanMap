@@ -124,7 +124,18 @@ class TrojanMap {
                                                  std::string location2_name);
   std::vector<std::string> CalculateShortestPath_Bellman_Ford(std::string location1_name,
                                                  std::string location2_name);
-
+  void Bellman_dfs(std::string u,std::unordered_map<std::string,bool>&visited,
+              std::unordered_map<std::string,std::unordered_map<std::string,double>>&mp);
+  std::unordered_map<std::string,std::vector<std::string>> Getpredecessor(std::string u,
+               std::unordered_map<std::string,std::unordered_map<std::string,double>>mp);
+  double Bellman_helper(std::string s,int i,std::string v,
+    std::unordered_map<std::string,std::unordered_map<std::string,double>>mp,
+    std::vector<std::string>&path);
+  void Bellman_bfs(std::string loca,std::string locb,
+    std::unordered_map<std::string,std::unordered_map<std::string,double>>&mp);
+  //void Bellman_Matrix(std::unordered_map<std::string,std::unordered_map<std::string,double>>&mp,
+                              //  std::vector<std::string>node,std::map<std::string,int>&node2index,
+                              //  std::map<int,std::string>&index2node);
   // Given CSV filename, it read and parse locations data from CSV file,
   // and return locations vector for topological sort problem.
   std::vector<std::string> ReadLocationsFromCSVFile(std::string locations_filename);
@@ -170,7 +181,12 @@ class TrojanMap {
 
   // Given a location id and k, find the k closest points on the map
   std::vector<std::string> FindKClosestPoints(std::string name, int k);
-  
+  void FindNodes_DFS(std::string u,std::unordered_map<std::string,bool>&visited,
+                            std::vector<std::string>&res);
+  std::vector<std::vector<double>> CreateMatrix(std::vector<std::string> &location_ids);
+  void BackTracking_helper(int start,std::vector<std::vector<double>> weights,
+              int cur_node,double cur_cost,std::vector<int>&cur_path,double &min_cost,
+              std::vector<int>&min_path,int k);
   //----------------------------------------------------- User-defined functions
 };
 

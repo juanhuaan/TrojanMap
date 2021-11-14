@@ -4,10 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+#include <set>
 #include <algorithm>
 #include <fstream>
 #include <locale>
+#include <stack>
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
@@ -129,7 +130,8 @@ void TrojanMap::PrintMenu() {
     std::string input2;
     getline(std::cin, input2);
     auto start = std::chrono::high_resolution_clock::now();
-    auto results = CalculateShortestPath_Dijkstra(input1, input2);
+   // auto results = CalculateShortestPath_Dijkstra(input1, input2);
+    auto results = CalculateShortestPath_Bellman_Ford(input1, input2);
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     menu = "*************************Results******************************\n";
@@ -801,133 +803,7 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
   return path;
 
 }
-
-//   std::vector<Edge> edges;
-//   std::string temp=a_id;
-//   visited.insert(a_id);
-//   while(visited.count(b_id)>0){
-//     for(auto &nei:data[temp].neighbors){
-//       graph[temp][nei]=Edge(temp, nei, CalculateDistance(temp,nei));
-//       edges.push_back(graph[temp][nei]);
-//     }
-//     std::sort(edges.begin(),edges.end(),Smaller);
-//     while (true){
-//       if(visited.count(edges[0].dst)<=0){
-//         temp=edges[0].dst;
-//         prev[edges[0].dst]=edges[0].src;
-//         visited.insert(temp);
-//         break;
-//       }else{
-//         edges.erase(edges.begin());
-//         if(edges.empty()) break;
-//       }
-//     }
-//   }
-//   temp = b_id;
-//   path.push_back(temp);
-//   while(temp != a_id){
-//     path.push_back(prev[temp]);
-//     temp=prev[temp];
-//   }
-//   std::reverse(path.begin(),path.end());
-//   return path; 
-// }
-
-// bool TrojanMap::Smaller(Edge&a,Edge&b){
-//   if(a.dis<b.dis){
-//       return true;
-//   }
-//   return false;
-// }
-  
-  //using DFS to find the graph from location1 to location2;
-  // std::string temp=a_id;
-  // std::string temp2=b_id;
-  // std::map<std::string,int>nodestore;
-  // std::map<std::string,Node>graph;
-  // FindGraph(temp,temp2,nodestore,graph);
-  // //creat a matrix to store the distance between evey node
-  // //create a map
-  // std::unordered_map<std::string,std::unordered_map<std::string,int>>weightgra;
-  // for(auto &item:graph){
-  //   item.second.neighbor
-  //   weightgra[item.first]=
-  // }
-  // int n = graph.size();
-  // // use a map to transform the location_id to index
-  // std::unordered_map<std::string, int> id2index;
-  // int i=0;
-  // for(auto &x:graph){
-  //   id2index[x.first]=i;
-  //   i++;
-  // }
-  // std::unordered_map<int,std::string>index2id;
-  // for(auto &y:id2index){
-  //   index2id[id2index.second]=id2index.first;
-  // }
-  // // initialize a matrix with infinity
-  // std::vector<std::vector<double>> adjacent_matrix(n, std::vector<double>(n, std::numeric_limits<double>::max()));
-  //   for(int i=0;i<n;i++){
-  //     for(int j=0;j<n;j++){
-  //       std::string item=index2id[i];
-  //       adjacent_matrix[i][id2index[graph[item].neighors[j]]]=CalculateDistance(item,graph[item].neigbors[j]);
-  //     }
-  //   }
-  // }
-    
-  
-//   //using Dijkstra to calculate the shortest path
-//   int source=id2index[location1_name];
-//   std::unordered_set<int>visited;
-//   std::vector<long>d(adjacent_matrix.size());
-//   for(int i=0;i<adjacent_matrix.size();i++){
-//     d[i]=adjacent_matrix[source][i];
-//   }
-//   visited.insert(source);
-//   while(visited.size()<adjacent_matrix.size()){
-//     int u=FindMinIndButNotVisited(d,visited);
-//     visited.insert(u);
-//     for(int i=0;i<adjacent_matrix.size();i++){
-//       d[i]=std::min<unsigned long>(d[i],d[u]+adjacent_matrix[u][i]);
-//     }
-//   }
-
-//   //return path; need to add the shortest path
-// }
-// //using DFS to find the graph 
-// void TrojanMap::FindGraph_helper(std::string temp,std::map<std::string,int>&nodestore){
-//   for(const std::string child: data[temp].neighbors){
-//     if(nodestore[child]!=1){
-//       nodestore[temp]=1;
-//       FindGraph_helper(child,nodestore);
-//     }
-//   }
-// }
-// void TrojanMap::FindGraph(std::string temp,std::string temp2,std::map<std::string,int>&nodestore,std::map<std::string,std::unordered_map<std::string,int>&graph){
-//   nodestore[temp]=1;
-//   FindGraph_helper(temp,nodestore);
-//   if(nodestore.count(temp2)>0){
-//     for(auto &e:nodestore){
-//       graph[e.first]=data[e.first];
-//     }
-//   }                                    
-// }
-//
-int TrojanMap::FindMinIndButNotVisited(std::vector<long>d,std::unordered_set<int>visited){
-  std::unordered_map<int,int>min;
-  int val=MAX_INPUT;
-  for(int i=0;i<d.size();i++){
-    min[d[i]]=i;
-  }
-  for(auto x:min){
-    if(x.first<val && visited.count(x.second)<0){
-      val=x.first;
-    }
-  }
-  return min[val];
-
-}
-
+   
 
 /**
  * CalculateShortestPath_Bellman_Ford: Given 2 locations, return the shortest path which is a
@@ -937,10 +813,219 @@ int TrojanMap::FindMinIndButNotVisited(std::vector<long>d,std::unordered_set<int
  * @param  {std::string} location2_name     : goal
  * @return {std::vector<std::string>}       : path
  */
+
+// std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford(
+//     std::string location1_name, std::string location2_name){
+//   std::string loc1_id=GetID(location1_name);
+//   std::string loc2_id=GetID(location2_name);
+//   std::vector<std::string> path;
+//   std::unordered_map<std::string,bool> visited;
+//   std::vector<std::string> node_store;//store the ids of dfs
+//   Bellman_dfs(loc1_id,visited,node_store);
+//   //establish the matrix
+//   std::unordered_map<std::string,std::unordered_map<std::string,double>>mp;
+//   std::map<std::string,int> node2index;
+//   std::map<int,std::string> index2node;
+//   Bellman_Matrix(mp,node_store,node2index,index2node);
+//   int i=(mp.size()/2);
+//   path=Bellman_helper(loc1_id,i,loc2_id,mp);
+//   std::reverse(path.begin(),path.end());
+
+  
+//   return path;
+// }
+// long TrojanMap::Bellman_helper(std::string s,int i,std::string v,
+//     std::unordered_map<std::string,std::unordered_map<std::string,double>>mp,
+//     std::vector<std::string>&path){
+//   std::stack<std::string> stk;
+//   path.push_back(v);
+//   if(i==0){
+//     if(s==v){
+//       path.push_back(s);
+//       return path;
+//     }else{
+//       return std::vector<std::string>();
+//     }
+//   }else{
+//     //mp[v][i]=double
+//     //auto pre= Getpredecessors();
+//     std::map<std::string,std::vector<std::string>> prev;
+//     for(auto e:mp){
+//       if(e.first==v){
+//         prev.first=v;
+//         prev.second.push_back(e.second.first);
+//       }
+//     }
+//     long d=INT16_MAX;
+//     for(auto u:prev[v]){
+//       long c=Bellman_helper(s,i-1,u,mp)+CalculateDistance(u,v);
+//       if(d>c){
+//         d=c;
+//         stk.push(u);
+//       }
+//     }
+//    if(d<Bellman_helper(s,i-1,v,mp) {
+//      std::string val=stk.top();
+//      path.push_back(val);
+//    }
+//   }
+// }
+// void TrojanMap::Bellman_Matrix(std::unordered_map<std::string,std::unordered_map<std::string,double>>&mp,
+//                                std::vector<std::string>node,std::map<std::string,int>&node2index,
+//                                std::map<int,std::string>&index2node){
+//   int n=node.size();
+//   int k=0;
+//   for(auto e:node){
+//     node2index[e]=k;
+//     k++;
+//   }
+//   for(auto l:node2index){
+//     index2node[l.second]=l.first;
+//   }
+//   for(int i=0; i<n;i++){
+//     for(int j=0; j<n; j++){
+//       std::string i_id=index2node[i];
+//       std::string j_id=index2node[j];
+//       std::set<std::string> i_nei;
+//       for(auto items:data[i_id].neighbors){
+//         i_nei.insert(items);
+//       }
+//       if(i_nei.count(j_id)<=0) {continue;}
+//       else{mp[j_id][i_id]=mp[i_id][j_id]=CalculateDistance(i_id,j_id);}
+//     }
+//   }
+// }
+
+// void TrojanMap::Bellman_dfs(std::string u,std::unordered_map<std::string,bool>&visited,
+//                             std::vector<std::string>&res){
+//   visited[u]=true;
+//   res.push_back(u);
+//   for(auto &i:data[u].neighbors){
+//     if(!visited[i]){
+//       Bellman_dfs(i,visited,res);
+//     }
+//   }
+// }
+//--------------------------------------------------------------------------------------
+void TrojanMap::Bellman_dfs(std::string u,std::unordered_map<std::string,bool>&visited,
+    std::unordered_map<std::string,std::unordered_map<std::string,double>>&mp){
+  visited[u]=true;
+  //res.push_back(u);
+  for(auto &i:data[u].neighbors){
+    if(!visited[i]){
+      mp[u][i]=CalculateDistance(i,u);
+      Bellman_dfs(i,visited,mp);
+    }
+  }
+}
+void TrojanMap::Bellman_bfs(std::string loca,std::string locb,
+    std::unordered_map<std::string,std::unordered_map<std::string,double>>&mp){
+  std::queue<std::string> q;
+  std::unordered_set<std::string> visited;
+  q.push(loca);
+  visited.insert(loca);
+  while(!q.empty()){
+    std::string temp=q.front();
+    q.pop();
+    for(auto &neigh :data[temp].neighbors){
+      mp[temp][neigh]=CalculateDistance(temp,neigh);
+      if(visited.count(neigh)==0){
+        if(neigh!=locb){
+          q.push(neigh);
+        }
+        visited.insert(neigh);
+      }
+    }
+  }
+}
 std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford(
-    std::string location1_name, std::string location2_name){
+                std::string location1_name, std::string location2_name){
+  std::string loc1_id=GetID(location1_name);
+  std::string loc2_id=GetID(location2_name);
   std::vector<std::string> path;
+  std::unordered_map<std::string,bool> visited;
+  std::unordered_map<std::string,std::unordered_map<std::string,double>>mp;
+  std::vector<std::string> node_store;//store the ids of dfs
+  Bellman_bfs(loc1_id,loc2_id,mp);
+  //Bellman_dfs(loc1_id,visited,mp);
+  int i=mp.size();
+  std::unordered_map<std::string,double>distance;//store the distance from the source to every node;
+  std::unordered_map<std::string,std::string>prev;//store the prev node of the shortest path;
+  //initialize
+
+  for(auto &items:mp){
+    
+      distance[items.first]=std::numeric_limits<double>::max();
+      //prev[items.first]=NULL;
+    
+  }
+  distance[loc1_id]=0.0;
+  for(int i=0;i<mp.size()-1;i++){
+    for(auto &u:mp){
+      for(auto &item:u.second){
+        if(distance[item.first]+mp[u.first][item.first]<distance[u.first]){
+          distance[u.first]=distance[item.first]+mp[u.first][item.first];
+          prev[u.first]=item.first;
+        }
+        // else if(distance[u.first]+mp[u.first][item.first]<distance[item.first]){
+        //   distance[item.first]=distance[u.first]+mp[u.first][item.first];
+        //   prev[item.first]=u.first;
+        // }
+      
+      }
+    }
+  }
+  path.push_back(loc2_id);
+  std::string temp=loc2_id;
+  while(temp!=loc1_id){
+    path.push_back(prev[temp]);
+    temp=prev[temp];
+  }
+  std::reverse(path.begin(),path.end());
+ 
+  // double sum1=Bellman_helper(loc1_id,i,loc2_id,mp,path);
+  // std::reverse(path.begin(),path.end());  
   return path;
+}
+std::unordered_map<std::string,std::vector<std::string>>TrojanMap::Getpredecessor(std::string u,
+    std::unordered_map<std::string,std::unordered_map<std::string,double>>mp){
+    std::unordered_map<std::string,std::vector<std::string>>prev;
+    for(auto &it :mp[u]){
+      prev[u].push_back(it.first);
+    }
+    return prev;
+    
+ }
+double TrojanMap::Bellman_helper(std::string s,int i,std::string v,
+    std::unordered_map<std::string,std::unordered_map<std::string,double>>mp,
+    std::vector<std::string>&path){
+  std::stack<std::string>stk;
+  path.push_back(v);
+  if(i==0){
+    if(s==v){
+      //path.push_back(v);
+      path.push_back(s);
+      return 0;   
+    }else{
+      path.clear();
+      return std::numeric_limits<double>::max();
+    } 
+  }else{
+    auto prev=Getpredecessor(v,mp);
+    double d =std::numeric_limits<double>::max();
+    for(auto u:prev[v]){
+      if(d>Bellman_helper(s,i-1,u,mp,path)+CalculateDistance(u,v)){
+        d=Bellman_helper(s,i-1,u,mp,path)+CalculateDistance(u,v);
+        stk.push(u);
+      }
+    }
+    if(Bellman_helper(s,i-1,v,mp,path)>d){
+      std::string p=stk.top();
+      path.push_back(p); 
+    }
+    return std::min(d,Bellman_helper(s,i-1,v,mp,path));
+
+  }
 }
 
 /**
@@ -1295,5 +1380,83 @@ return false;
  */
 std::vector<std::string> TrojanMap::FindKClosestPoints(std::string name, int k) {
   std::vector<std::string> res;
+  std::vector<std::string> location_ids;
+  std::string loc_id=GetID(name);
+  std::unordered_map<std::string,bool> visited;
+  FindNodes_DFS(loc_id,visited,location_ids);
+  //creat a matrix to store the distance between evey node
+  int n = location_ids.size();
+  // use a map to transform the location_id to index
+  std::unordered_map<std::string, int> id2index;
+  for(int i = 0; i < n; ++i) id2index[location_ids[i]] = i;
+  //use a map to transform the index back to location_id
+  std::unordered_map<int, std::string> index2id;
+  for(auto l:id2index) index2id[l.second]=l.first;
+  //create the matrix
+  std::vector<std::vector<double>> weights=CreateMatrix(location_ids);
+  for(int i=1;i<=k;i++){
+    int cur_node=0;
+    double cur_cost=0.0;
+    double min_cost=0.0;
+    std::vector<int> cur_path;
+    std::vector<int> min_path;
+    BackTracking_helper(0,weights,cur_node,cur_cost,cur_path,min_cost,min_path,i);
+    int last_loc=min_path.size()-1;
+    int path=min_path[last_loc];
+    std::string rep=index2id[path];
+    res.push_back(rep);
+    cur_path.clear();
+    min_path.clear();  
+
+  }
   return res;
+ 
+}
+void TrojanMap::FindNodes_DFS(std::string u,std::unordered_map<std::string,bool>&visited,
+                            std::vector<std::string>&result){
+  visited[u]=true;
+  result.push_back(u);
+  for(auto &i:data[u].neighbors){
+    if(!visited[i]){
+      FindNodes_DFS(i,visited,result);
+    }
+  }
+}
+std::vector<std::vector<double>> TrojanMap::CreateMatrix(std::vector<std::string> &location_ids){
+  // initialize a matrix with infinity
+  int n = location_ids.size();
+  std::vector<std::vector<double>> adjacent_matrix(n, std::vector<double>(n, std::numeric_limits<double>::max()));
+
+  // creat a matrix to store the distance betwwen evey node
+  for(int i  = 0; i < n; ++i){
+		std::string source_loc = location_ids[i];
+		for(int j = i + 1; j < n; ++j){
+			std::string destination_loc = location_ids[j];
+      //ensure source_loc and destination_loc are neighbors
+      Node loc_ID=data[source_loc];
+      if(find(loc_ID.neighbors.begin(),loc_ID.neighbors.end(),destination_loc)==loc_ID.neighbors.end()){continue;}
+			adjacent_matrix[i][j] = adjacent_matrix[j][i] = CalculateDistance(source_loc, destination_loc);
+		}
+  }
+  return adjacent_matrix;
+}
+void TrojanMap::BackTracking_helper(int start,std::vector<std::vector<double>> weights,
+              int cur_node,double cur_cost,std::vector<int>&cur_path,double &min_cost,
+              std::vector<int>&min_path,int k){
+//if we are at the k th node
+  if(cur_path.size()==k+1){
+    if(cur_cost<min_cost){
+      min_cost=cur_cost;
+      min_path=cur_path;
+    }
+    return;
+  }
+  //else eveluate all the children
+  for(int i=0; i<k || i<weights.size();i++){
+    if(std::find(cur_path.begin(),cur_path.end(),i)==cur_path.end()){
+      cur_path.push_back(i);
+      BackTracking_helper(start,weights,i,cur_cost+weights[cur_node][i],cur_path,min_cost,min_path,k);
+      cur_path.pop_back();
+    }
+  }
 }
