@@ -728,6 +728,7 @@ std::pair<double, double> TrojanMap::GetPosition(std::string name) {
   std::pair<double, double> results(-1, -1);
   
   std::string ID=GetID(name);
+  if(ID==""){return results;}
   results.first=data[ID].lat;
   results.second=data[ID].lon;
   
@@ -743,6 +744,7 @@ std::pair<double, double> TrojanMap::GetPosition(std::string name) {
  * @return {int}  : id
  */
 std::string TrojanMap::GetID(std::string name) {
+  if(name2id.count(name)<=0){return "";}
   std::string res = name2id[name];
   return res;
 }
@@ -912,8 +914,8 @@ void TrojanMap::Bellman_dfs(std::string u,std::unordered_map<std::string,bool>&v
   visited[u]=true;
   //res.push_back(u);
   for(auto &i:data[u].neighbors){
+    mp[u][i]=CalculateDistance(i,u);
     if(!visited[i]){
-      mp[u][i]=CalculateDistance(i,u);
       Bellman_dfs(i,visited,mp);
     }
   }
@@ -946,8 +948,8 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford(
   std::unordered_map<std::string,bool> visited;
   std::unordered_map<std::string,std::unordered_map<std::string,double>>mp;
   std::vector<std::string> node_store;//store the ids of dfs
-  Bellman_bfs(loc1_id,loc2_id,mp);
-  //Bellman_dfs(loc1_id,visited,mp);
+ // Bellman_bfs(loc1_id,loc2_id,mp);
+  Bellman_dfs(loc1_id,visited,mp);
   int i=mp.size();
   std::unordered_map<std::string,double>distance;//store the distance from the source to every node;
   std::unordered_map<std::string,std::string>prev;//store the prev node of the shortest path;
@@ -960,6 +962,7 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford(
     
   }
   distance[loc1_id]=0.0;
+  //distance[loc2_id]=std::numeric_limits<double>::max();
   for(int i=0;i<mp.size()-1;i++){
     for(auto &u:mp){
       for(auto &item:u.second){
