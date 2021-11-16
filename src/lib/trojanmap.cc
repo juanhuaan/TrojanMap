@@ -131,7 +131,7 @@ void TrojanMap::PrintMenu() {
     getline(std::cin, input2);
     auto start = std::chrono::high_resolution_clock::now();
    // auto results = CalculateShortestPath_Dijkstra(input1, input2);
-    auto results = CalculateShortestPath_Bellman_Ford(input1, input2);
+    auto results = CalculateShortestPath_Dijkstra(input1, input2);
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     menu = "*************************Results******************************\n";
@@ -805,7 +805,63 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
   return path;
 
 }
-   
+//method2
+// std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
+//     std::string location1_name, std::string location2_name) {
+//   std::vector<std::string> path;
+//   std::string a_id=GetID(location1_name);
+//   std::string b_id=GetID(location2_name);
+//   std::unordered_map<std::string,double> dist;
+//   std::unordered_map<std::string,std::string>prev;
+//   std::unordered_set<std::string> q;
+//   std::unordered_map<std::string,bool> visited_mark;
+//   std::unordered_map<std::string,std::unordered_map<std::string,double>>mp;
+//   std::vector<std::string> node_store;//store the ids of dfs
+//   Bellman_dfs(a_id,visited_mark,mp);
+//   for(auto &items:mp){
+//       dist[items.first]=std::numeric_limits<double>::max();
+//       q.insert(items.first);
+//   }
+//   dist[a_id]=0.0;
+//   while(!q.empty()){
+//     double temp=std::numeric_limits<double>::max();
+//     for(auto items:q){
+//       if(dist[items]<temp){
+//         temp=dist[items];
+//       }
+//     }
+//     std::string u;
+//     for(auto &k:dist){
+//       if(k.second==temp){
+//         u=k.first;
+//         q.erase(k.first);
+//         break;
+//       }
+//     }
+//     for(auto nei:mp[u]){
+//       if(q.count(nei.first)>0){
+//         double alt=dist[u]+mp[u][nei.first];
+//         if(alt<dist[nei.first]){
+//           dist[nei.first]=alt;
+//           prev[nei.first]=u;
+
+//         }
+//       }
+//     }
+
+//   }
+//   std::string temp_loc=b_id;
+//   while(temp_loc!=a_id){
+//     path.emplace_back(temp_loc);
+//     temp_loc=prev[temp_loc];
+//   }
+//   path.emplace_back(a_id);
+//   std::reverse(path.begin(),path.end());
+//   return path;
+
+
+ 
+// }
 
 /**
  * CalculateShortestPath_Bellman_Ford: Given 2 locations, return the shortest path which is a
@@ -816,99 +872,7 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
  * @return {std::vector<std::string>}       : path
  */
 
-// std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford(
-//     std::string location1_name, std::string location2_name){
-//   std::string loc1_id=GetID(location1_name);
-//   std::string loc2_id=GetID(location2_name);
-//   std::vector<std::string> path;
-//   std::unordered_map<std::string,bool> visited;
-//   std::vector<std::string> node_store;//store the ids of dfs
-//   Bellman_dfs(loc1_id,visited,node_store);
-//   //establish the matrix
-//   std::unordered_map<std::string,std::unordered_map<std::string,double>>mp;
-//   std::map<std::string,int> node2index;
-//   std::map<int,std::string> index2node;
-//   Bellman_Matrix(mp,node_store,node2index,index2node);
-//   int i=(mp.size()/2);
-//   path=Bellman_helper(loc1_id,i,loc2_id,mp);
-//   std::reverse(path.begin(),path.end());
 
-  
-//   return path;
-// }
-// long TrojanMap::Bellman_helper(std::string s,int i,std::string v,
-//     std::unordered_map<std::string,std::unordered_map<std::string,double>>mp,
-//     std::vector<std::string>&path){
-//   std::stack<std::string> stk;
-//   path.push_back(v);
-//   if(i==0){
-//     if(s==v){
-//       path.push_back(s);
-//       return path;
-//     }else{
-//       return std::vector<std::string>();
-//     }
-//   }else{
-//     //mp[v][i]=double
-//     //auto pre= Getpredecessors();
-//     std::map<std::string,std::vector<std::string>> prev;
-//     for(auto e:mp){
-//       if(e.first==v){
-//         prev.first=v;
-//         prev.second.push_back(e.second.first);
-//       }
-//     }
-//     long d=INT16_MAX;
-//     for(auto u:prev[v]){
-//       long c=Bellman_helper(s,i-1,u,mp)+CalculateDistance(u,v);
-//       if(d>c){
-//         d=c;
-//         stk.push(u);
-//       }
-//     }
-//    if(d<Bellman_helper(s,i-1,v,mp) {
-//      std::string val=stk.top();
-//      path.push_back(val);
-//    }
-//   }
-// }
-// void TrojanMap::Bellman_Matrix(std::unordered_map<std::string,std::unordered_map<std::string,double>>&mp,
-//                                std::vector<std::string>node,std::map<std::string,int>&node2index,
-//                                std::map<int,std::string>&index2node){
-//   int n=node.size();
-//   int k=0;
-//   for(auto e:node){
-//     node2index[e]=k;
-//     k++;
-//   }
-//   for(auto l:node2index){
-//     index2node[l.second]=l.first;
-//   }
-//   for(int i=0; i<n;i++){
-//     for(int j=0; j<n; j++){
-//       std::string i_id=index2node[i];
-//       std::string j_id=index2node[j];
-//       std::set<std::string> i_nei;
-//       for(auto items:data[i_id].neighbors){
-//         i_nei.insert(items);
-//       }
-//       if(i_nei.count(j_id)<=0) {continue;}
-//       else{mp[j_id][i_id]=mp[i_id][j_id]=CalculateDistance(i_id,j_id);}
-//     }
-//   }
-// }
-
-// void TrojanMap::Bellman_dfs(std::string u,std::unordered_map<std::string,bool>&visited,
-//                             std::vector<std::string>&res){
-//   visited[u]=true;
-//   res.push_back(u);
-//   for(auto &i:data[u].neighbors){
-//     if(!visited[i]){
-//       Bellman_dfs(i,visited,res);
-//     }
-//   }
-// }
-//--------------------------------------------------------------------------------------
 void TrojanMap::Bellman_dfs(std::string u,std::unordered_map<std::string,bool>&visited,
     std::unordered_map<std::string,std::unordered_map<std::string,double>>&mp){
   visited[u]=true;
