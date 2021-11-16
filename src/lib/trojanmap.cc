@@ -1297,10 +1297,10 @@ void TrojanMap::TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::ve
  * @param {std::vector<double>} square: four vertexes of the square area
  * @return {bool}: whether there is a cycle or not
  */
-std::unordered_map<std::string,std::vector<std::string>> adj;
+
 bool TrojanMap::CycleDetection(std::vector<double> &square) {
 //establish an map with all node in square
-//std::unordered_map<std::string,std::vector<std::string>> adj;
+std::unordered_map<std::string,std::vector<std::string>> adj;
 for(auto &item:data){
   if(item.second.lon>=square[0] && item.second.lon<=square[1] && item.second.lat<=square[2] && item.second.lat>=square[3]){
     adj[item.first]=item.second.neighbors;
@@ -1312,26 +1312,31 @@ for(auto items:adj){
   local_ids.push_back(items.first);
 }
 PlotPointsandEdges(local_ids,square);
+//some preparation
+std::map<std::string,bool>isvisited;
+for(auto &items:local_ids){
+  isvisited[items]=false;
+}
+//
 for(auto &node:adj){
-  std::string u=node.first;
-  std::map<std::string,int>visited;
-  visited.clear();
-  std::string parent;
-  if(IsCyclicUtil(u,visited,parent)==true){
-    return true;
-    break;
+  if(isvisited[node.first]==false){
+    if(IsCyclicUtil(node.first,isvisited,"",adj)==true){
+      return true;
+    }
   }
 }
 return false;
 }
+
 //using DFS to find cycle
- bool TrojanMap::IsCyclicUtil(std::string u,std::map<std::string,int>&visited,std::string parent){
-  visited[u]=1;
-  for(int i=0;i<adj[u].size();i++){
-    if(visited.count(adj[u][i])==0){
-      if(IsCyclicUtil(adj[u][i],visited,u)==true) return true;
+ bool TrojanMap::IsCyclicUtil(std::string node,std::map<std::string,bool>&isvisited,
+     std::string parent,std::unordered_map<std::string,std::vector<std::string>> adj){
+  isvisited[node]=true;
+  for(auto &nei:adj[node]){
+    if (isvisited[nei]==false){
+      if(IsCyclicUtil(nei,isvisited,node,adj)==true) return true;
       }
-    if(visited.count(adj[u][i])==1 && adj[u][i]!=parent) return true;
+    if(isvisited[nei]==true && nei!=parent ) return true;  
   }
   return false;
  }
@@ -1427,3 +1432,43 @@ void TrojanMap::BackTracking_helper(int start,std::vector<std::vector<double>> w
     }
   }
 }
+
+// bool TrojanMap::CycleDetection(std::vector<double> &square) {
+// //establish an map with all node in square
+// std::unordered_map<std::string,std::vector<std::string>> adj;
+// for(auto &item:data){
+//   if(item.second.lon>=square[0] && item.second.lon<=square[1] && item.second.lat<=square[2] && item.second.lat>=square[3]){
+//     adj[item.first]=item.second.neighbors;
+//   }
+// }
+// //see the node on the map
+// std::vector<std::string>local_ids;
+// for(auto items:adj){
+//   local_ids.push_back(items.first);
+// }
+// PlotPointsandEdges(local_ids,square);
+
+// for(auto &n:adj){
+//   std::string u=n.first;
+//   std::map<std::string,int>visited;
+//   visited.clear();
+//   std::string parent;
+//   if(IsCyclicUtil(u,visited,parent)==true){
+//     return true;
+//     break;
+//   }
+// }
+// return false;
+// }
+// //using DFS to find cycle
+//  bool TrojanMap::IsCyclicUtil(std::string u,std::map<std::string,int>&visited,std::string parent){
+//   visited[u]=1;
+//   for(int i=0;i<adj[u].size();i++){
+//     if(visited.count(adj[u][i])==0){
+//       if(IsCyclicUtil(adj[u][i],visited,u)==true) return true;
+//       }
+//     if(visited.count(adj[u][i])==1 && adj[u][i]!=parent) return true;
+//   }
+//   return false;
+//  }
+
