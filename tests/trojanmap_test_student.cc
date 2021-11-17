@@ -335,3 +335,28 @@ TEST(TrojanMapStudentTest, TopologicalSort3) {
   // else flag = false;
   EXPECT_EQ(flag, true);
 }
+
+//CycleDestection Test;
+// TEST(TrojanMapTest, CycleDetection1) {
+//   TrojanMap m;
+//   m.CreateGraphFromCSVFile();
+//   std::vector<double> square1 = {-118.299, -118.264, 34.032, 34.011};
+//   bool result1 = m.CycleDetection(square1);
+//   EXPECT_EQ(result1, true);
+// }
+// TEST(TrojanMapTest, CycleDetection2) {
+//   TrojanMap m;
+//   m.CreateGraphFromCSVFile();
+//   // Test case 1
+//   std::vector<double> square1 = {-118.299, -118.264, 34.032, 34.011};
+//   bool result1 = m.CycleDetection(square1);
+//   EXPECT_EQ(result1, true);
+// }
+// TEST(TrojanMapTest, CycleDetection3) {
+//   TrojanMap m;
+//   m.CreateGraphFromCSVFile();
+//   // Test case 1
+//   std::vector<double> square1 = {-118.299, -118.264, 34.032, 34.011};
+//   bool result1 = m.CycleDetection(square1);
+//   EXPECT_EQ(result1, true);
+// }
