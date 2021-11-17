@@ -1351,84 +1351,72 @@ return false;
  */
 std::vector<std::string> TrojanMap::FindKClosestPoints(std::string name, int k) {
   std::vector<std::string> res;
-  std::vector<std::string> location_ids;
+  //std::vector<std::string> location_ids;
   std::string loc_id=GetID(name);
-  std::unordered_map<std::string,bool> visited;
-  FindNodes_DFS(loc_id,visited,location_ids);
-  //creat a matrix to store the distance between evey node
-  int n = location_ids.size();
-  // use a map to transform the location_id to index
-  std::unordered_map<std::string, int> id2index;
-  for(int i = 0; i < n; ++i) id2index[location_ids[i]] = i;
-  //use a map to transform the index back to location_id
-  std::unordered_map<int, std::string> index2id;
-  for(auto l:id2index) index2id[l.second]=l.first;
-  //create the matrix
-  std::vector<std::vector<double>> weights=CreateMatrix(location_ids);
-  for(int i=1;i<=k;i++){
-    int cur_node=0;
-    double cur_cost=0.0;
-    double min_cost=0.0;
-    std::vector<int> cur_path;
-    std::vector<int> min_path;
-    BackTracking_helper(0,weights,cur_node,cur_cost,cur_path,min_cost,min_path,i);
-    int last_loc=min_path.size()-1;
-    int path=min_path[last_loc];
-    std::string rep=index2id[path];
-    res.push_back(rep);
-    cur_path.clear();
-    min_path.clear();  
-
+  auto compare=[](DJNode a,DJNode b){return a.dist > b.dist;};
+  std::priority_queue<DJNode,std::vector<DJNode>,decltype(compare)> dist_heap(compare);
+  for(auto &items:data){
+    double dis= CalculateDistance(loc_id,items.first);
+    dist_heap.emplace(DJNode(items.first,dis));
+  }
+  dist_heap.pop();
+  int j=0;
+  while (j!=k){
+    DJNode temp=dist_heap.top();
+    dist_heap.pop();
+    if(!data[temp.id].name.empty()){
+      res.push_back(temp.id);
+      j=j+1;
+    }
   }
   return res;
- 
 }
-void TrojanMap::FindNodes_DFS(std::string u,std::unordered_map<std::string,bool>&visited,
-                            std::vector<std::string>&result){
-  visited[u]=true;
-  result.push_back(u);
-  for(auto &i:data[u].neighbors){
-    if(!visited[i]){
-      FindNodes_DFS(i,visited,result);
-    }
-  }
-}
-std::vector<std::vector<double>> TrojanMap::CreateMatrix(std::vector<std::string> &location_ids){
-  // initialize a matrix with infinity
-  int n = location_ids.size();
-  std::vector<std::vector<double>> adjacent_matrix(n, std::vector<double>(n, std::numeric_limits<double>::max()));
+// void TrojanMap::FindNodes_DFS(std::string u,std::unordered_map<std::string,bool>&visited,
+//                             std::vector<std::string>&result){
+//   visited[u]=true;
+//   result.push_back(u);
+//   for(auto &i:data[u].neighbors){
+//     if(!visited[i]){
+//       FindNodes_DFS(i,visited,result);
+//     }
+//   }
+// }
+// std::vector<std::vector<double>> TrojanMap::CreateMatrix(std::vector<std::string> &location_ids){
+//   // initialize a matrix with infinity
+//   int n = location_ids.size();
+//   std::vector<std::vector<double>> adjacent_matrix(n, std::vector<double>(n, std::numeric_limits<double>::max()));
 
-  // creat a matrix to store the distance betwwen evey node
-  for(int i  = 0; i < n; ++i){
-		std::string source_loc = location_ids[i];
-		for(int j = i + 1; j < n; ++j){
-			std::string destination_loc = location_ids[j];
-      //ensure source_loc and destination_loc are neighbors
-      Node loc_ID=data[source_loc];
-      if(find(loc_ID.neighbors.begin(),loc_ID.neighbors.end(),destination_loc)==loc_ID.neighbors.end()){continue;}
-			adjacent_matrix[i][j] = adjacent_matrix[j][i] = CalculateDistance(source_loc, destination_loc);
-		}
-  }
-  return adjacent_matrix;
-}
-void TrojanMap::BackTracking_helper(int start,std::vector<std::vector<double>> weights,
-              int cur_node,double cur_cost,std::vector<int>&cur_path,double &min_cost,
-              std::vector<int>&min_path,int k){
-//if we are at the k th node
-  if(cur_path.size()==k+1){
-    if(cur_cost<min_cost){
-      min_cost=cur_cost;
-      min_path=cur_path;
-    }
-    return;
-  }
-  //else eveluate all the children
-  for(int i=0; i<k || i<weights.size();i++){
-    if(std::find(cur_path.begin(),cur_path.end(),i)==cur_path.end()){
-      cur_path.push_back(i);
-      BackTracking_helper(start,weights,i,cur_cost+weights[cur_node][i],cur_path,min_cost,min_path,k);
-      cur_path.pop_back();
-    }
-  }
-}
+//   // creat a matrix to store the distance betwwen evey node
+//   for(int i  = 0; i < n; ++i){
+// 		std::string source_loc = location_ids[i];
+// 		for(int j = i + 1; j < n; ++j){
+// 			std::string destination_loc = location_ids[j];
+//       //ensure source_loc and destination_loc are neighbors
+//       Node loc_ID=data[source_loc];
+//       if(find(loc_ID.neighbors.begin(),loc_ID.neighbors.end(),destination_loc)==loc_ID.neighbors.end()){continue;}
+// 			adjacent_matrix[i][j] = adjacent_matrix[j][i] = CalculateDistance(source_loc, destination_loc);
+// 		}
+//   }
+//   return adjacent_matrix;
+// }
+// void TrojanMap::BackTracking_helper(int start,std::vector<std::vector<double>> weights,
+//               int cur_node,double cur_cost,std::vector<int>&cur_path,double &min_cost,
+//               std::vector<int>&min_path,int k){
+// //if we are at the k th node
+//   if(cur_path.size()==k+1){
+//     if(cur_cost<min_cost){
+//       min_cost=cur_cost;
+//       min_path=cur_path;
+//     }
+//     return;
+//   }
+//   //else eveluate all the children
+//   for(int i=0; i<k || i<weights.size();i++){
+//     if(std::find(cur_path.begin(),cur_path.end(),i)==cur_path.end()){
+//       cur_path.push_back(i);
+//       BackTracking_helper(start,weights,i,cur_cost+weights[cur_node][i],cur_path,min_cost,min_path,k);
+//       cur_path.pop_back();
+//     }
+//   }
+// }
 

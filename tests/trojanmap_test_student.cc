@@ -335,8 +335,31 @@ TEST(TrojanMapStudentTest, TopologicalSort3) {
   // else flag = false;
   EXPECT_EQ(flag, true);
 }
-
-//CycleDestection Test;
+TEST(TrojanMapTest, FindKClosestPoints1) {
+  TrojanMap m;
+  m.CreateGraphFromCSVFile();
+  auto result = m.FindKClosestPoints("Target",3);
+  std::vector<std::string> gt{
+  "5237417649","7695616467","5261316289"};
+  EXPECT_EQ(result, gt);
+}
+TEST(TrojanMapTest, FindKClosestPoints2) {
+  TrojanMap m;
+  m.CreateGraphFromCSVFile();
+  auto result = m.FindKClosestPoints("7Eleven",5);
+  std::vector<std::string> gt{
+  "5695236160","5695236161","5695236164","5695236162","5695236163"};
+  EXPECT_EQ(result, gt);
+}
+TEST(TrojanMapTest, FindKClosestPoints3) {
+  TrojanMap m;
+  m.CreateGraphFromCSVFile();
+  auto result = m.FindKClosestPoints("Leavey Library",6);
+  std::vector<std::string> gt{
+  "5231970323","614990288","5231970324","5231970322","5231970321","4089614984"};
+  EXPECT_EQ(result, gt);
+}
+// //CycleDestection Test;
 // TEST(TrojanMapTest, CycleDetection1) {
 //   TrojanMap m;
 //   m.CreateGraphFromCSVFile();

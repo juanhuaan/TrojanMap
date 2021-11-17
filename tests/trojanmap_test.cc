@@ -194,20 +194,20 @@
 //   EXPECT_EQ(flag, true);
 // }
 
-// Test cycle detection function
-TEST(TrojanMapTest, CycleDetection) {
-  TrojanMap m;
-  m.CreateGraphFromCSVFile();
-  // Test case 1
-  std::vector<double> square1 = {-118.299, -118.264, 34.032, 34.011};
-  bool result1 = m.CycleDetection(square1);
-  EXPECT_EQ(result1, true);
+// // Test cycle detection function
+// TEST(TrojanMapTest, CycleDetection) {
+//   TrojanMap m;
+//   m.CreateGraphFromCSVFile();
+//   // Test case 1
+//   std::vector<double> square1 = {-118.299, -118.264, 34.032, 34.011};
+//   bool result1 = m.CycleDetection(square1);
+//   EXPECT_EQ(result1, true);
 
-  //Test case 2
-  std::vector<double> square2 = {-118.290919, -118.282911, 34.02235, 34.019675};
-  bool result2 = m.CycleDetection(square2);
-  EXPECT_EQ(result2, false);
-}
+//   //Test case 2
+//   std::vector<double> square2 = {-118.290919, -118.282911, 34.02235, 34.019675};
+//   bool result2 = m.CycleDetection(square2);
+//   EXPECT_EQ(result2, false);
+// }
 
 
 
@@ -223,13 +223,13 @@ TEST(TrojanMapTest, CycleDetection) {
 // }
 
 
-// // Test K closest points
-// TEST(TrojanMapTest, FindKClosestPoints) {
-//   TrojanMap m;
-//   m.CreateGraphFromCSVFile();
-//   auto result = m.FindKClosestPoints("Ralphs",10);
-//   std::vector<std::string> gt{
-//   "3724125231", "358791507", "7158047272", "358828789", "358794109",
-//   "5757277355", "7204975815", "6510335101", "6807374558", "6510335102"};
-//   EXPECT_EQ(result, gt);
-// }
+// Test K closest points
+TEST(TrojanMapTest, FindKClosestPoints) {
+  TrojanMap m;
+  m.CreateGraphFromCSVFile();
+  auto result = m.FindKClosestPoints("Ralphs",10);
+  std::vector<std::string> gt{
+  "3724125231", "358791507", "7158047272", "358828789", "358794109",
+  "5757277355", "7204975815", "6510335101", "6807374558", "6510335102"};
+  EXPECT_EQ(result, gt);
+}
