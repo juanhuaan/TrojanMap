@@ -211,25 +211,25 @@
 
 
 
-// // Test cycle detection function
-// TEST(TrojanMapTest, TopologicalSort) {
-//   TrojanMap m;
-//   m.CreateGraphFromCSVFile();
-//   std::vector<std::string> location_names = {"Cardinal Gardens", "Coffee Bean1","CVS"};
-//   std::vector<std::vector<std::string>> dependencies = {{"Cardinal Gardens","Coffee Bean1"}, {"Cardinal Gardens","CVS"}, {"Coffee Bean1","CVS"}};
-//   auto result = m.DeliveringTrojan(location_names, dependencies);
-//   std::vector<std::string> gt ={"Cardinal Gardens", "Coffee Bean1","CVS"};
-//   EXPECT_EQ(result, gt);
-// }
-
-
-// Test K closest points
-TEST(TrojanMapTest, FindKClosestPoints) {
+// Test cycle detection function
+TEST(TrojanMapTest, TopologicalSort) {
   TrojanMap m;
   m.CreateGraphFromCSVFile();
-  auto result = m.FindKClosestPoints("Ralphs",10);
-  std::vector<std::string> gt{
-  "3724125231", "358791507", "7158047272", "358828789", "358794109",
-  "5757277355", "7204975815", "6510335101", "6807374558", "6510335102"};
+  std::vector<std::string> location_names = {"Cardinal Gardens", "Coffee Bean1","CVS"};
+  std::vector<std::vector<std::string>> dependencies = {{"Cardinal Gardens","Coffee Bean1"}, {"Cardinal Gardens","CVS"}, {"Coffee Bean1","CVS"}};
+  auto result = m.DeliveringTrojan(location_names, dependencies);
+  std::vector<std::string> gt ={"Cardinal Gardens", "Coffee Bean1","CVS"};
   EXPECT_EQ(result, gt);
 }
+
+
+// // Test K closest points
+// TEST(TrojanMapTest, FindKClosestPoints) {
+//   TrojanMap m;
+//   m.CreateGraphFromCSVFile();
+//   auto result = m.FindKClosestPoints("Ralphs",10);
+//   std::vector<std::string> gt{
+//   "3724125231", "358791507", "7158047272", "358828789", "358794109",
+//   "5757277355", "7204975815", "6510335101", "6807374558", "6510335102"};
+//   EXPECT_EQ(result, gt);
+// }

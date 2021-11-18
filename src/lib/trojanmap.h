@@ -189,6 +189,8 @@ class TrojanMap {
               int cur_node,double cur_cost,std::vector<int>&cur_path,double &min_cost,
               std::vector<int>&min_path,int k);
   //----------------------------------------------------- User-defined functions
+  void TSP_aux(const std::vector<std::vector<double>> &adj_matrix, int cur_node,
+  double cur_cost,double &min_cost,std::vector<std::string>&path,std::vector<std::vector<std::string>>&paths,std::vector<std::string> &location_ids);
 };
 
 #endif
