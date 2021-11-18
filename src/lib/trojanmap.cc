@@ -708,8 +708,10 @@ bool TrojanMap::match(std::string str, std::string target){
 
 std::vector<std::string> TrojanMap::Autocomplete(std::string name){
   std::vector<std::string> res;
+  int n = name.size();
   for(auto &item : data){
     std::string result = GetName(item.first);
+    if(result.size() < n) continue;
     if(match(result, name)){
       res.push_back(result);
     }
@@ -1028,7 +1030,8 @@ std::vector<std::vector<double>> TrojanMap::CreateAdjMatrix(std::vector<std::str
 }
 
 void TrojanMap::Backtracking(const std::vector<std::vector<double>> &adjacent_matrix, std::vector<std::vector<std::string>> &paths, std::vector<std::string> &path, std::vector<bool> &visit, double &mincost, double cost, int current, const std::vector<std::string> &location_ids){
-	if(path.size() == adjacent_matrix.size()){
+	if(cost > mincost) return;
+  if(path.size() == adjacent_matrix.size()){
 		cost += adjacent_matrix[0][current];
 		if(cost < mincost){
 			mincost = cost;
@@ -1085,7 +1088,7 @@ double TrojanMap::CalculatePathDis(const std::vector<std::vector<double>> &adjac
   }
   return distance;
 }
-
+// time complexity: k*n^2
 std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan_2opt(
       std::vector<std::string> &location_ids){
   std::pair<double, std::vector<std::vector<std::string>>> results;
