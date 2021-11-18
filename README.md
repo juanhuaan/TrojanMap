@@ -10,14 +10,14 @@ Code submission: Monday, December 5 by 23:59 pm
 | Task Name | Functions | Tests |
 | :--- | :---: | :---: |
 | 1. `Autocomplete` | Done :white_check_mark: | Done :white_check_mark: | 
-| 2. `GetPosition` | Done :white_check_mark: | To Be Added :heavy_exclamation_mark: | 
-| 3.1 `CalculateShortestPath_Dijkstra` | Done :white_check_mark: | To Be Added :heavy_exclamation_mark: | 
-| 3.2 `CalculateShortestPath_Bellman_Ford` | To Be Done :golf: | To Be Added :heavy_exclamation_mark: | 
+| 2. `GetPosition` | Done :white_check_mark: | Done :white_check_mark: | 
+| 3.1 `CalculateShortestPath_Dijkstra` | Done :white_check_mark: | Done :white_check_mark: | 
+| 3.2 `CalculateShortestPath_Bellman_Ford` | Done :white_check_mark: | Done :white_check_mark: | 
 | 4.1 `TravellingTrojan` | Done :white_check_mark: | Done :white_check_mark: | 
 | 4.2 `TravellingTrojan_2opt` | Done :white_check_mark: | Done :white_check_mark: | 
-| 5. `CycleDetection` | Done :white_check_mark: | To Be Added :heavy_exclamation_mark: | 
+| 5. `CycleDetection` | Done :white_check_mark: | Done :white_check_mark: | 
 | 6. `DeliveringTrojan` | Done :white_check_mark: | Done :white_check_mark: | 
-| 7. `FindKClosestPoints` | To Be Done :golf: | To Be Added :heavy_exclamation_mark: | 
+| 7. `FindKClosestPoints` | Done :white_check_mark: | Done :white_check_mark: | 
 | 8. `Video presentation and report` | To Be Done :golf: | To Be Added :heavy_exclamation_mark: | 
 | 8. `Extra credit items(3-opt)` | Done :white_check_mark: | Done :white_check_mark: | 
 
