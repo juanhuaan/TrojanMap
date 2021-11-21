@@ -81,8 +81,11 @@ TEST(TrojanMapStudentTest, Autocomplete3) {
   EXPECT_EQ(names.size(), gt1.size());
 }
 
-//Test for GetPosition
-
+/**
+ * 
+ * Test for GetPosition
+ * 
+ * */
 TEST(TrojanMapTest, FindPosition) {
   TrojanMap m;
   m.CreateGraphFromCSVFile();
@@ -103,14 +106,11 @@ TEST(TrojanMapTest, FindPosition) {
   EXPECT_EQ(position, gt4);
 }
 
-
-
 /**
  * 
  * Test for CalculateShortestPath
  * 
  * */
-
 TEST(TrojanMapTest, CalculateShortestPath1) {
   TrojanMap m;
   m.CreateGraphFromCSVFile();
@@ -136,7 +136,6 @@ TEST(TrojanMapTest, CalculateShortestPath1) {
   std::cout << "GT path length: " << m.CalculatePathLength(gt1) << "miles" << std::endl;
   EXPECT_EQ(path, gt1);
 }
-
 // Test CalculateShortestPath_Dijkstra function 2
 TEST(TrojanMapTest, CalculateShortestPath2) {
   TrojanMap m;
@@ -191,7 +190,6 @@ TEST(TrojanMapTest, CalculateShortestPath3) {
   EXPECT_EQ(path, gt);
 }
 
-
 /**
  * 
  * Test for TravellingTrojan
@@ -215,7 +213,6 @@ TEST(TrojanMapStudentTest, TSP) {
   
   EXPECT_EQ(flag, true);
 }
-
 // Test TSP function 2
 TEST(TrojanMapStudentTest, TSP2) {
   TrojanMap m;
@@ -238,7 +235,6 @@ TEST(TrojanMapStudentTest, TSP2) {
   
   EXPECT_EQ(flag, true);
 }
-
 // Test TSP function 3
 TEST(TrojanMapStudentTest, TSP3) {
   TrojanMap m;
@@ -261,7 +257,42 @@ TEST(TrojanMapStudentTest, TSP3) {
   EXPECT_EQ(flag, true);
 }
 
+/**
+ * 
+ * Test for CycleDetection
+ * 
+ * */
+TEST(TrojanMapTest, CycleDetection1) {
+  TrojanMap m;
+  m.CreateGraphFromCSVFile();
+  std::vector<double> square1 = {-118.299, -118.264, 34.032, 34.011};
+  bool result1 = m.CycleDetection(square1);
+  EXPECT_EQ(result1, true);
+}
 
+TEST(TrojanMapTest, CycleDetection2) {
+  TrojanMap m;
+  m.CreateGraphFromCSVFile();
+  // Test case 1
+  std::vector<double> square1 = {-118.299, -118.264, 34.032, 34.011};
+  bool result1 = m.CycleDetection(square1);
+  EXPECT_EQ(result1, true);
+}
+
+TEST(TrojanMapTest, CycleDetection3) {
+  TrojanMap m;
+  m.CreateGraphFromCSVFile();
+  // Test case 1
+  std::vector<double> square1 = {-118.299, -118.264, 34.032, 34.011};
+  bool result1 = m.CycleDetection(square1);
+  EXPECT_EQ(result1, true);
+}
+
+/**
+ * 
+ * Test for DeliveringTrojan
+ * 
+ * */
 TEST(TrojanMapStudentTest, TopologicalSort1) {
   TrojanMap m;
   m.CreateGraphFromCSVFile();
@@ -335,6 +366,12 @@ TEST(TrojanMapStudentTest, TopologicalSort3) {
   // else flag = false;
   EXPECT_EQ(flag, true);
 }
+
+/**
+ * 
+ * Test for FindKClosestPoints
+ * 
+ * */
 TEST(TrojanMapTest, FindKClosestPoints1) {
   TrojanMap m;
   m.CreateGraphFromCSVFile();
@@ -343,6 +380,7 @@ TEST(TrojanMapTest, FindKClosestPoints1) {
   "5237417649","7695616467","5261316289"};
   EXPECT_EQ(result, gt);
 }
+
 TEST(TrojanMapTest, FindKClosestPoints2) {
   TrojanMap m;
   m.CreateGraphFromCSVFile();
@@ -351,6 +389,7 @@ TEST(TrojanMapTest, FindKClosestPoints2) {
   "5695236160","5695236161","5695236164","5695236162","5695236163"};
   EXPECT_EQ(result, gt);
 }
+
 TEST(TrojanMapTest, FindKClosestPoints3) {
   TrojanMap m;
   m.CreateGraphFromCSVFile();
@@ -359,27 +398,3 @@ TEST(TrojanMapTest, FindKClosestPoints3) {
   "5231970323","614990288","5231970324","5231970322","5231970321","4089614984"};
   EXPECT_EQ(result, gt);
 }
-// //CycleDestection Test;
-// TEST(TrojanMapTest, CycleDetection1) {
-//   TrojanMap m;
-//   m.CreateGraphFromCSVFile();
-//   std::vector<double> square1 = {-118.299, -118.264, 34.032, 34.011};
-//   bool result1 = m.CycleDetection(square1);
-//   EXPECT_EQ(result1, true);
-// }
-// TEST(TrojanMapTest, CycleDetection2) {
-//   TrojanMap m;
-//   m.CreateGraphFromCSVFile();
-//   // Test case 1
-//   std::vector<double> square1 = {-118.299, -118.264, 34.032, 34.011};
-//   bool result1 = m.CycleDetection(square1);
-//   EXPECT_EQ(result1, true);
-// }
-// TEST(TrojanMapTest, CycleDetection3) {
-//   TrojanMap m;
-//   m.CreateGraphFromCSVFile();
-//   // Test case 1
-//   std::vector<double> square1 = {-118.299, -118.264, 34.032, 34.011};
-//   bool result1 = m.CycleDetection(square1);
-//   EXPECT_EQ(result1, true);
-// }
