@@ -168,7 +168,8 @@ $ bazel test tests:trojanmap_test_student
 ## Step 1: Autocomplete the location name
 
 ```c++
-std::vector<std::string> Autocomplete(std::string name);
+bool match(std::string str, std::string target); // check if str and target have the same prefix, regardless of whether the letters are uppercase or lowercase
+std::vector<std::string> Autocomplete(std::string name); // first discard all the locations whose size is less than name, then do the match() for them
 ```
 
 We consider the names of nodes as the locations. Implement a method to type the partial name of the location and return a list of possible locations with partial name as prefix. Please treat uppercase and lower case as the same character.
@@ -285,11 +286,28 @@ We will use the following algorithms:
 
 - Backtracking
 ```c++
+std::vector<std::vector<double>> CreateAdjMatrix(std::vector<std::string> &location_ids); // create the weights matrix for all locations
+void Backtracking(...); // do the backtracking to get the optimal result, and every time getting a shorter path, push it in paths, the detailed parameters are shown in the following diagram
 std::pair<double, std::vector<std::vector<std::string>>> TravellingTrojan(
       std::vector<std::string> &location_ids);
 ```
+### Parameters List ("shorter" in the diagram means less cost)
+| Parameter Name | Meaning |
+| :--- | :--- |
+| `const std::vector<std::vector<double>> &adjacent_matrix` | Store the distance weight between all points |
+| `std::vector<std::vector<std::string>> &paths` | Store every shorter path |
+| `std::vector<std::string> &path` | Store current path |
+| `std::vector<bool> &visit` | Check if a location is visited |
+| `double &mincost` | Store the cost of the shortest path |
+| `double cost` | Store the cost of current path |
+| `int current` | Store the index of current location |
+| `const std::vector<std::string> &location_ids` | The input vector to map location's index to its id |
+| `std::unordered_map<std::string, int> &id2index` | A unordered_map to map location's id to its index |
+
 - [2-opt Heuristic](https://en.wikipedia.org/wiki/2-opt). Also see [this paper](http://cs.indstate.edu/~zeeshan/aman.pdf)
 ```c++
+// Calculate the distance for each adjusted path
+double CalculatePathDis(const std::vector<std::vector<double>> &adjacent_matrix, std::unordered_map<std::string, int> &id2index, std::vector<std::string> &path);
 std::pair<double, std::vector<std::vector<std::string>>> TravellingTrojan_2opt(
       std::vector<std::string> &location_ids);
 ```
