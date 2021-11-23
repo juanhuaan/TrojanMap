@@ -548,7 +548,7 @@ void TrojanMap::PlotPointsLabel(std::vector<std::string> &location_ids, std::str
     auto result = GetPlotLocation(data[x].lat, data[x].lon);
     cv::circle(img, cv::Point(result.first, result.second), DOT_SIZE,
                cv::Scalar(0, 0, 255), cv::FILLED);
-    cv::putText(img, std::to_string(cnt), cv::Point(result.first, result.second), cv::FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(255, 0, 0), 2);
+    //cv::putText(img, std::to_string(cnt), cv::Point(result.first, result.second), cv::FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(255, 0, 0), 2);
     cnt++;
   }
   cv::imshow("TrojanMap", img);
@@ -708,8 +708,10 @@ bool TrojanMap::match(std::string str, std::string target){
 
 std::vector<std::string> TrojanMap::Autocomplete(std::string name){
   std::vector<std::string> res;
+  int n = name.size();
   for(auto &item : data){
     std::string result = GetName(item.first);
+    if(result.size() < n) continue;
     if(match(result, name)){
       res.push_back(result);
     }
@@ -805,63 +807,7 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
   return path;
 
 }
-//method2 run long time 
-// std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
-//     std::string location1_name, std::string location2_name) {
-//   std::vector<std::string> path;
-//   std::string a_id=GetID(location1_name);
-//   std::string b_id=GetID(location2_name);
-//   std::unordered_map<std::string,double> dist;
-//   std::unordered_map<std::string,std::string>prev;
-//   std::unordered_set<std::string> q;
-//   std::unordered_map<std::string,bool> visited_mark;
-//   std::unordered_map<std::string,std::unordered_map<std::string,double>>mp;
-//   std::vector<std::string> node_store;//store the ids of dfs
-//   Bellman_dfs(a_id,visited_mark,mp);
-//   for(auto &items:mp){
-//       dist[items.first]=std::numeric_limits<double>::max();
-//       q.insert(items.first);
-//   }
-//   dist[a_id]=0.0;
-//   while(!q.empty()){
-//     double temp=std::numeric_limits<double>::max();
-//     for(auto items:q){
-//       if(dist[items]<temp){
-//         temp=dist[items];
-//       }
-//     }
-//     std::string u;
-//     for(auto &k:dist){
-//       if(k.second==temp){
-//         u=k.first;
-//         q.erase(k.first);
-//         break;
-//       }
-//     }
-//     for(auto nei:mp[u]){
-//       if(q.count(nei.first)>0){
-//         double alt=dist[u]+mp[u][nei.first];
-//         if(alt<dist[nei.first]){
-//           dist[nei.first]=alt;
-//           prev[nei.first]=u;
 
-//         }
-//       }
-//     }
-
-//   }
-//   std::string temp_loc=b_id;
-//   while(temp_loc!=a_id){
-//     path.emplace_back(temp_loc);
-//     temp_loc=prev[temp_loc];
-//   }
-//   path.emplace_back(a_id);
-//   std::reverse(path.begin(),path.end());
-//   return path;
-
-
- 
-// }
 
 /**
  * CalculateShortestPath_Bellman_Ford: Given 2 locations, return the shortest path which is a
@@ -1028,7 +974,8 @@ std::vector<std::vector<double>> TrojanMap::CreateAdjMatrix(std::vector<std::str
 }
 
 void TrojanMap::Backtracking(const std::vector<std::vector<double>> &adjacent_matrix, std::vector<std::vector<std::string>> &paths, std::vector<std::string> &path, std::vector<bool> &visit, double &mincost, double cost, int current, const std::vector<std::string> &location_ids){
-	if(path.size() == adjacent_matrix.size()){
+	if(cost > mincost) return;
+  if(path.size() == adjacent_matrix.size()){
 		cost += adjacent_matrix[0][current];
 		if(cost < mincost){
 			mincost = cost;
@@ -1085,7 +1032,7 @@ double TrojanMap::CalculatePathDis(const std::vector<std::vector<double>> &adjac
   }
   return distance;
 }
-
+// time complexity: k*n^2
 std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan_2opt(
       std::vector<std::string> &location_ids){
   std::pair<double, std::vector<std::vector<std::string>>> results;
@@ -1311,7 +1258,7 @@ std::vector<std::string>local_ids;
 for(auto items:adj){
   local_ids.push_back(items.first);
 }
-PlotPointsandEdges(local_ids,square);
+//PlotPointsandEdges(local_ids,square);
 //some preparation
 std::map<std::string,bool>isvisited;
 for(auto &items:local_ids){
@@ -1339,7 +1286,7 @@ return false;
   }
   return false;
  }
-
+//O(n^2)
 
 
 /**
@@ -1371,52 +1318,4 @@ std::vector<std::string> TrojanMap::FindKClosestPoints(std::string name, int k) 
   }
   return res;
 }
-
-//--------------------------------------------------------
-//practice backtracking Step4
-// void TrojanMap::TSP_aux(const std::vector<std::vector<double>> &adj_matrix, int cur_node,
-//   double cur_cost,double &min_cost,std::vector<std::string>&path,
-//   std::vector<std::vector<std::string>>&paths,std::vector<std::string> &location_ids){
-// 	if(path.size()==adj_matrix.size()){
-//     double final_cost=cur_cost+adj_matrix[cur_node][0];
-//     if(final_cost<min_cost){
-//       min_cost=final_cost;
-//       path.push_back(location_ids[0]);
-//       paths.push_back(path);
-//       path.pop_back();
-//     }
-//     return;
-//   }
-//   if(cur_cost>=min_cost) return;
-//   for(int i=0;i<adj_matrix.size();i++){
-//     if(std::find(path.begin(),path.end(),location_ids[i])==path.end()){
-//       path.push_back(location_ids[i]);
-//       TSP_aux(adj_matrix,i,cur_cost+adj_matrix[cur_node][i],min_cost,path,paths,location_ids);
-//       path.pop_back();
-//     }
-//   }
-// }
-
-// std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan(std::vector<std::string> &location_ids) {
-//   std::pair<double, std::vector<std::vector<std::string>>> results;
-  
-//   std::vector<std::vector<std::string>>paths;
-//   std::vector<std::string>path;
-//   //create a adj matrix
-//   int n=location_ids.size();
-//   std::vector<std::vector<double>> adj_matrix(n,std::vector<double>(n,std::numeric_limits<double>::max()));
-//   for(int i=0;i<location_ids.size();i++){
-//     for(int j=0;j<location_ids.size();j++){
-//       adj_matrix[i][j]=adj_matrix[j][i]=CalculateDistance(location_ids[i],location_ids[j]);
-//     }
-//   }
-//   std::unordered_map<std::string, int> id2index;
-//   for(int i = 0; i < n; ++i) id2index[location_ids[i]] = i;
-//   int start=id2index[location_ids[0]];
-//   path.push_back(location_ids[0]);  
-//   double min_cost=std::numeric_limits<double>::max();
-//   TSP_aux(adj_matrix, 0, 0,min_cost,path,paths,location_ids);
-//   results=make_pair(min_cost,paths);
-//   return results;
-// }
-//------------------------------------------
+//O(nlogn)

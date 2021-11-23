@@ -194,33 +194,33 @@
 //   EXPECT_EQ(flag, true);
 // }
 
-// // Test cycle detection function
-// TEST(TrojanMapTest, CycleDetection) {
-//   TrojanMap m;
-//   m.CreateGraphFromCSVFile();
-//   // Test case 1
-//   std::vector<double> square1 = {-118.299, -118.264, 34.032, 34.011};
-//   bool result1 = m.CycleDetection(square1);
-//   EXPECT_EQ(result1, true);
-
-//   //Test case 2
-//   std::vector<double> square2 = {-118.290919, -118.282911, 34.02235, 34.019675};
-//   bool result2 = m.CycleDetection(square2);
-//   EXPECT_EQ(result2, false);
-// }
-
-
-
 // Test cycle detection function
-TEST(TrojanMapTest, TopologicalSort) {
+TEST(TrojanMapTest, CycleDetection) {
   TrojanMap m;
   m.CreateGraphFromCSVFile();
-  std::vector<std::string> location_names = {"Cardinal Gardens", "Coffee Bean1","CVS"};
-  std::vector<std::vector<std::string>> dependencies = {{"Cardinal Gardens","Coffee Bean1"}, {"Cardinal Gardens","CVS"}, {"Coffee Bean1","CVS"}};
-  auto result = m.DeliveringTrojan(location_names, dependencies);
-  std::vector<std::string> gt ={"Cardinal Gardens", "Coffee Bean1","CVS"};
-  EXPECT_EQ(result, gt);
+  // Test case 1
+  std::vector<double> square1 = {-118.299, -118.264, 34.032, 34.011};
+  bool result1 = m.CycleDetection(square1);
+  EXPECT_EQ(result1, true);
+
+  //Test case 2
+  std::vector<double> square2 = {-118.290919, -118.282911, 34.02235, 34.019675};
+  bool result2 = m.CycleDetection(square2);
+  EXPECT_EQ(result2, false);
 }
+
+
+
+// // Test cycle detection function
+// TEST(TrojanMapTest, TopologicalSort) {
+//   TrojanMap m;
+//   m.CreateGraphFromCSVFile();
+//   std::vector<std::string> location_names = {"Cardinal Gardens", "Coffee Bean1","CVS"};
+//   std::vector<std::vector<std::string>> dependencies = {{"Cardinal Gardens","Coffee Bean1"}, {"Cardinal Gardens","CVS"}, {"Coffee Bean1","CVS"}};
+//   auto result = m.DeliveringTrojan(location_names, dependencies);
+//   std::vector<std::string> gt ={"Cardinal Gardens", "Coffee Bean1","CVS"};
+//   EXPECT_EQ(result, gt);
+// }
 
 
 // // Test K closest points
