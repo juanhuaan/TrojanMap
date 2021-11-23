@@ -1000,13 +1000,8 @@ void TrojanMap::Backtracking(const std::vector<std::vector<double>> &adjacent_ma
 std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan(std::vector<std::string> &location_ids) {
   std::pair<double, std::vector<std::vector<std::string>>> results;
   
-  //creat a matrix to store the distance between evey node
   int n = location_ids.size();
-  // use a map to transform the location_id to index
-  std::unordered_map<std::string, int> id2index;
-  for(int i = 0; i < n; ++i) id2index[location_ids[i]] = i;
-
-  // initialize a matrix with infinity
+  //creat a matrix to store the distance between evey node
   std::vector<std::vector<double>> adjacent_matrix = CreateAdjMatrix(location_ids);
 
 	std::vector<bool> visit(n);
