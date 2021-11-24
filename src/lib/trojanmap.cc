@@ -130,23 +130,37 @@ void TrojanMap::PrintMenu() {
     std::string input2;
     getline(std::cin, input2);
     auto start = std::chrono::high_resolution_clock::now();
-   // auto results = CalculateShortestPath_Dijkstra(input1, input2);
     auto results = CalculateShortestPath_Dijkstra(input1, input2);
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    
+    auto start2 = std::chrono::high_resolution_clock::now();
+    auto results2 = CalculateShortestPath_Bellman_Ford(input1, input2);
+    auto stop2 = std::chrono::high_resolution_clock::now();
+    auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     menu = "*************************Results******************************\n";
     std::cout << menu;
     if (results.size() != 0) {
       for (auto x : results) std::cout << x << std::endl;
       std::cout << "The distance of the path is:" << CalculatePathLength(results) << " miles" << std::endl;
-      PlotPath(results);
+      PlotPath(results,"input2");
+    } else {
+      std::cout << "No route from the start point to the destination."
+                << std::endl;
+    }
+    std::cout << menu;
+    if (results2.size() != 0) {
+      for (auto x : results2) std::cout << x << std::endl;
+      std::cout << "The distance of the path is:" << CalculatePathLength(results2) << " miles" << std::endl;
+      PlotPath(results2,"input");
     } else {
       std::cout << "No route from the start point to the destination."
                 << std::endl;
     }
     menu = "**************************************************************\n";
     std::cout << menu;
-    std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl << std::endl;
+    std::cout << "Time taken by function Dijkstra: " << duration.count() << " microseconds" << std::endl << std::endl;
+    std::cout << "Time taken by function Bellman_Ford: " << duration2.count() << " microseconds" << std::endl << std::endl;
     PrintMenu();
     break;
   }
@@ -203,7 +217,10 @@ void TrojanMap::PrintMenu() {
       std::cout << "The distance of the path is:" << results.first << " miles" << std::endl;
       std::cout << "The distance of the path is(2-opt):" << results_2opt.first << " miles" << std::endl;
       std::cout << "The distance of the path is(3-opt):" << results_3opt.first << " miles" << std::endl;
-      PlotPath(results.second[results.second.size()-1]);
+      PlotPath(results.second[results.second.size()-1],"input");
+      PlotPath(results_2opt.second[results.second.size()-1],"input2");
+      PlotPath(results_3opt.second[results.second.size()-1],"input3");
+
     } else {
       std::cout << "The size of the path is 0" << std::endl;
     }
@@ -436,8 +453,8 @@ void TrojanMap::PlotPoint(double lat, double lon) {
  * 
  * @param  {std::vector<std::string>} location_ids : path
  */
-void TrojanMap::PlotPath(std::vector<std::string> &location_ids) {
-  std::string image_path = cv::samples::findFile("src/lib/input.jpg");
+void TrojanMap::PlotPath(std::vector<std::string> &location_ids, std::string filename) {
+  std::string image_path = cv::samples::findFile("src/lib/"+filename+".jpg");
   cv::Mat img = cv::imread(image_path, cv::IMREAD_COLOR);
   auto start = GetPlotLocation(data[location_ids[0]].lat, data[location_ids[0]].lon);
   cv::circle(img, cv::Point(int(start.first), int(start.second)), DOT_SIZE,
