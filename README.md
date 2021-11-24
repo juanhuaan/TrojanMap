@@ -142,25 +142,22 @@ Case 1: 6 locations
 <p align="center"><img src="report/TSP_6.png" alt="Runtime" width="500"/></p>
 <p align="center"><img src="report/TSP_6loc.png" alt="Visualization" width="500"/></p>
 
-<center class="half">
-!<img src="report/TSP_6loc.gif" alt="TSP_6loc videos" width="300"/>!<img src="report/TSP_6loc_2opt.gif" alt="TSP_6loc_2opt videos" width="300"/>!<img src="report/TSP_6loc_3opt.gif" alt="TSP_6loc_3opt videos" width="300"/>
-</center>
-
 Case 2: 9 locations
 <p align="center"><img src="report/TSP_9.png" alt="Runtime" width="500"/></p>
 <p align="center"><img src="report/TSP_9loc.png" alt="Visualization" width="500"/></p>
 
-<center>
-!<img src="report/TSP_9loc.gif" alt="TSP_9loc videos" width="250"/>!<img src="report/TSP_9loc_2opt.gif" alt="TSP_9loc_2opt videos" width="250"/>!<img src="report/TSP_9loc_3opt.gif" alt="TSP_9loc_3opt videos" width="250"/>
-</center>
 
 Case 3: 16 locations
 <p align="center"><img src="report/TSP_16.png" alt="Runtime"  width="500"/></p>
 <p align="center"><img src="report/TSP_16loc.png" alt="Visualization" width="500"/></p>
 
-<center class="half">
-!<img src="report/TSP_16loc.gif" alt="TSP_16loc videos" width="350"/>!<img src="report/TSP_16loc_2opt.gif" alt="TSP_16loc_2opt videos" width="350"/>!<img src="report/TSP_16loc_3opt.gif" alt="TSP_16loc_3opt videos" width="350"/>
-</center>
+||||
+| :---: | :---: | :---: |
+| `Backtracking` | `2-opt` | `3-opt` |
+| <img src="report/TSP_6loc.gif" alt="TSP_6loc videos" width="300"/> | <img src="report/TSP_6loc_2opt.gif" alt="TSP_6loc_2opt videos" width="300"/> | <img src="report/TSP_6loc_3opt.gif" alt="TSP_6loc_3opt videos" width="300"/> |
+| <img src="report/TSP_9loc.gif" alt="TSP_9loc videos" width="250"/> | <img src="report/TSP_9loc_2opt.gif" alt="TSP_9loc_2opt videos" width="250"/> | <img src="report/TSP_9loc_3opt.gif" alt="TSP_9loc_3opt videos" width="250"/> |
+| !<img src="report/TSP_16loc.gif" alt="TSP_16loc videos" width="350"/> | <img src="report/TSP_16loc_2opt.gif" alt="TSP_16loc_2opt videos" width="350"/> | <img src="report/TSP_16loc_3opt.gif" alt="TSP_16loc_3opt videos" width="350"/> |
+
 
 ## Step 5: Cycle Detection
 
