@@ -139,24 +139,27 @@ Show the routes on the map. For each intermediate solution, create a new plot. Y
 We will randomly select N points in the map and run your program.
 
 Case 1: 6 locations
-<p align="center"><img src="report/TSP_6.png" alt="Runtime" width="500"/></p>
+For a few locations, all the 3 methods can find the optimal result in an acceptable time. These two heuristic algorithms have not been able to show their advantages in time consumption.
+<p align="center"><img src="report/TSP_6.png" alt="Runtime" width="1000"/></p>
 <p align="center"><img src="report/TSP_6loc.png" alt="Visualization" width="500"/></p>
 
 Case 2: 9 locations
-<p align="center"><img src="report/TSP_9.png" alt="Runtime" width="500"/></p>
+When the locations become more, 2-opt failed to get the optimal result, but saved a lot of time compared to the backtracking. 3-opt still can get the optimal result, while cost slightly more time than 2-opt.
+<p align="center"><img src="report/TSP_9.png" alt="Runtime" width="800"/></p>
 <p align="center"><img src="report/TSP_9loc.png" alt="Visualization" width="500"/></p>
 
 
 Case 3: 16 locations
-<p align="center"><img src="report/TSP_16.png" alt="Runtime"  width="500"/></p>
+At this case, the time cost by backtracking is gradually unacceptable, the two heuristic algorithms can dramatically decrease the time consumption，and the results only have an error of less than 10% and 5% respectively.
+<p align="center"><img src="report/TSP_16.png" alt="Runtime"  width="1200"/></p>
 <p align="center"><img src="report/TSP_16loc.png" alt="Visualization" width="500"/></p>
 
 ||||
 | :---: | :---: | :---: |
 | `Backtracking` | `2-opt` | `3-opt` |
 | <img src="report/TSP_6loc.gif" alt="TSP_6loc videos" width="400"/> | <img src="report/TSP_6loc_2opt.gif" alt="TSP_6loc_2opt videos" width="400"/> | <img src="report/TSP_6loc_3opt.gif" alt="TSP_6loc_3opt videos" width="400"/> |
-| <img src="report/TSP_9loc.gif" alt="TSP_9loc videos" width="450"/> | <img src="report/TSP_9loc_2opt.gif" alt="TSP_9loc_2opt videos" width="450"/> | <img src="report/TSP_9loc_3opt.gif" alt="TSP_9loc_3opt videos" width="450"/> |
-| !<img src="report/TSP_16loc.gif" alt="TSP_16loc videos" width="500"/> | <img src="report/TSP_16loc_2opt.gif" alt="TSP_16loc_2opt videos" width="500"/> | <img src="report/TSP_16loc_3opt.gif" alt="TSP_16loc_3opt videos" width="500"/> |
+| <img src="report/TSP_9loc.gif" alt="TSP_9loc videos" width="400"/> | <img src="report/TSP_9loc_2opt.gif" alt="TSP_9loc_2opt videos" width="400"/> | <img src="report/TSP_9loc_3opt.gif" alt="TSP_9loc_3opt videos" width="400"/> |
+| <img src="report/TSP_16loc.gif" alt="TSP_16loc videos" width="400"/> | <img src="report/TSP_16loc_2opt.gif" alt="TSP_16loc_2opt videos" width="400"/> | <img src="report/TSP_16loc_3opt.gif" alt="TSP_16loc_3opt videos" width="400"/> |
 
 
 ## Step 5: Cycle Detection
