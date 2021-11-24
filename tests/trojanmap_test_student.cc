@@ -311,13 +311,13 @@ TEST(TrojanMapStudentTest, TopologicalSort1) {
 TEST(TrojanMapStudentTest, TopologicalSort2) {
   TrojanMap m;
   m.CreateGraphFromCSVFile();
-  std::vector<std::string> location_names = {"Driveway", "University Park", "Holbox", "DASH F", "Leavey Library", "Ramen KenJo", "PED"};
-  std::vector<std::vector<std::string>> dependencies = {{"Driveway", "PED"}, {"Driveway", "University Park"}, {"University Park", "Ramen KenJo"}, {"PED", "Ramen KenJo"}, {"PED", "Leavey Library"}, {"Ramen KenJo", "Leavey Library"}, {"Leavey Library", "DASH F"}, {"Leavey Library", "Holbox"}};
+  std::vector<std::string> location_names = {"Driveway", "crosswalk3", "Holbox", "DASH F", "Leavey Library", "Ramen KenJo", "PED"};
+  std::vector<std::vector<std::string>> dependencies = {{"Driveway", "PED"}, {"Driveway", "crosswalk3"}, {"crosswalk3", "Ramen KenJo"}, {"PED", "Ramen KenJo"}, {"PED", "Leavey Library"}, {"Ramen KenJo", "Leavey Library"}, {"Leavey Library", "DASH F"}, {"Leavey Library", "Holbox"}};
   auto result = m.DeliveringTrojan(location_names, dependencies);
-  std::vector<std::string> gt1 ={"Driveway", "PED", "University Park,", "Ramen KenJo", "Leavey Library", "DASH F", "Holbox"};
-  std::vector<std::string> gt2 ={"Driveway", "University Park", "PED", "Ramen KenJo", "Leavey Library", "DASH F", "Holbox"};
-  std::vector<std::string> gt3 ={"Driveway", "University Park", "PED", "Ramen KenJo", "Leavey Library", "Holbox", "DASH F"};
-  std::vector<std::string> gt4 ={"Driveway", "PED", "University Park", "Ramen KenJo", "Leavey Library", "Holbox", "DASH F"};
+  std::vector<std::string> gt1 ={"Driveway", "PED", "crosswalk3", "Ramen KenJo", "Leavey Library", "DASH F", "Holbox"};
+  std::vector<std::string> gt2 ={"Driveway", "crosswalk3", "PED", "Ramen KenJo", "Leavey Library", "DASH F", "Holbox"};
+  std::vector<std::string> gt3 ={"Driveway", "crosswalk3", "PED", "Ramen KenJo", "Leavey Library", "Holbox", "DASH F"};
+  std::vector<std::string> gt4 ={"Driveway", "PED", "crosswalk3", "Ramen KenJo", "Leavey Library", "Holbox", "DASH F"};
   // for(auto &loc : result){
   //   std::cout << loc << ", ";
   // }
