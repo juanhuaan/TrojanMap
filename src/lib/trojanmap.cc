@@ -141,16 +141,18 @@ void TrojanMap::PrintMenu() {
     menu = "*************************Results******************************\n";
     std::cout << menu;
     if (results.size() != 0) {
-      for (auto x : results) std::cout << x << std::endl;
+      for(int i = 0; i < results.size(); ++i){
+        std::cout << results[i] << "\t" << results2[i] << std::endl;
+      }
       std::cout << "The distance of the path(DJ) is:" << CalculatePathLength(results) << " miles" << std::endl;
       PlotPath(results);
     } else {
       std::cout << "No route from the start point to the destination."
                 << std::endl;
     }
-    std::cout << menu;
+    
     if (results2.size() != 0) {
-      for (auto x : results2) std::cout << x << std::endl;
+      
       std::cout << "The distance of the path(BF) is:" << CalculatePathLength(results2) << " miles" << std::endl;
     } else {
       std::cout << "No route from the start point to the destination."
