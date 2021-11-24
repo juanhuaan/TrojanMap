@@ -61,7 +61,7 @@ class TrojanMap {
   void PlotPoint(double lat, double lon);
 
   // Given a vector of location ids draws the path (connects the points)
-  void PlotPath(std::vector<std::string> &location_ids,std::string filename);
+  void PlotPath(std::vector<std::string> &location_ids);
 
   // Given a vector of location ids draws the points on the map (no path).
   void PlotPoints(std::vector<std::string> &location_ids);
