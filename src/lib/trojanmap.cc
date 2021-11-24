@@ -877,6 +877,7 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford(
   std::vector<std::string> node_store;//store the ids of dfs
  // Bellman_bfs(loc1_id,loc2_id,mp);
   Bellman_dfs(loc1_id,visited,mp);
+  if(visited[loc2_id]==false) return path;
   int i=mp.size();
   std::unordered_map<std::string,double>distance;//store the distance from the source to every node;
   std::unordered_map<std::string,std::string>prev;//store the prev node of the shortest path;
