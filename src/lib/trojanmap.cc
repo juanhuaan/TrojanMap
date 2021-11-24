@@ -1137,6 +1137,7 @@ void TrojanMap::TPS_3opt(const std::vector<std::vector<double>> &adjacent_matrix
     for(int i = 0; i < 4; ++i){
       cost = CalculatePathDis(adjacent_matrix, id2index, path_copys[i]);
       if(cost < mincost){
+        paths.emplace_back(path_copys[i]);
         mincost = cost;
         index = i;
       }

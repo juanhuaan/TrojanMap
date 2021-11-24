@@ -63,6 +63,8 @@ std::vector<std::string> Autocomplete(std::string name); // first discard all th
 We consider the names of nodes as the locations. Implement a method to type the partial name of the location and return a list of possible locations with partial name as prefix. Please treat uppercase and lower case as the same character.
 
 <p align="center"><img src="report/1_1.png" alt="1_1" width="500"/></p>
+<p align="center"><img src="report/1_2.png" alt="1_2" width="500"/></p>
+<p align="center"><img src="report/1_2.png" alt="1_2" width="500"/></p>
 
 
 ## Step 2: Find the place's Coordinates in the Map
@@ -136,10 +138,29 @@ Show the routes on the map. For each intermediate solution, create a new plot. Y
 
 We will randomly select N points in the map and run your program.
 
+Case 1: 6 locations
+<p align="center"><img src="report/TSP_6.png" alt="Runtime" width="500"/></p>
+<p align="center"><img src="report/TSP_6loc.png" alt="Visualization" width="500"/></p>
 
-<p align="center"><img src="img/TSP.png" alt="TSP" width="500"/></p>
+<center class="half">
+<img src="report/TSP_6loc.gif" alt="TSP_6loc videos" width="400"/><img src="report/TSP_6loc_2opt.gif" alt="TSP_6loc_2opt videos" width="400"/><img src="report/TSP_6loc_3opt.gif" alt="TSP_6loc_3opt videos" width="400"/>
+</center>
 
-<p align="center"><img src="img/output.gif" alt="TSP videos" width="500"/></p>
+Case 2: 9 locations
+<p align="center"><img src="report/TSP_9.png" alt="Runtime" width="500"/></p>
+<p align="center"><img src="report/TSP_9loc.png" alt="Visualization" width="500"/></p>
+
+<center class="half">
+<img src="report/TSP_9loc.gif" alt="TSP_9loc videos" width="400"/><img src="report/TSP_9loc_2opt.gif" alt="TSP_9loc_2opt videos" width="400"/><img src="report/TSP_9loc_3opt.gif" alt="TSP_9loc_3opt videos" width="400"/>
+</center>
+
+Case 3: 16 locations
+<p align="center"><img src="report/TSP_16.png" alt="Runtime"  width="500"/></p>
+<p align="center"><img src="report/TSP_16loc.png" alt="Visualization" width="500"/></p>
+
+<center class="half">
+<img src="report/TSP_16loc.gif" alt="TSP_16loc videos" width="400"/><img src="report/TSP_16loc_2opt.gif" alt="TSP_16loc_2opt videos" width="400"/><img src="report/TSP_16loc_3opt.gif" alt="TSP_16loc_3opt videos" width="400"/>
+</center>
 
 ## Step 5: Cycle Detection
 
@@ -193,8 +214,15 @@ The TrojanEats app will have some instructions about these constraints. So, Tomm
 Here we will give you a vector of location names that Tommy needs to visit, and also some dependencies between those locations.
 
 
-
-<p align="center"><img src="img/TopologicalSort.png" alt="TSP" width="500"/></p>
+Case 1: 4 locations
+<p align="center"><img src="report/6_1.png" alt="TopoSort_4loc" width="500"/></p>
+<p align="center"><img src="report/6_2.png" alt="TopoSort_4loc" width="500"/></p>
+Case 2: 7 locations
+<p align="center"><img src="report/6_3.png" alt="TopoSort_7loc" width="500"/></p>
+<p align="center"><img src="report/6_4.png" alt="TopoSort_7loc" width="500"/></p>
+Case 3: 12 locations
+<p align="center"><img src="report/6_5.png" alt="TopoSort_12loc" width="500"/></p>
+<p align="center"><img src="report/6_6.png" alt="TopoSort_12loc" width="500"/></p>
 
 
 ## Step 7: Find K closest points
