@@ -154,9 +154,9 @@ Case 3: 16 locations
 ||||
 | :---: | :---: | :---: |
 | `Backtracking` | `2-opt` | `3-opt` |
-| <img src="report/TSP_6loc.gif" alt="TSP_6loc videos" width="300"/> | <img src="report/TSP_6loc_2opt.gif" alt="TSP_6loc_2opt videos" width="300"/> | <img src="report/TSP_6loc_3opt.gif" alt="TSP_6loc_3opt videos" width="300"/> |
-| <img src="report/TSP_9loc.gif" alt="TSP_9loc videos" width="250"/> | <img src="report/TSP_9loc_2opt.gif" alt="TSP_9loc_2opt videos" width="250"/> | <img src="report/TSP_9loc_3opt.gif" alt="TSP_9loc_3opt videos" width="250"/> |
-| !<img src="report/TSP_16loc.gif" alt="TSP_16loc videos" width="350"/> | <img src="report/TSP_16loc_2opt.gif" alt="TSP_16loc_2opt videos" width="350"/> | <img src="report/TSP_16loc_3opt.gif" alt="TSP_16loc_3opt videos" width="350"/> |
+| <img src="report/TSP_6loc.gif" alt="TSP_6loc videos" width="400"/> | <img src="report/TSP_6loc_2opt.gif" alt="TSP_6loc_2opt videos" width="400"/> | <img src="report/TSP_6loc_3opt.gif" alt="TSP_6loc_3opt videos" width="400"/> |
+| <img src="report/TSP_9loc.gif" alt="TSP_9loc videos" width="450"/> | <img src="report/TSP_9loc_2opt.gif" alt="TSP_9loc_2opt videos" width="450"/> | <img src="report/TSP_9loc_3opt.gif" alt="TSP_9loc_3opt videos" width="450"/> |
+| !<img src="report/TSP_16loc.gif" alt="TSP_16loc videos" width="500"/> | <img src="report/TSP_16loc_2opt.gif" alt="TSP_16loc_2opt videos" width="500"/> | <img src="report/TSP_16loc_3opt.gif" alt="TSP_16loc_3opt videos" width="500"/> |
 
 
 ## Step 5: Cycle Detection
