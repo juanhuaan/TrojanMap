@@ -121,14 +121,40 @@ std::vector<std::string> CalculateShortestPath_Bellman_Ford(std::string &locatio
 Given 2 locations A and B, find the best route from A to B. The distance between 2 points is the euclidean distance using latitude and longitude. You should use both Dijkstra algorithm and Bellman-Ford algorithm. Compare the time for the different methods. Show the routes on the map. If there is no path, please return empty vector.
 
 Please report and compare the time spent by these 2 algorithms.
+### Parameters List ("shorter" in the diagram means less cost)
+| Parameter Name | Meaning |
+| :--- | :--- |
+| `const std::vector<std::vector<double>> &adjacent_matrix` | Store the distance weight between all points |
+| `std::vector<std::vector<std::string>> &paths` | Store every shorter path |
+| `std::vector<std::string> &path` | Store current path |
+| `std::vector<bool> &visit` | Check if a location is visited |
+| `double &mincost` | Store the cost of the shortest path |
+| `double cost` | Store the cost of current path |
+| `int current` | Store the index of current location |
+
+### Runtime Comparison
+| NO. | Src Loc | Dst Loc | Distance(miles) | DJ-runtime(microsec) | BF-runtime(microsec) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 0 | 7Eleven |  Popeyes Louisiana Kitchen| 0.107757 | 489 | 15,032,881 |
+| 1 | Tap Two Blue | 7Eleven | 0.259747 | 994 | 14,186068 |
+| 2 | CVS | Target | 0.351751 | 1,844 | 14,708,495 |
+| 3 | 7Eleven | CVS | 0.463025 | 4,338 | 13,974,720 |
+| 4 | Tap Two Blue | CVS | 0.684286 | 4,782 | 14,463,257 |
+| 5 | 7Eleven | Target | 0.788389 | 7,976 | 15,537,051 |
+| 6 | Target | Ralphs | 0.839235 | 21,308 | 14,822,822 |
+| 7 | Ralphs | CVS | 1.14497 | 9,330 | 14,655,557 |
+| 8 | Ralphs | 7Eleven | 1.3303 | 14,042 | 15,988,243 |
+| 9 | Metro 40 | Driveway | 1.77417 | 54,777 | 15,715,079 |
 
 
+### Sample Sreenshot
 <p align="center"><img src="report/3_1.png" alt="3_1" width="500"/></p>
 <p align="center"><img src="report/3_2.png" alt="3_2" width="500"/></p>
 <p align="center"><img src="report/3_3.png" alt="3_3" width="500"/></p>
 <p align="center"><img src="report/3_4.png" alt="3_4" width="500"/></p>
 <p align="center"><img src="report/3_5.png" alt="3_5" width="500"/></p>
 <p align="center"><img src="report/3_6.png" alt="3_6" width="500"/></p>
+
 ## Step 4: The Traveling Trojan Problem (AKA Traveling Salesman!)
 
 In this section, we assume that a complete graph is given to you. That means each node is a neighbor of all other nodes.
