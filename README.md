@@ -123,7 +123,7 @@ Given 2 locations A and B, find the best route from A to B. The distance between
 Please report and compare the time spent by these 2 algorithms.
 ### Parameters List ("shorter" in the diagram means less cost)
 | Parameter Name | Meaning |
-| :--- | :--- |
+| :-------- | :--- |
 | `std::vector<std::string> path` | Store the final shortest path|
 | `std::unordered_map<std::string,double> dist` | key: node ; val: the shortest distance from the node to the src |
 | `std::unordered_map<std::string,std::string>prev` | key: the node ; val is the prev node |
@@ -144,7 +144,6 @@ Please report and compare the time spent by these 2 algorithms.
 | 7 | Ralphs | CVS | 1.14497 | 9,330 | 14,655,557 |
 | 8 | Ralphs | 7Eleven | 1.3303 | 14,042 | 15,988,243 |
 | 9 | Metro 40 | Driveway | 1.77417 | 54,777 | 15,715,079 |
-
 
 ### Sample Sreenshot
 <p align="center"><img src="report/3_1.png" alt="3_1" width="500"/></p>
