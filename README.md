@@ -92,7 +92,6 @@ We consider the names of nodes as the locations. Implement a method to type the 
 <p align="center"><img src="report/1_2.png" alt="1_2" width="500"/></p>
 <p align="center"><img src="report/1_2.png" alt="1_2" width="500"/></p>
 
-
 ## Step 2: Find the place's Coordinates in the Map
 
 ```c++
@@ -100,7 +99,7 @@ std::pair<double, double> GetPosition(std::string name);
 std::string TrojanMap::GetID(std::string name);
 ```
 
-Given a location name, in order to find the information of the node, find the id of the node first by using function `std::string TrojanMap::GetID(std::string name);`, then all the information of the node could be knew through ``std::unordered_map<std::string, Node> data``.Return the latitude and longitude. If could not find ID, return (-1, -1).
+Given a location name, in order to find the information of the node, find the id of the node first by using function `std::string TrojanMap::GetID(std::string name)`, then all the information of the node could be knew through ``std::unordered_map<std::string, Node> data`` Return the latitude and longitude. If could not find ID, return (-1, -1).
 
 
 <p align="center"><img src="report/2_1.png" alt="2_1" width="500"/></p>
@@ -124,8 +123,12 @@ Given 2 locations A and B, find the best route from A to B. The distance between
 Please report and compare the time spent by these 2 algorithms.
 
 
-<p align="center"><img src="img/Routing.png" alt="Routing" width="500"/></p>
-
+<p align="center"><img src="report/3_1.png" alt="3_1" width="500"/></p>
+<p align="center"><img src="report/3_2.png" alt="3_2" width="500"/></p>
+<p align="center"><img src="report/3_3.png" alt="3_3" width="500"/></p>
+<p align="center"><img src="report/3_4.png" alt="3_4" width="500"/></p>
+<p align="center"><img src="report/3_5.png" alt="3_5" width="500"/></p>
+<p align="center"><img src="report/3_6.png" alt="3_6" width="500"/></p>
 ## Step 4: The Traveling Trojan Problem (AKA Traveling Salesman!)
 
 In this section, we assume that a complete graph is given to you. That means each node is a neighbor of all other nodes.
