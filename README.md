@@ -128,7 +128,8 @@ Please report and compare the time spent by these 2 algorithms.
 | `std::unordered_map<std::string,double> dist` | key: node ; val: the shortest distance from the node to the src |
 | `std::unordered_map<std::string,std::string>prev` | key: the node ; val is the prev node |
 | `std::unordered_set<std::string> visited;` | store the shortest distance node in visited |
-| `std::priority_queue<DJNode,std::vector<DJNode>,decltype(compare)> dist_heap(compare)` | using a heap to store the  |
+| `std::priority_queue<DJNode,std::vector<DJNode>,`
+  `decltype(compare)> dist_heap(compare)` | using a heap to store the  |
 
 
 ### Runtime Comparison
