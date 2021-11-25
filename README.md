@@ -124,16 +124,15 @@ Please report and compare the time spent by these 2 algorithms.
 ### Parameters List ("shorter" in the diagram means less cost)
 | Parameter Name | Meaning |
 | :--- | :--- |
-| `const std::vector<std::vector<double>> &adjacent_matrix` | Store the distance weight between all points |
-| `std::vector<std::vector<std::string>> &paths` | Store every shorter path |
-| `std::vector<std::string> &path` | Store current path |
-| `std::vector<bool> &visit` | Check if a location is visited |
-| `double &mincost` | Store the cost of the shortest path |
-| `double cost` | Store the cost of current path |
-| `int current` | Store the index of current location |
+| `std::vector<std::string> path` | Store the final shortest path|
+| `std::unordered_map<std::string,double> dist` | key: node ; val: the shortest distance from the node to the src |
+| `std::unordered_map<std::string,std::string>prev` | key: the node ; val is the prev node |
+| `std::unordered_set<std::string> visited;` | store the shortest distance node in visited |
+| `std::priority_queue<DJNode,std::vector<DJNode>,decltype(compare)> dist_heap(compare)` | using a heap to store the  |
+
 
 ### Runtime Comparison
-| NO. | Src Loc | Dst Loc | Distance(miles) | DJ-runtime(microsec) | BF-runtime(microsec) |
+| NO. | Src Loc | Dst Loc | Dist(miles) | DJ-runtime(usec)| BF-runtime(usec) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | 0 | 7Eleven |  Popeyes Louisiana Kitchen| 0.107757 | 489 | 15,032,881 |
 | 1 | Tap Two Blue | 7Eleven | 0.259747 | 994 | 14,186068 |
