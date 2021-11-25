@@ -50,6 +50,32 @@ class Node {
 };
 
 ```
+Establish a new data structure class **DJNode** shown below and defined in [trojanmap.h]
+DJNode have two parameter, the first is the id of the node, the second is a ``double`` type dist.
+DJNode will be used by **CalculateShortestPath_Dijkstra** to calculate the shortest path and 
+**FindKClosestPoints** to find the find the Kth closest points.
+```cpp
+class DJNode{
+  public:
+  std::string id;
+  double dist;
+  DJNode(){};
+  DJNode(const DJNode &n):id(n.id), dist(n.dist){}
+  DJNode(std::string id, double dist=std::numeric_limits<double>::max()): id(id),dist(dist){}
+  DJNode &operator=(const DJNode&n){
+    if(this==&n) return *this;
+    this->id=n.id;
+    this->dist=n.dist;
+    return *this;
+  }
+};
+
+```
+Given node's id, all the information of node could be obtained through **data**; In order to find the id of the node, using **name2id**.
+```cpp
+  std::unordered_map<std::string, Node> data;
+  std::unordered_map<std::string, std::string> name2id;
+```
 
 ---
 
@@ -71,12 +97,18 @@ We consider the names of nodes as the locations. Implement a method to type the 
 
 ```c++
 std::pair<double, double> GetPosition(std::string name);
+std::string TrojanMap::GetID(std::string name);
 ```
 
-Given a location name, return the latitude and longitude. There are no duplicated location names. You should mark the given locations on the map. If the location does not exist, return (-1, -1).
+Given a location name, in order to find the information of the node, find the id of the node first by using function `std::string TrojanMap::GetID(std::string name);`, then all the information of the node could be knew through ``std::unordered_map<std::string, Node> data``.Return the latitude and longitude. If could not find ID, return (-1, -1).
 
 
-<p align="center"><img src="img/Target.png" alt="Target" width="500"/></p>
+<p align="center"><img src="report/2_1.png" alt="2_1" width="500"/></p>
+<p align="center"><img src="report/2_2.png" alt="2_2" width="500"/></p>
+<p align="center"><img src="report/2_3.png" alt="2_3" width="500"/></p>
+<p align="center"><img src="report/2_4.png" alt="2_4" width="500"/></p>
+<p align="center"><img src="report/2_5.png" alt="2_5" width="500"/></p>
+<p align="center"><img src="report/2_6.png" alt="2_6" width="500"/></p>
 
 ## Step 3: CalculateShortestPath between two places
 
