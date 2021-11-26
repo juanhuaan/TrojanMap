@@ -1272,7 +1272,7 @@ std::vector<std::string>local_ids;
 for(auto items:adj){
   local_ids.push_back(items.first);
 }
-//PlotPointsandEdges(local_ids,square);
+PlotPointsandEdges(local_ids,square);
 //some preparation
 std::map<std::string,bool>isvisited;
 for(auto &items:local_ids){
@@ -1332,4 +1332,4 @@ std::vector<std::string> TrojanMap::FindKClosestPoints(std::string name, int k) 
   }
   return res;
 }
-//O(nlogn)
+//O(n^2*logn)

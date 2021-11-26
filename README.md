@@ -116,21 +116,30 @@ std::vector<std::string> CalculateShortestPath_Dijkstra(std::string &location1_n
                                                std::string &location2_name);
 std::vector<std::string> CalculateShortestPath_Bellman_Ford(std::string &location1_name,
                                                std::string &location2_name);
+void Bellman_dfs(std::string u,std::unordered_map<std::string,bool>&visited,
+                 std::unordered_map<std::string,std::unordered_map<std::string,double>>&mp);
 ```
 
-Given 2 locations A and B, find the best route from A to B. The distance between 2 points is the euclidean distance using latitude and longitude. You should use both Dijkstra algorithm and Bellman-Ford algorithm. Compare the time for the different methods. Show the routes on the map. If there is no path, please return empty vector.
+Given 2 locations A and B, find the best route from A to B.(A is src location and B is dst location) The distance between 2 points is the euclidean distance using latitude and longitude. Use both Dijkstra algorithm and Bellman-Ford algorithm. Compare the time for the different methods. Show the routes on the map. If there is no path, please return empty vector.
 
-Please report and compare the time spent by these 2 algorithms.
-### Parameters List ("shorter" in the diagram means less cost)
+
+### Parameters List1 (CalculateShortestPath_Dijkstra)
 | Parameter Name | Meaning |
-| :-------- | :--- |
+| :--- | :--- |
 | `std::vector<std::string> path` | Store the final shortest path|
 | `std::unordered_map<std::string,double> dist` | key: node ; val: the shortest distance from the node to the src |
 | `std::unordered_map<std::string,std::string>prev` | key: the node ; val is the prev node |
 | `std::unordered_set<std::string> visited;` | store the shortest distance node in visited |
-| `std::priority_queue<DJNode,std::vector<DJNode>,`
-  `decltype(compare)> dist_heap(compare)` | using a heap to store the  |
+| `std::priority_queue<DJNode,std::vector<DJNode>, decltype(compare)> dist_heap(compare)` | using a heap to sort the node in the graph |
 
+### Parameters List2 (CalculateShortestPath_Bellman_Ford)
+| Parameter Name | Meaning |
+| :--- | :--- |
+| `std::vector<std::string> path` | Store the final shortest path|
+| ` std::unordered_map<std::string,bool> visited` | store the node visited in DFS|
+| `std::unordered_map<std::string,std::unordered_map<std::string,double>>mp` | use DFS iterate the graph, store the relationship of nodes in the graph |
+| `std::unordered_map<std::string,double> distance` | key: node ; val: the shortest distance from the node to the src |
+| `std::unordered_map<std::string,std::string>prev` | key: the node ; val is the prev node |
 
 ### Runtime Comparison
 | NO. | Src Loc | Dst Loc | Dist(miles) | DJ-runtime(usec)| BF-runtime(usec) |
@@ -145,6 +154,12 @@ Please report and compare the time spent by these 2 algorithms.
 | 7 | Ralphs | CVS | 1.14497 | 9,330 | 14,655,557 |
 | 8 | Ralphs | 7Eleven | 1.3303 | 14,042 | 15,988,243 |
 | 9 | Metro 40 | Driveway | 1.77417 | 54,777 | 15,715,079 |
+
+From the table above, we could found that the speed of Dijkstra is exceeded Bellman Ford to great extent. That is because Bellman ford need to iterate each node in the data using DFS to find the graph. However, Dijstra doesn't need to do that. Dijstra using priority_queue to find the shortest distance, it only need to sort the relevant node.
+
+### Time Complxity
+CalculateShortestPath_Dijkstra: O(m+nlogn)
+CalculateShortestPath_Bellman_Ford: O(m*n)
 
 ### Sample Sreenshot
 <p align="center"><img src="report/3_1.png" alt="3_1" width="500"/></p>
@@ -226,39 +241,24 @@ At this case, the time cost by backtracking is gradually unacceptable, the two h
 
 ```c++
 bool CycleDetection(std::vector<double> &square);
+//using DFS to find cycle
+bool IsCyclicUtil(std::string node,std::map<std::string,bool>&isvisited,
+        std::string parent,std::unordered_map<std::string,std::vector<std::string>> adj);
 ```
 
-In this section, we use a square-shaped subgraph of the original graph by using four coordinates stored in ```std::vector<double> square```, which follows the order of left, right, upper, and lower bounds. 
+In this section, we use a square-shaped subgraph of the original graph by using four coordinates stored in ```std::vector<double> square```, which follows the order of left, right, upper, and lower bounds.
+Firstly, we iterate the  ```data``` to find out all the node inside the 
+```std::vector<double> square```, and establish a map to store the node and its neighbors
+```std::unordered_map<std::string,std::vector<std::string>> adj```
+Then using DFS to find is there remains a cycle, call the recursive function ```IsCyclicUtil()```
+If there is a cycle return true, and  path will appears on the map. Otherwise return false.
 
-Then try to determine if there is a cycle path in the that subgraph. If it does, return true and report that path on the map. Otherwise return false.
+Cases:
 
-Example 1:
-```shell
-Input: square = {-118.299, -118.264, 34.032, 34.011}
-Output: true
-```
-Here we use the whole original graph as our subgraph. 
-<p align="center"><img src="img/cycle1.png" alt="TSP" width="500"/></p>
+### Time complexity: 
+iterate the data O(n), DFS recursive 0(n+m);
+Total complexity: O(n^2);
 
-Example 2:
-```shell
-Input: square = {-118.290919, -118.282911, 34.02235, 34.019675}
-Output: false
-```
-Here we use a square area inside USC campus as our subgraph
-<p align="center"><img src="img/cycle2.png" alt="TSP" width="500"/></p>
-
-Note: You could use the function below to visualize the subgraph. 
-
-```c++
-/**
- * PlotPoints: Given a vector of location ids draws the points on the map (no path).
- * 
- * @param  {std::vector<std::string>} location_ids : points inside square
- * @param  {std::vector<double>} square : boundary
- */
-void TrojanMap::PlotPointsandEdges(std::vector<std::string> &location_ids, std::vector<double> &square)
-```
 
 ## Step 6: Topological Sort
 
@@ -291,15 +291,22 @@ Given a location name and a integer k , find the k closest locations with name o
 
 We will use the following algorithms:
 
-- Backtracking
+- Heap Sort
 ```c++
 std::vector<std::string> FindKClosestPoints(std::string name, int k);
 ```
+In this function, we will use the data stureture DJNode again to establish the priority_queue, to
+sort the distance from the from to each node in the map.
+```c++
+  auto compare=[](DJNode a,DJNode b){return a.dist > b.dist;};
+  std::priority_queue<DJNode,std::vector<DJNode>,decltype(compare)> dist_heap(compare); 
+```
+Cases:
 
-Please report and compare the time spent by this algorithm and show the points on the map.
-
-
-<p align="center"><img src="img/Kclosest.png" alt="Kclosest" width="500"/></p>
+### Time complexity:
+Firstly, using a for loop to iterate the `data` to calculate the distance between each node and the source O(n);
+Then push the node into priority_queue to sort the nodes O(nlogn);
+Total O(n^2 logn);
 
 
 
