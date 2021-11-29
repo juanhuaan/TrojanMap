@@ -565,7 +565,7 @@ void TrojanMap::PlotPointsLabel(std::vector<std::string> &location_ids, std::str
     auto result = GetPlotLocation(data[x].lat, data[x].lon);
     cv::circle(img, cv::Point(result.first, result.second), DOT_SIZE,
                cv::Scalar(0, 0, 255), cv::FILLED);
-    //cv::putText(img, std::to_string(cnt), cv::Point(result.first, result.second), cv::FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(255, 0, 0), 2);
+    cv::putText(img, std::to_string(cnt), cv::Point(result.first, result.second), cv::FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(255, 0, 0), 2);
     cnt++;
   }
   cv::imshow("TrojanMap", img);
@@ -781,16 +781,17 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
   std::vector<std::string> path;
   std::string a_id=GetID(location1_name);
   std::string b_id=GetID(location2_name);
-  std::unordered_map<std::string,double> dist;//inspect if it is the first time to visit  the node
-  std::unordered_map<std::string,std::string>prev;//return the prev node
-  std::unordered_set<std::string> visited;// store the shortest distance in visited
+  std::unordered_map<std::string,double> dist; // store the shortest distance in visited
+  std::unordered_map<std::string,std::string>prev;// return the prev node
+  std::unordered_set<std::string> visited; // check if the location had been popped from the heap
   auto compare=[](DJNode a,DJNode b){return a.dist > b.dist;};
   std::priority_queue<DJNode,std::vector<DJNode>,decltype(compare)> dist_heap(compare);
-  dist_heap.emplace(DJNode(a_id,0.0));//the source code setting
+  dist_heap.emplace(DJNode(a_id,0.0));
   dist[a_id]=0.0;
   while (!dist_heap.empty()){
     DJNode temp=dist_heap.top();
     dist_heap.pop();
+    // if the top of the heap had been popped, just ignore it, until find the first not pooped one
     while(visited.count(temp.id)>0){
       temp=dist_heap.top();
       dist_heap.pop();
@@ -976,8 +977,9 @@ double TrojanMap::Bellman_helper(std::string s,int i,std::string v,
  * @return {std::pair<double, std::vector<std::vector<std::string>>} : a pair of total distance and the all the progress to get final path (ids)
  */
 std::vector<std::vector<double>> TrojanMap::CreateAdjMatrix(std::vector<std::string> &location_ids){
-  // initialize a matrix with infinity
+  
   int n = location_ids.size();
+  // initialize a matrix with infinity
   std::vector<std::vector<double>> adjacent_matrix(n, std::vector<double>(n, std::numeric_limits<double>::max()));
 
   // creat a matrix to store the distance between evey node
@@ -992,7 +994,7 @@ std::vector<std::vector<double>> TrojanMap::CreateAdjMatrix(std::vector<std::str
 }
 
 void TrojanMap::Backtracking(const std::vector<std::vector<double>> &adjacent_matrix, std::vector<std::vector<std::string>> &paths, std::vector<std::string> &path, std::vector<bool> &visit, double &mincost, double cost, int current, const std::vector<std::string> &location_ids){
-	if(cost > mincost) return;
+	if(cost > mincost) return; // early break
   if(path.size() == adjacent_matrix.size()){
 		cost += adjacent_matrix[0][current];
 		if(cost < mincost){
@@ -1126,6 +1128,7 @@ void TrojanMap::TPS_3opt(const std::vector<std::vector<double>> &adjacent_matrix
         for(int end = mid + 1; end < n; ++end){
           std::vector<std::vector<std::string>> path_copys {path_start, path_start, path_start, path_start};
           // a = [end, start - 1], b = [start, mid - 1], c = [mid, end - 1]
+          // use reverse[start, end) to replace reverse[end, start) as a'
           // 1. ab'c'
           std::reverse(path_copys[0].begin() + start, path_copys[0].begin() + mid);
           std::reverse(path_copys[0].begin() + mid , path_copys[0].begin() + end);
@@ -1258,6 +1261,7 @@ std::vector<std::string> TrojanMap::DeliveringTrojan(std::vector<std::string> &l
 }
 
 void TrojanMap::TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::vector<bool> &visit, int cur, std::vector<int> &topo_list){
+  // DFS
   for(auto &loc : DAG[cur]){
     if(!visit[loc]){
       visit[loc] = true;
@@ -1274,7 +1278,6 @@ void TrojanMap::TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::ve
  * @param {std::vector<double>} square: four vertexes of the square area
  * @return {bool}: whether there is a cycle or not
  */
-
 bool TrojanMap::CycleDetection(std::vector<double> &square) {
 //establish an map with all node in square
 std::unordered_map<std::string,std::vector<std::string>> adj;
@@ -1288,7 +1291,7 @@ std::vector<std::string>local_ids;
 for(auto items:adj){
   local_ids.push_back(items.first);
 }
-//PlotPointsandEdges(local_ids,square);
+PlotPointsandEdges(local_ids,square);
 //some preparation
 std::map<std::string,bool>isvisited;
 for(auto &items:local_ids){
