@@ -321,11 +321,22 @@ Firstly, we iterate the  ```data``` to find out all the node inside the
 Then using DFS to find is there remains a cycle, call the recursive function ```IsCyclicUtil()```
 If there is a cycle return true, and  path will appears on the map. Otherwise return false.
 
-Cases:
+Case1:
+<p align="center"><img src="report/5_1.png" alt="5_1" width="500"/></p>
+<p align="center"><img src="report/5_2.png" alt="5_2" width="500"/></p>
+Case2:
+<p align="center"><img src="report/5_3.png" alt="5_3" width="500"/></p>
+<p align="center"><img src="report/5_4.png" alt="5_4" width="500"/></p>
+Case3:The Full map
+<p align="center"><img src="report/5_fullmap.png" alt="5_fullmap" width="500"/></p>
+<p align="center"><img src="report/5_fullmap2.png" alt="5_fullmap2" width="500"/></p>
+Case4:No cycle
+<p align="center"><img src="report/5_no_cycle.png" alt="5_no_cycle" width="500"/></p>
+<p align="center"><img src="report/5_no_cycle2.png" alt="5_no_cycle2" width="500"/></p>
 
 ### Time complexity: 
-iterate the data O(n), DFS recursive 0(n+m);
-Total complexity: O(n^2);
+Iterate the data O(n), DFS recursive 0(n+m);
+Total complexity: O(n);
 
 
 ## Step 6: Topological Sort
@@ -372,12 +383,20 @@ sort the distance from the from to each node in the map.
   auto compare=[](DJNode a,DJNode b){return a.dist > b.dist;};
   std::priority_queue<DJNode,std::vector<DJNode>,decltype(compare)> dist_heap(compare); 
 ```
-Cases:
+Case1: CVS 5 locations
+<p align="center"><img src="report/7_1.png" alt="7_1" width="500"/></p>
+<p align="center"><img src="report/7_2.png" alt="7_2" width="500"/></p>
+Case2: Lyons Center 12 locations 
+<p align="center"><img src="report/7_3.png" alt="7_3" width="500"/></p>
+<p align="center"><img src="report/7_4.png" alt="7_4" width="500"/></p>
+Case3: HolBox 8 locations
+<p align="center"><img src="report/7_5.png" alt="7_5" width="500"/></p>
+<p align="center"><img src="report/7_6.png" alt="7_6" width="500"/></p>
 
 ### Time complexity:
 Firstly, using a for loop to iterate the `data` to calculate the distance between each node and the source O(n);
 Then push the node into priority_queue to sort the nodes O(nlogn);
-Total O(n^2 logn);
+Total O(nlogn);
 
 
 
