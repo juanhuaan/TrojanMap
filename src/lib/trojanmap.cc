@@ -878,7 +878,7 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford(
  // Bellman_bfs(loc1_id,loc2_id,mp);
   Bellman_dfs(loc1_id,visited,mp);
   if(visited[loc2_id]==false) return path;
-  int i=mp.size();
+  //int i=mp.size();
   std::unordered_map<std::string,double>distance;//store the distance from the source to every node;
   std::unordered_map<std::string,std::string>prev;//store the prev node of the shortest path;
   //initialize
@@ -1068,28 +1068,29 @@ void TrojanMap::TPS_2opt(const std::vector<std::vector<double>> &adjacent_matrix
                         std::vector<std::string> &path_start, std::unordered_map<std::string, int> &id2index){
 
   int count = 0, n = path_start.size();
-  std::vector<std::string> path_copy;
-  int MAXNUM = 6 * n; // set the max iteration times
-
+  std::vector<std::string> path_copy = path_start;
+  int MAXNUM = n; // set the max iteration times
+  bool improve = false;
   while(count < MAXNUM){
-    path_copy.assign(path_start.begin(), path_start.end());
-    int start = std::rand() % (n - 3) + 1;
-    int end;
-    while(true){
-      end = std::rand() % (n - 3) + 2;
-      if(end - start >= 1) break;
+    improve = false;
+    for(int start = 1; start < n - 1; ++start){
+      for(int end = start + 1; end < n; ++end){
+        double d1 = CalculateDistance(path_copy[start-1], path_copy[start]) + CalculateDistance(path_copy[end-1], path_copy[end]);
+        double d2 = CalculateDistance(path_copy[start-1], path_copy[end-1]) + CalculateDistance(path_copy[start], path_copy[end]);
+        if(d2 < d1){
+          std::reverse(path_copy.begin() + start, path_copy.begin() + end);
+          paths.emplace_back(path_copy);
+          mincost = CalculatePathDis(adjacent_matrix, id2index, path_copy);
+          path_start.assign(path_copy.begin(), path_copy.end());
+          improve = true;
+          break;
+        }
+      }
+      if(improve) break;
     }
-
-    std::reverse(path_copy.begin() + start, path_copy.begin() + end + 1);
-    double cost = CalculatePathDis(adjacent_matrix, id2index, path_copy);
-    if(cost < mincost){
-      mincost = cost;
-      paths.emplace_back(path_copy);
-      path_start.assign(path_copy.begin(), path_copy.end());
-      count = 0;
-    }else ++count;
-  }
-            
+    if(improve) count = 0;
+    else ++count; 
+  }         
 }
 
 std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan_3opt(
@@ -1109,42 +1110,58 @@ std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTr
   return results;
 }
 
+// randomly choose
 void TrojanMap::TPS_3opt(const std::vector<std::vector<double>> &adjacent_matrix, 
                         double &mincost, std::vector<std::vector<std::string>> &paths, 
                         std::vector<std::string> &path_start, std::unordered_map<std::string, int> &id2index){
 
   int count = 0, n = path_start.size();
-  int MAXNUM = 6 * n; // set the max iteration times
+  int MAXNUM = 1; // set the max iteration times
+  bool improve = false;
 
   while(count < MAXNUM){
-    int start = std::rand() % (n - 4) + 1;
-    int mid, end;
-    while(true){
-      mid = std::rand() % (n - 4) + 2;
-      end = std::rand() % (n - 4) + 3;
-      if(mid - start >= 1 && end - mid >= 1) break;
-    }
-    std::vector<std::vector<std::string>> path_copys {path_start, path_start, path_start, path_start};
-    std::reverse(path_copys[0].begin() + start, path_copys[0].begin() + mid + 1);
-    std::reverse(path_copys[1].begin() + start, path_copys[1].begin() + end + 1);
-    std::reverse(path_copys[2].begin() + mid, path_copys[2].begin() + end + 1);
-    std::reverse(path_copys[3].begin() + start, path_copys[3].begin() + mid + 1);
-    std::reverse(path_copys[3].begin() + mid, path_copys[3].begin() + end + 1);
-    std::reverse(path_copys[3].begin() + start, path_copys[3].begin() + end + 1);
+    improve = false;
+    for(int start = 1; start < n - 2; ++start){
+      for(int mid = start + 1; mid < n - 1; ++mid){
+        for(int end = mid + 1; end < n; ++end){
+          std::vector<std::vector<std::string>> path_copys {path_start, path_start, path_start, path_start};
+          // a = [end, start - 1], b = [start, mid - 1], c = [mid, end - 1]
+          // 1. ab'c'
+          std::reverse(path_copys[0].begin() + start, path_copys[0].begin() + mid);
+          std::reverse(path_copys[0].begin() + mid , path_copys[0].begin() + end);
+          // 2. a'b'c
+          std::reverse(path_copys[1].begin() + start, path_copys[1].begin() + end);
+          std::reverse(path_copys[1].begin() + start, path_copys[1].begin() + mid);
+          // 3. a'bc'
+          std::reverse(path_copys[2].begin() + start, path_copys[2].begin() + end);
+          std::reverse(path_copys[2].begin() + mid, path_copys[2].begin() + end);
+          // 4. a'b'c'
+          std::reverse(path_copys[3].begin() + start, path_copys[3].begin() + end);
+          std::reverse(path_copys[3].begin() + start, path_copys[3].begin() + mid);
+          std::reverse(path_copys[3].begin() + mid, path_copys[3].begin() + end);
 
-    double cost;
-    int index = -1;
-    for(int i = 0; i < 4; ++i){
-      cost = CalculatePathDis(adjacent_matrix, id2index, path_copys[i]);
-      if(cost < mincost){
-        paths.emplace_back(path_copys[i]);
-        mincost = cost;
-        index = i;
+          double cost;
+          int index = -1;
+          for(int i = 0; i < 4; ++i){
+            cost = CalculatePathDis(adjacent_matrix, id2index, path_copys[i]);
+            if(cost < mincost){
+              paths.emplace_back(path_copys[i]);
+              mincost = cost;
+              index = i;
+            }
+          }
+          if(index != -1){
+            path_start.assign(path_copys[index].begin(), path_copys[index].end()); // index != -1 means find a shorter path
+            improve = true;
+            break;
+          }
+        }
+        if(improve) break;
       }
+      if(improve) break;
     }
-    if(index != -1){
-      path_start.assign(path_copys[index].begin(), path_copys[index].end()); // index != -1 means find a shorter path
-    }else ++count;   
+    if(improve) count = 0;
+    else ++count;
   }   
 }
 
@@ -1186,7 +1203,6 @@ std::vector<std::vector<std::string>> TrojanMap::ReadDependenciesFromCSVFile(std
   getline(fin, line);
   while(getline(fin, line)){
     std::stringstream s(line);
-    int count = 0;
     std::vector<std::string> dependency;
     while(getline(s, word, ',')){
       dependency.emplace_back(word);
@@ -1272,7 +1288,7 @@ std::vector<std::string>local_ids;
 for(auto items:adj){
   local_ids.push_back(items.first);
 }
-PlotPointsandEdges(local_ids,square);
+//PlotPointsandEdges(local_ids,square);
 //some preparation
 std::map<std::string,bool>isvisited;
 for(auto &items:local_ids){
@@ -1332,4 +1348,4 @@ std::vector<std::string> TrojanMap::FindKClosestPoints(std::string name, int k) 
   }
   return res;
 }
-//O(n^2*logn)
+//O(nlogn)
