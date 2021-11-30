@@ -51,7 +51,7 @@ class Node {
 
 ```
 Establish a new data structure class **DJNode** shown below and defined in [trojanmap.h]
-DJNode have two parameter, the first is the id of the node, the second is a ``double`` type dist.
+DJNode have two member variables, the first is the id of the node, the second is a ``double`` type dist.
 DJNode will be used by **CalculateShortestPath_Dijkstra** to calculate the shortest path and 
 **FindKClosestPoints** to find the find the Kth closest points.
 ```cpp
@@ -69,8 +69,11 @@ class DJNode{
     return *this;
   }
 };
-
 ```
+
+An example of the DJNodes applied in **CalculateShortestPath_Dijkstra**
+<p align="center"><img src="report/3_heap.png" alt="3_heap" width="500" /></p>
+
 Given node's id, all the information of node could be obtained through **data**; In order to find the id of the node, using **name2id**.
 ```cpp
   std::unordered_map<std::string, Node> data;
@@ -88,13 +91,13 @@ std::vector<std::string> Autocomplete(std::string name); // first discard all th
 
 We consider the names of nodes as the locations. Implement a method to type the partial name of the location and return a list of possible locations with partial name as prefix. Please treat uppercase and lower case as the same character.
 
-<p align="center"><img src="report/1_1.png" alt="1_1" width="700"/></p>
-<p align="center"><img src="report/1_2.png" alt="1_2" width="700"/></p>
-<p align="center"><img src="report/1_2.png" alt="1_2" width="700"/></p>
+<p align="center"><img src="report/1_1.png" alt="1_1" width="500"/></p>
+<p align="center"><img src="report/1_2.png" alt="1_2" width="500"/></p>
+<p align="center"><img src="report/1_3.png" alt="1_3" width="500"/></p>
 
 ### Time complexity: 
-Let n be the length of name, m be the number of all locations, ```match``` need to check every character in target(name), so it is O(n), and we need to apply ```match``` to every locations, so the totally time complexity is O(n*m).  
-PS: The longer the name, the less locatins need to be chech in ```match``` , the shorter the time it takes.
+1. Let n be the length of name, m be the number of all locations, ```match``` need to check every character in target(name), so it is O(n), and we need to apply ```match``` to every locations, so the totally time complexity is O(n*m).  
+2. The longer the name, the less locatins need to be chech in ```match``` , the shorter the time it takes, like the last case.
 
 ## Step 2: Find the place's Coordinates in the Map
 
@@ -144,7 +147,7 @@ Given 2 locations A and B, find the best route from A to B.(A is src location an
 | `std::unordered_map<std::string,std::unordered_map<std::string,double>>mp` | use DFS iterate the graph, store the relationship of nodes in the graph |
 | `std::unordered_map<std::string,double> distance` | key: node ; val: the shortest distance from the node to the src |
 | `std::unordered_map<std::string,std::string>prev` | key: the node ; val is the prev node |
-
+<p align="center"><img src="report/3_Bellman_mp.png" alt="3_Bellman_mp" width="500"/></p>
 ### Runtime Comparison
 | NO. | Src Loc | Dst Loc | Dist(miles) | DJ-runtime(usec)| BF-runtime(usec) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -204,18 +207,20 @@ std::pair<double, std::vector<std::vector<std::string>>> TravellingTrojan(std::v
 | `std::unordered_map<std::string, int> &id2index` | A unordered_map to map location's id to its index |
 
 - [2-opt Heuristic](https://en.wikipedia.org/wiki/2-opt). Also see [this paper](http://cs.indstate.edu/~zeeshan/aman.pdf)
+- 3-opt
 ```c++
 // Calculate the distance for each adjusted path
 double CalculatePathDis(const std::vector<std::vector<double>> &adjacent_matrix, std::unordered_map<std::string, int> &id2index, std::vector<std::string> &path);
-// 1. Starting from the default path, 
-// 2. randomly exchange two points to check whether the distance becomes shorter, 
-// 3. if so, counter = 0, if not, counter is increased by one, 
-// 4. repeat 2,3 until the counter == the maximum number of iterations
+// 1. Starting from the default path,;
+// 2. iterate to choose two points to reverse the path;
+// 3. if the reversed path is shorter, improve = true, repeat step 2, start a new iteration;
+// 4. if not, continue to iterate;
+// 5. if there is no improvement during the whole iteration, return the result.
 std::pair<double, std::vector<std::vector<std::string>>> TravellingTrojan_2opt(std::vector<std::string> &location_ids); 
 void TrojanMap::TPS_2opt(const std::vector<std::vector<double>> &adjacent_matrix, 
                         double &mincost, std::vector<std::vector<std::string>> &paths, 
                         std::vector<std::string> &path_start, std::unordered_map<std::string, int> &id2index);
-// Similar to 2-opt, but in 3-opt, you need to choose 3 points randomly, and have 7 way to change the path, and 3 of them are the same as 2-opt, so apply the left 4 ways in 3-opt
+// Similar to 2-opt, but in 3-opt, you need to choose 3 points, and have 7 way to change the path, and 3 of them are the same as 2-opt, so apply the left 4 ways in 3-opt
 std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan_3opt(std::vector<std::string> &location_ids);
 void TrojanMap::TPS_3opt(const std::vector<std::vector<double>> &adjacent_matrix, 
                         double &mincost, std::vector<std::vector<std::string>> &paths, 
@@ -228,15 +233,17 @@ void TrojanMap::TPS_3opt(const std::vector<std::vector<double>> &adjacent_matrix
   std::reverse(path_copys[0].begin() + mid , path_copys[0].begin() + end);
   // 2. a'b'c
   std::reverse(path_copys[1].begin() + start, path_copys[1].begin() + end);
-  std::reverse(path_copys[1].begin() + start, path_copys[1].begin() + mid);
+  std::reverse(path_copys[1].begin() + start, path_copys[1].begin() + start + end - mid);
   // 3. a'bc'
   std::reverse(path_copys[2].begin() + start, path_copys[2].begin() + end);
-  std::reverse(path_copys[2].begin() + mid, path_copys[2].begin() + end);
+  std::reverse(path_copys[2].begin() + start + end - mid, path_copys[2].begin() + end);
   // 4. a'b'c'
   std::reverse(path_copys[3].begin() + start, path_copys[3].begin() + end);
-  std::reverse(path_copys[3].begin() + start, path_copys[3].begin() + mid);
-  std::reverse(path_copys[3].begin() + mid, path_copys[3].begin() + end);
+  std::reverse(path_copys[3].begin() + start, path_copys[3].begin() + start + end - mid);
+  std::reverse(path_copys[3].begin() + start + end - mid, path_copys[3].begin() + end);
 ```
+<p align="center"><img src="report/TSP_3_opt.jpeg" alt="3-opt" width="600"/></p>
+
 
 Please report and compare the time spent by these 2 algorithms. 2-opt algorithm may not get the optimal solution. Please show how far your solution is from the optimal solution.
 
@@ -246,63 +253,65 @@ We will randomly select N points in the map and run your program.
 
 Case 1: 6 locations
 For a few locations, all the 3 methods can find the optimal result in an acceptable time. These two heuristic algorithms have to do some redundant iterators, so in this case they cost more time than Backtracking.
-<p align="center"><img src="report/TSP_6.png" alt="Runtime" width="1000"/></p>
+<p align="center"><img src="report/TSP_6.png" alt="Runtime" width="8000"/></p>
 <p align="center"><img src="report/TSP_6loc.png" alt="Visualization" width="500"/></p>
 
 Case 2: 9 locations
-When the locations become more, the time increase of Backtracking is greater than 2-opt and 3-opt, the time cost by these 3 algorithms is silimar.
+When the locations become more, the time increase of Backtracking is greater than 2-opt and 3-opt, the time cost by Backtracking and 3-opt is silimar.
 <p align="center"><img src="report/TSP_9.png" alt="Runtime" width="800"/></p>
 <p align="center"><img src="report/TSP_9loc.png" alt="Visualization" width="500"/></p>
 
 Case 3: 12 locations
-When the locations become more, 2-opt and 3-opt gradually show their advantages in time consumption. And sometimes, 2-opt/3-opt would not get the optimal results.
+When the locations become more, 2-opt and 3-opt gradually show their advantages in time consumption. 
 <p align="center"><img src="report/TSP_12.png" alt="Runtime" width="800"/></p>
 <p align="center"><img src="report/TSP_12loc.png" alt="Visualization" width="500"/></p>
 
-Case 4: 16 locations
+Case 4: 15 locations
 At this case, the time cost by backtracking is gradually unacceptable, the two heuristic algorithms can dramatically decrease the time consumption，and can get the same or very close results.
-<p align="center"><img src="report/TSP_16.png" alt="Runtime"  width="1200"/></p>
-<p align="center"><img src="report/TSP_16loc.png" alt="Visualization" width="500"/></p>
+<p align="center"><img src="report/TSP_15.png" alt="Runtime"  width="800"/></p>
+<p align="center"><img src="report/TSP_15loc.png" alt="Visualization" width="500"/></p>
 
 | `Backtracking` | `2-opt` | `3-opt` |
 | :---: | :---: | :---: |
 | <img src="report/TSP_6loc.gif" alt="TSP_6loc videos" width="300"/> | <img src="report/TSP_6loc_2opt.gif" alt="TSP_6loc_2opt videos" width="300"/> | <img src="report/TSP_6loc_3opt.gif" alt="TSP_6loc_3opt videos" width="300"/> |
 | <img src="report/TSP_9loc.gif" alt="TSP_9loc videos" width="300"/> | <img src="report/TSP_9loc_2opt.gif" alt="TSP_9loc_2opt videos" width="300"/> | <img src="report/TSP_9loc_3opt.gif" alt="TSP_9loc_3opt videos" width="300"/> |
 | <img src="report/TSP_12loc.gif" alt="TSP_12loc videos" width="300"/> | <img src="report/TSP_12loc_2opt.gif" alt="TSP_12loc_2opt videos" width="300"/> | <img src="report/TSP_12loc_3opt.gif" alt="TSP_12loc_3opt videos" width="300"/> |
-| <img src="report/TSP_16loc.gif" alt="TSP_16loc videos" width="300"/> | <img src="report/TSP_16loc_2opt.gif" alt="TSP_16loc_2opt videos" width="300"/> | <img src="report/TSP_16loc_3opt.gif" alt="TSP_16loc_3opt videos" width="300"/> |
+| <img src="report/TSP_15loc.gif" alt="TSP_15loc videos" width="300"/> | <img src="report/TSP_15loc_2opt.gif" alt="TSP_15loc_2opt videos" width="300"/> | <img src="report/TSP_15loc_3opt.gif" alt="TSP_15loc_3opt videos" width="300"/> |
 
+### Examples (dis: miles, time: microseconds)
 | # of the places | dis(Backtracking) | time(Backtracking) | dis(2-opt) | time(2-opt) | dis(3-opt) | time(3-opt) |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| 4 | 2.33288 | 43 | 2.33288 | 169 | 2.33288 | 62 |
-| 5 | 2.84035 | 50 | 2.84035 | 424 | 2.84035 | 211 |
-| 6 | 3.96888 | 115 | 3.96888 | 915 | 3.96888 | 666 |
-| 6 | 2.92648 | 96 | 2.92648 | 579 | 2.92648 | 425 |
-| 7 | 3.2894 | 278 | 3.2894 | 1393 | 3.2894 | 1511 |
-| 8 | 3.34032 | 1043 | 3.34032 | 2145 | 3.34032 | 2154 |
-| 9 | 5.19646 | 3324 | 5.5148 | 2863 | 4.71893 | 3854 |
-| 9 | 4.29746 | 3332 | 4.29746 | 2102 | 4.29746 | 2938 |
-| 10 | 4.75803 | 13757  | 4.75803 | 3594 | 4.75803 | 5126 |
-| 11 | 5.72452 | 71818 | 6.23207 | 2995 | 5.72452 | 6291 |
-| 12 | 4.6685 | 98647 | 4.6685 | 4837 | 4.6685 | 21344 |
-| 12 | 4.76991 | 149328 | 4.9068 | 4222 | 4.76991 | 6939 |
-| 12 | 3.93467 | 30824 | 3.93467 | 5961 | 3.93467 | 11926 |
-| 12 | 5.08785 | 67933 | 5.16168 | 4860 | 5.08785 | 8823 |
-| 13 | 5.04915 | 523515 | 5.08812 | 5991 | 5.04915 | 10451 |
-| 14 | 4.63693 | 976212 | 4.63693 | 7058 | 4.63693 | 42052 |
-| 15 | 5.31136 | 66687483 | 5.31137 | 8529 | 5.31136 | 31505 |
-| 16 | 5.49701 | 174477497 | 5.52954 | 12596 | 5.49701 | 76929 |
-| 16 | 5.18812 | 4112852 | 5.18812 | 11139 | 5.18812 | 76376 |
-
+| 4 | 2.68747 | 33 | 2.68747 | 59 | 2.68747 | 115 |
+| 5 | 3.67029 | 52 | 3.67029 | 133 | 3.67029 | 433 |
+| 6 | 4.05083 | 95 | 4.15358 | 380 | 4.05083 | 1363 |
+| 6 | 3.23573 | 69 | 3.23573 | 191 | 3.23573 | 710 |
+| 6 | 2.95252 | 95 | 2.95399 | 225 | 2.95252 | 1200 |
+| 7 | 3.29827 | 299 | 3.29827 | 289 | 3.29827 | 1115 |
+| 8 | 3.74217 | 952 | 3.74217 | 414 | 3.74217 | 2455 |
+| 9 | 4.3105 | 1891 | 4.3105 | 944 | 4.3105 | 2533 |
+| 9 | 4.25536 | 3778 | 4.25536 | 1154 | 4.25536 | 2770 |
+| 9 | 4.00037 | 3664 | 4.00037 | 815 | 4.00037 | 3006 |
+| 10 | 4.15441 | 4833 | 4.15441 | 1490 | 4.15441 | 4157 |
+| 11 | 5.17885 | 68106 | 5.58581 | 1324 | 5.17885 | 9395 |
+| 12 | 4.53812 | 102178 | 4.53812 | 3023 | 4.53812 | 10376 |
+| 12 | 4.11525 | 48704 | 4.11525 | 2141 | 4.11525 | 5303 |
+| 12 | 5.17578 | 161429 | 5.25541 | 1870 | 5.17578 | 6282 |
+| 13 | 5.48798 | 1074349 | 6.35786 | 2598 | 5.48798 | 17837 |
+| 14 | 4.44515 | 1417832 | 4.48261 | 4129 | 4.44515 | 9714 |
+| 15 | 5.0912 | 4605515 | 5.17081 | 3429 | 5.0912 | 16316 |
+| 15 | 5.43451 | 10375847 | 5.45486 | 2732 | 5.45486 | 13028 |
+| 15 | 5.25523 | 3167399 | 5.25523 | 3717 | 5.25523 | 26053 |
+| 15 | 5.16767 | 1624167 | 5.18942 | 3359 | 5.16767 | 14690 |
 
 ### Runtime Comparison
-When the number of locations is larger than 13, the time cost by Backtracking is more than 50 times than 2-opt, while 2-opt/3-opt can have very close or the same results.
-In addition, from the last two cases, we can find the early break can decrease dramatically the time in some special cases. 2-opt and 3-opt would not have some obvious change for the same scale cases.
+1. When the number of locations is larger than 13, the time cost by Backtracking is more than 50 times than 2-opt, while 2-opt/3-opt can have very close or the same results.
+2. In addition, from the cases with same number of locations, we can find the early break can decrease dramatically the time in some special cases. 2-opt and 3-opt would not have some very large changes for the same scale cases.
 
 ### Time complexity
 Let n be the number of the locations. 
 1. For the Backtracking, we need to iterate every path, so it is O(n!), while in fact, due to the early break, the time it cost practically would be less than O(n!);
-2. Let the maximum number of iterations be K, for every iteration, we have O(n^2) ways to choose two locations to reverse the path, so the whole time complexity is (K*n^2). In practical, I set K = n;
-3. Similarly to 2-opt, for every iteration, we have O(n^3) ways to choose three locations to change the path in 4 pattern, so the whole time complexity is (K*n^3). In practical, I set K = 1. 
+2. Let the K be the number of iterations until the iteration cannot improve the cost, for every iteration, we have O(n^2) ways to choose two locations to reverse the path, so the whole time complexity is (K*n^2).
+3. Similarly to 2-opt, for every iteration, we have O(n^3) ways to choose three locations to change the path in 4 pattern, so the whole time complexity is (K*n^3). 
 
 
 ## Step 5: Cycle Detection

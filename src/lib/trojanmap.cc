@@ -1069,11 +1069,10 @@ void TrojanMap::TPS_2opt(const std::vector<std::vector<double>> &adjacent_matrix
                         double &mincost, std::vector<std::vector<std::string>> &paths, 
                         std::vector<std::string> &path_start, std::unordered_map<std::string, int> &id2index){
 
-  int count = 0, n = path_start.size();
+  int n = path_start.size();
   std::vector<std::string> path_copy = path_start;
-  int MAXNUM = n; // set the max iteration times
-  bool improve = false;
-  while(count < MAXNUM){
+  bool improve = true; // check if it still can be improved
+  while(improve){
     improve = false;
     for(int start = 1; start < n - 1; ++start){
       for(int end = start + 1; end < n; ++end){
@@ -1090,8 +1089,6 @@ void TrojanMap::TPS_2opt(const std::vector<std::vector<double>> &adjacent_matrix
       }
       if(improve) break;
     }
-    if(improve) count = 0;
-    else ++count; 
   }         
 }
 
@@ -1112,59 +1109,70 @@ std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTr
   return results;
 }
 
-// randomly choose
 void TrojanMap::TPS_3opt(const std::vector<std::vector<double>> &adjacent_matrix, 
                         double &mincost, std::vector<std::vector<std::string>> &paths, 
                         std::vector<std::string> &path_start, std::unordered_map<std::string, int> &id2index){
 
-  int count = 0, n = path_start.size();
-  int MAXNUM = 1; // set the max iteration times
-  bool improve = false;
-
-  while(count < MAXNUM){
+  int n = path_start.size();
+  std::vector<std::string> path_copy = path_start;
+  bool improve = true; // check if it still can be improved
+  while(improve){
     improve = false;
     for(int start = 1; start < n - 2; ++start){
       for(int mid = start + 1; mid < n - 1; ++mid){
         for(int end = mid + 1; end < n; ++end){
-          std::vector<std::vector<std::string>> path_copys {path_start, path_start, path_start, path_start};
-          // a = [end, start - 1], b = [start, mid - 1], c = [mid, end - 1]
-          // use reverse[start, end) to replace reverse[end, start) as a'
-          // 1. ab'c'
-          std::reverse(path_copys[0].begin() + start, path_copys[0].begin() + mid);
-          std::reverse(path_copys[0].begin() + mid , path_copys[0].begin() + end);
-          // 2. a'b'c
-          std::reverse(path_copys[1].begin() + start, path_copys[1].begin() + end);
-          std::reverse(path_copys[1].begin() + start, path_copys[1].begin() + mid);
-          // 3. a'bc'
-          std::reverse(path_copys[2].begin() + start, path_copys[2].begin() + end);
-          std::reverse(path_copys[2].begin() + mid, path_copys[2].begin() + end);
-          // 4. a'b'c'
-          std::reverse(path_copys[3].begin() + start, path_copys[3].begin() + end);
-          std::reverse(path_copys[3].begin() + start, path_copys[3].begin() + mid);
-          std::reverse(path_copys[3].begin() + mid, path_copys[3].begin() + end);
+          double d0 = CalculateDistance(path_copy[start-1], path_copy[start]) + 
+                      CalculateDistance(path_copy[mid-1], path_copy[mid]) + 
+                      CalculateDistance(path_copy[end-1], path_copy[end]);
 
-          double cost;
-          int index = -1;
-          for(int i = 0; i < 4; ++i){
-            cost = CalculatePathDis(adjacent_matrix, id2index, path_copys[i]);
-            if(cost < mincost){
-              paths.emplace_back(path_copys[i]);
-              mincost = cost;
-              index = i;
-            }
+          double d1 = CalculateDistance(path_copy[start-1], path_copy[mid-1]) + 
+                      CalculateDistance(path_copy[start], path_copy[end-1]) + 
+                      CalculateDistance(path_copy[mid], path_copy[end]);
+
+          double d2 = CalculateDistance(path_copy[start-1], path_copy[mid]) + 
+                      CalculateDistance(path_copy[end-1], path_copy[mid-1]) + 
+                      CalculateDistance(path_copy[start], path_copy[end]);
+
+          double d3 = CalculateDistance(path_copy[start-1], path_copy[end-1]) + 
+                      CalculateDistance(path_copy[mid], path_copy[start]) + 
+                      CalculateDistance(path_copy[mid-1], path_copy[end]);
+          double d4 = CalculateDistance(path_copy[start-1], path_copy[mid]) + 
+                      CalculateDistance(path_copy[end-1], path_copy[start]) + 
+                      CalculateDistance(path_copy[mid-1], path_copy[end]);
+          std::vector<double> dist{d0, d1, d2, d3, d4};
+          int min_change = std::min_element(dist.begin(), dist.end()) - dist.begin();
+          if(min_change == 0){
+            continue;
           }
-          if(index != -1){
-            path_start.assign(path_copys[index].begin(), path_copys[index].end()); // index != -1 means find a shorter path
-            improve = true;
-            break;
+          if(min_change == 1){
+            // the shortest cahnge is the 1st one
+            // 1. ab'c'
+            std::reverse(path_copy.begin() + start, path_copy.begin() + mid);
+            std::reverse(path_copy.begin() + mid , path_copy.begin() + end);
+          }else if(min_change == 2){
+            // 2. a'b'c
+            std::reverse(path_copy.begin() + start, path_copy.begin() + end);
+            std::reverse(path_copy.begin() + start, path_copy.begin() + start + end - mid);
+          }else if(min_change == 3){
+            // 3. a'bc'
+            std::reverse(path_copy.begin() + start, path_copy.begin() + end);
+            std::reverse(path_copy.begin() + start + end - mid, path_copy.begin() + end);
+          }else if(min_change == 4){
+            // 4. a'b'c'
+            std::reverse(path_copy.begin() + start, path_copy.begin() + end);
+            std::reverse(path_copy.begin() + start, path_copy.begin() + start + end - mid);
+            std::reverse(path_copy.begin() + start + end - mid, path_copy.begin() + end);
           }
+          mincost = CalculatePathDis(adjacent_matrix, id2index, path_copy);
+          paths.emplace_back(path_copy);
+          improve = true;
+          break;
         }
         if(improve) break;
       }
       if(improve) break;
     }
-    if(improve) count = 0;
-    else ++count;
+    if(!improve) break;
   }   
 }
 
