@@ -147,7 +147,9 @@ Given 2 locations A and B, find the best route from A to B.(A is src location an
 | `std::unordered_map<std::string,std::unordered_map<std::string,double>>mp` | use DFS iterate the graph, store the relationship of nodes in the graph |
 | `std::unordered_map<std::string,double> distance` | key: node ; val: the shortest distance from the node to the src |
 | `std::unordered_map<std::string,std::string>prev` | key: the node ; val is the prev node |
+
 <p align="center"><img src="report/3_Bellman_mp.png" alt="3_Bellman_mp" width="500"/></p>
+
 ### Runtime Comparison
 | NO. | Src Loc | Dst Loc | Dist(miles) | DJ-runtime(usec)| BF-runtime(usec) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -253,7 +255,7 @@ We will randomly select N points in the map and run your program.
 
 Case 1: 6 locations
 For a few locations, all the 3 methods can find the optimal result in an acceptable time. These two heuristic algorithms have to do some redundant iterators, so in this case they cost more time than Backtracking.
-<p align="center"><img src="report/TSP_6.png" alt="Runtime" width="8000"/></p>
+<p align="center"><img src="report/TSP_6.png" alt="Runtime" width="800"/></p>
 <p align="center"><img src="report/TSP_6loc.png" alt="Visualization" width="500"/></p>
 
 Case 2: 9 locations
