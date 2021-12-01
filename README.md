@@ -18,7 +18,7 @@ Code submission: Monday, December 5 by 23:59 pm
 | 5. `CycleDetection` | Done :white_check_mark: | Done :white_check_mark: | 
 | 6. `DeliveringTrojan` | Done :white_check_mark: | Done :white_check_mark: | 
 | 7. `FindKClosestPoints` | Done :white_check_mark: | Done :white_check_mark: | 
-| 8. `Video presentation and report` | To Be Done :golf: | To Be Added :heavy_exclamation_mark: | 
+| 8. `Video presentation and report` | Done :white_check_mark: | Done :white_check_mark: | 
 | 8. `Extra credit items(3-opt)` | Done :white_check_mark: | Done :white_check_mark: | 
 
 
