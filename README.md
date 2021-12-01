@@ -358,12 +358,7 @@ Iterate the data to find the nodes in the square O(N), DFS recursive using relev
 std::vector<std::string> DeliveringTrojan(std::vector<std::string> &location_names,
                                             std::vector<std::vector<std::string>> &dependencies);
 ```
-
-Tommy Trojan got a part-time job from TrojanEats, for which he needs to pick up and deliver food from local restaurants to various location near the campus. Tommy needs to visit a few different location near the campus with certain order, since there are some constraints. For example, he must first get the food from the restaurant before arriving at the delivery point. 
-
-The TrojanEats app will have some instructions about these constraints. So, Tommy asks you to help him figure out the feasible route!
-
-Here we will give you a vector of location names that Tommy needs to visit, and also some dependencies between those locations.
+First, we use ```ReadLocationsFromCSVFile``` to get locations, and use ```ReadDependenciesFromCSVFile``` to get dependencies, and based them, build a directed acyclic graph, then dfs it, push_back the locations when we return. Finally reverse it.
 
 
 Case 1: 4 locations
@@ -399,7 +394,7 @@ sort the distance from the from to each node in the map. We maintain the heap wi
 Case1: Lyons Center 6 locations
 <p align="center"><img src="report/7_1.png" alt="7_1" width="500"/></p>
 <p align="center"><img src="report/7_2.png" alt="7_2" width="500"/></p>
-Case2: Lyons Center 13 locations 
+Case2: Lyons Center 12 locations 
 <p align="center"><img src="report/7_3.png" alt="7_3" width="500"/></p>
 <p align="center"><img src="report/7_4.png" alt="7_4" width="500"/></p>
 Case3: Lyons Center 36 locations
@@ -407,18 +402,5 @@ Case3: Lyons Center 36 locations
 <p align="center"><img src="report/7_6.png" alt="7_6" width="500"/></p>
 
 ### Time complexity:
-Firstly, using a for loop to iterate the `data` to calculate the distance between each node and the source is O(n). Then push the n nodes into priority_queue to sort the nodes. Since we only need the k closest nodes, we maintain the size of priority_queue with size k. Therefore, the time complexity is O(nlogk);The total time complexity is O(n+nlogk);
+Firstly, using a for loop to iterate the `data` , in every iteration, we inspect whether the node name is empty, if not, we put the node into the priority_queue whose size is k. Therefore, the time complexity of each iteration is O(lohk+h). To be specitif, h is the time of calculate the distance. We iterate n times. Thus, the total time complexity is O(n(logk+h)).
 
-
-
-
-
-
-### Report:
-
-Your README file should include two sections:
-
-1. High-level overview of your design (Use diagrams and pictures for your data structures).
-2. Detailed description of each function and its time complexity.
-3. Time spent for each function.
-4. Discussion, conclusion, and lessons learned.
