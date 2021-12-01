@@ -154,18 +154,18 @@ Given 2 locations A and B, find the best route from A to B.(A is src location an
 <p align="center"><img src="report/3_Bellman_mp.png" alt="3_Bellman_mp" width="500"/></p>
 
 ### Runtime Comparison
-| NO. | Src Loc | Dst Loc | Dist(miles) | DJ-runtime(usec)| BF-runtime(usec) |
+| # locs | Src Loc | Dst Loc | Dist(miles) | DJ-runtime(usec)| BF-runtime(usec) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| 0 | 7Eleven |  Popeyes Louisiana Kitchen| 0.107757 | 489 | 15,032,881 |
-| 1 | Tap Two Blue | 7Eleven | 0.259747 | 994 | 14,186068 |
-| 2 | CVS | Target | 0.351751 | 1,844 | 14,708,495 |
-| 3 | 7Eleven | CVS | 0.463025 | 4,338 | 13,974,720 |
-| 4 | Tap Two Blue | CVS | 0.684286 | 4,782 | 14,463,257 |
-| 5 | 7Eleven | Target | 0.788389 | 7,976 | 15,537,051 |
-| 6 | Target | Ralphs | 0.839235 | 21,308 | 14,822,822 |
-| 7 | Ralphs | CVS | 1.14497 | 9,330 | 14,655,557 |
-| 8 | Ralphs | 7Eleven | 1.3303 | 14,042 | 15,988,243 |
-| 9 | Metro 40 | Driveway | 1.77417 | 54,777 | 15,715,079 |
+| 9 | 7Eleven |  Popeyes Louisiana Kitchen| 0.107757 | 489 | 15,032,881 |
+| 17 | Tap Two Blue | 7Eleven | 0.259747 | 994 | 14,186068 |
+| 23 | CVS | Target | 0.351751 | 1,844 | 14,708,495 |
+| 29 | Target | Ralphs | 0.839235 | 21,308 | 14,822,822 |
+| 39 | 7Eleven | CVS | 0.463025 | 4,338 | 13,974,720 |
+| 53 | 7Eleven | Target | 0.788389 | 7,976 | 15,537,051 |
+| 49 | Ralphs | CVS | 1.14497 | 9,330 | 14,655,557 |
+| 54 | Tap Two Blue | CVS | 0.684286 | 4,782 | 14,463,257 |
+| 64 | Ralphs | 7Eleven | 1.3303 | 14,042 | 15,988,243 |
+| 101 | Metro 40 | Driveway | 1.77417 | 54,777 | 15,715,079 |
 
 From the table above, we could found that the speed of Dijkstra is exceeded Bellman Ford to great extent. That is because Bellman ford need to iterate each node in the data using DFS to find the graph. However, Dijstra doesn't need to do that. Dijstra using priority_queue to find the shortest distance, it only need to sort the relevant node.
 

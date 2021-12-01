@@ -1342,15 +1342,23 @@ std::vector<std::string> TrojanMap::FindKClosestPoints(std::string name, int k) 
   std::vector<std::string> res;
   //std::vector<std::string> location_ids;
   std::string loc_id=GetID(name);
-  auto compare=[](DJNode a,DJNode b){return a.dist > b.dist;};
+  auto compare=[](DJNode a,DJNode b){return a.dist < b.dist;};
   std::priority_queue<DJNode,std::vector<DJNode>,decltype(compare)> dist_heap(compare);
+
   for(auto &items:data){
     double dis= CalculateDistance(loc_id,items.first);
-    dist_heap.emplace(DJNode(items.first,dis));
+    if(dist_heap.size()<=k+1){
+      dist_heap.emplace(DJNode(items.first,dis));
+    }else{
+      if(dis<dist_heap.top().dist){
+        dist_heap.pop();
+        dist_heap.emplace(DJNode(items.first,dis));
+      }
+    }
   }
-  dist_heap.pop();
+  // dist_heap.pop();
   int j=0;
-  while (j!=k){
+  while (j!=k-1){
     DJNode temp=dist_heap.top();
     dist_heap.pop();
     if(!data[temp.id].name.empty()){
@@ -1358,6 +1366,7 @@ std::vector<std::string> TrojanMap::FindKClosestPoints(std::string name, int k) 
       j=j+1;
     }
   }
+  std::reverse(res.begin(),res.end());
   return res;
 }
 //O(nlogn)
