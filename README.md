@@ -391,25 +391,23 @@ We will use the following algorithms:
 std::vector<std::string> FindKClosestPoints(std::string name, int k);
 ```
 In this function, we will use the data stureture DJNode again to establish the priority_queue, to
-sort the distance from the from to each node in the map.
+sort the distance from the from to each node in the map. We maintain the heap with k elements.
 ```c++
   auto compare=[](DJNode a,DJNode b){return a.dist > b.dist;};
   std::priority_queue<DJNode,std::vector<DJNode>,decltype(compare)> dist_heap(compare); 
 ```
-Case1: CVS 5 locations
+Case1: Lyons Center 6 locations
 <p align="center"><img src="report/7_1.png" alt="7_1" width="500"/></p>
 <p align="center"><img src="report/7_2.png" alt="7_2" width="500"/></p>
-Case2: Lyons Center 12 locations 
+Case2: Lyons Center 13 locations 
 <p align="center"><img src="report/7_3.png" alt="7_3" width="500"/></p>
 <p align="center"><img src="report/7_4.png" alt="7_4" width="500"/></p>
-Case3: HolBox 8 locations
+Case3: Lyons Center 36 locations
 <p align="center"><img src="report/7_5.png" alt="7_5" width="500"/></p>
 <p align="center"><img src="report/7_6.png" alt="7_6" width="500"/></p>
 
 ### Time complexity:
-Firstly, using a for loop to iterate the `data` to calculate the distance between each node and the source is O(n);
-Then push the n nodes into priority_queue to sort the nodes O(nlogn);
-Total O(nlogn);
+Firstly, using a for loop to iterate the `data` to calculate the distance between each node and the source is O(n). Then push the n nodes into priority_queue to sort the nodes. Since we only need the k closest nodes, we maintain the size of priority_queue with size k. Therefore, the time complexity is O(nlogk);The total time complexity is O(n+nlogk);
 
 
 

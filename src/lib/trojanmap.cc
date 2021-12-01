@@ -1366,4 +1366,3 @@ std::vector<std::string> TrojanMap::FindKClosestPoints(std::string name, int k) 
   std::reverse(res.begin(),res.end());
   return res;
 }
-//O(nlogn)
