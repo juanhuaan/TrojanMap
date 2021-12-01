@@ -76,8 +76,14 @@ An example of the DJNodes applied in **CalculateShortestPath_Dijkstra**
 
 Given node's id, all the information of node could be obtained through **data**; In order to find the id of the node, using **name2id**.
 ```cpp
+class TrojanMap {
+ public:
+  // A map of ids to Nodes.
   std::unordered_map<std::string, Node> data;
+  // A map of names to ids.
   std::unordered_map<std::string, std::string> name2id;
+  ...
+}
 ```
 
 ---
