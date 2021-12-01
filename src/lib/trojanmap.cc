@@ -1136,7 +1136,7 @@ void TrojanMap::TPS_3opt(const std::vector<std::vector<double>> &adjacent_matrix
           double d3 = CalculateDistance(path_copy[start-1], path_copy[end-1]) + 
                       CalculateDistance(path_copy[mid], path_copy[start]) + 
                       CalculateDistance(path_copy[mid-1], path_copy[end]);
-                      
+
           double d4 = CalculateDistance(path_copy[start-1], path_copy[mid]) + 
                       CalculateDistance(path_copy[end-1], path_copy[start]) + 
                       CalculateDistance(path_copy[mid-1], path_copy[end]);
@@ -1346,8 +1346,9 @@ std::vector<std::string> TrojanMap::FindKClosestPoints(std::string name, int k) 
   std::priority_queue<DJNode,std::vector<DJNode>,decltype(compare)> dist_heap(compare);
 
   for(auto &items:data){
+    if(data[items.first].name.empty()) continue;
     double dis= CalculateDistance(loc_id,items.first);
-    if(dist_heap.size()<=k+1){
+    if(dist_heap.size()<k+1){
       dist_heap.emplace(DJNode(items.first,dis));
     }else{
       if(dis<dist_heap.top().dist){
@@ -1357,14 +1358,10 @@ std::vector<std::string> TrojanMap::FindKClosestPoints(std::string name, int k) 
     }
   }
   // dist_heap.pop();
-  int j=0;
-  while (j!=k-1){
+  while (k--){
     DJNode temp=dist_heap.top();
     dist_heap.pop();
-    if(!data[temp.id].name.empty()){
-      res.push_back(temp.id);
-      j=j+1;
-    }
+    res.push_back(temp.id);
   }
   std::reverse(res.begin(),res.end());
   return res;
