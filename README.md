@@ -116,6 +116,9 @@ Given a location name, in order to find the information of the node, find the id
 <p align="center"><img src="report/2_5.png" alt="2_5" width="500"/></p>
 <p align="center"><img src="report/2_6.png" alt="2_6" width="500"/></p>
 
+### Time complexity
+When we read the file using ```void TrojanMap::CreateGraphFromCSVFile``` we build the name2id, the time complexity of creating the unordered_map is O(n). Since name2id is a member variable, we only need to create the map one time. After the map is created, we call the funtion GetID whose time complextity is O(1).
+
 ## Step 3: CalculateShortestPath between two places
 
 ```c++
@@ -167,9 +170,9 @@ Given 2 locations A and B, find the best route from A to B.(A is src location an
 From the table above, we could found that the speed of Dijkstra is exceeded Bellman Ford to great extent. That is because Bellman ford need to iterate each node in the data using DFS to find the graph. However, Dijstra doesn't need to do that. Dijstra using priority_queue to find the shortest distance, it only need to sort the relevant node.
 
 ### Time Complxity
-CalculateShortestPath_Dijkstra: O(m+nlogn)
+CalculateShortestPath_Dijkstra: O(m+nlogn) the number of total edge in the graph is m, the number of the total nodes we need is n. We use the heap to store DJNodes, therefore the time complexity of picking the shortest Node is logn. Thus, the total time complexity is O(m+nlogn).
 
-CalculateShortestPath_Bellman_Ford: O(m*n)
+CalculateShortestPath_Bellman_Ford: O(m*n+m+n) the number of total edge in the graph is m, the number of the total nodes is n. Firstly, we use DFS to find the graph, we visited all the node relevant with source node, and we wisited all the children of each node, thus the time complexity is O(m+n). The we use Bellman Ford to find the shortest path. We visit all the edge. After we visited each edge O(m), we renew all of the nodes O(n). Therefore, the time complexity of Bellman-Ford is O(m*n).
 
 ### Sample Sreenshot
 <p align="center"><img src="report/3_1.png" alt="3_1" width="500"/></p>
@@ -346,8 +349,7 @@ Case4:No cycle
 <p align="center"><img src="report/5_no_cycle2.png" alt="5_no_cycle2" width="500"/></p>
 
 ### Time complexity: 
-Iterate the data O(n), DFS recursive 0(n+m);
-Total complexity: O(n);
+Iterate the data to find the nodes in the square O(N), DFS recursive using relevant nodes and the children 0(n+m); Total complexity: O(N+n+m);
 
 
 ## Step 6: Topological Sort
@@ -405,8 +407,8 @@ Case3: HolBox 8 locations
 <p align="center"><img src="report/7_6.png" alt="7_6" width="500"/></p>
 
 ### Time complexity:
-Firstly, using a for loop to iterate the `data` to calculate the distance between each node and the source O(n);
-Then push the node into priority_queue to sort the nodes O(nlogn);
+Firstly, using a for loop to iterate the `data` to calculate the distance between each node and the source is O(n);
+Then push the n nodes into priority_queue to sort the nodes O(nlogn);
 Total O(nlogn);
 
 

@@ -1136,6 +1136,7 @@ void TrojanMap::TPS_3opt(const std::vector<std::vector<double>> &adjacent_matrix
           double d3 = CalculateDistance(path_copy[start-1], path_copy[end-1]) + 
                       CalculateDistance(path_copy[mid], path_copy[start]) + 
                       CalculateDistance(path_copy[mid-1], path_copy[end]);
+                      
           double d4 = CalculateDistance(path_copy[start-1], path_copy[mid]) + 
                       CalculateDistance(path_copy[end-1], path_copy[start]) + 
                       CalculateDistance(path_copy[mid-1], path_copy[end]);
