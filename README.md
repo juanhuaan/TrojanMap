@@ -244,9 +244,11 @@ void TrojanMap::TPS_3opt(const std::vector<std::vector<double>> &adjacent_matrix
   std::reverse(path_copys[0].begin() + mid , path_copys[0].begin() + end);
   // 2. a'b'c
   std::reverse(path_copys[1].begin() + start, path_copys[1].begin() + end);
+  // Because I use reverse(b+c) to replace reverse a, after that reverse(b) is reverse(start, start + end - mid) rather than reverse(start, mid)
   std::reverse(path_copys[1].begin() + start, path_copys[1].begin() + start + end - mid);
   // 3. a'bc'
   std::reverse(path_copys[2].begin() + start, path_copys[2].begin() + end);
+  // Similarly, reverse(start + end - mid, end) rather than reverse(mid, end)
   std::reverse(path_copys[2].begin() + start + end - mid, path_copys[2].begin() + end);
   // 4. a'b'c'
   std::reverse(path_copys[3].begin() + start, path_copys[3].begin() + end);
@@ -316,7 +318,7 @@ At this case, the time cost by backtracking is gradually unacceptable, the two h
 
 ### Runtime Comparison
 1. When the number of locations is larger than 13, the time cost by Backtracking is more than 50 times than 2-opt, while 2-opt/3-opt can have very close or the same results.
-2. In addition, from the cases with same number of locations, we can find the early break can decrease dramatically the time in some special cases. 2-opt and 3-opt would not have some very large changes for the same scale cases.
+2. In addition, from the cases with the same number of locations, we can find the early break can decrease dramatically the time in some special cases. For example, the last four cases all have 15 locations, but the runtime is different. I think the reason is that when the edges between locations are similar, it would rarely have a chance to get an early break, so it would be degraded to the brute force, on the contrary, if there are some edges long, some edges short, the early break can decrease the time consumption dramatically. 2-opt and 3-opt would not have some very large changes for the same scale cases.
 
 ### Time complexity
 Let n be the number of the locations. 
