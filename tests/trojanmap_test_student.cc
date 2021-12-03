@@ -111,6 +111,7 @@ TEST(TrojanMapTest, FindPosition) {
  * Test for CalculateShortestPath
  * 
  * */
+ 
 TEST(TrojanMapTest, CalculateShortestPath1) {
   TrojanMap m;
   m.CreateGraphFromCSVFile();
@@ -257,6 +258,7 @@ TEST(TrojanMapStudentTest, TSP3) {
   EXPECT_EQ(flag, true);
 }
 
+
 /**
  * 
  * Test for CycleDetection
@@ -293,6 +295,17 @@ TEST(TrojanMapTest, CycleDetection3) {
  * Test for DeliveringTrojan
  * 
  * */
+TEST(TrojanMapStudentTest, TopologicalSort0) {
+  TrojanMap m;
+  m.CreateGraphFromCSVFile();
+  std::vector<std::string> location_names = {"Cardinal Gardens", "Coffee Bean1", "CVS", "Target"};
+  std::vector<std::vector<std::string>> dependencies = {{"Coffee Bean1", "CVS"}, {"Cardinal Gardens","CVS"}, {"Target", "Coffee Bean1"}, {"CVS", "Target"}};
+  auto result = m.DeliveringTrojan(location_names, dependencies);
+  std::vector<std::string> gt = {}; // there is a cycle, should return {}
+  EXPECT_EQ(result.size(), gt.size());
+  EXPECT_EQ(result, gt);
+}
+
 TEST(TrojanMapStudentTest, TopologicalSort1) {
   TrojanMap m;
   m.CreateGraphFromCSVFile();

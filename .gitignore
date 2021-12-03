@@ -7,7 +7,6 @@
 /bazel-*
 /opencv
 /.vscode
-/src/lib/output.avi
 /ncurses.BUILD
 /WORKSPACE
 .DS_Store

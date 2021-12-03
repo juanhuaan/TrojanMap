@@ -193,6 +193,12 @@ void TrojanMap::PrintMenu() {
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
+    std::cout << "Calculating (using Brute_Force)..." << std::endl;
+    start = std::chrono::high_resolution_clock::now();
+    auto results_bf = TravellingTrojan_Brute_force(locations);
+    stop = std::chrono::high_resolution_clock::now();
+    auto duration_bf = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
     std::cout << "Calculating (using 2-opt)..." << std::endl;
     start = std::chrono::high_resolution_clock::now();
     auto results_2opt = TravellingTrojan_2opt(locations);
@@ -205,7 +211,8 @@ void TrojanMap::PrintMenu() {
     stop = std::chrono::high_resolution_clock::now();
     auto duration_3opt = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
-    CreateAnimation(results.second, "TSP_output_001");
+    CreateAnimation(results.second, "output0");
+    CreateAnimation(results_bf.second, "TSP_output_001");
     CreateAnimation(results_2opt.second, "TSP_output_002");
     CreateAnimation(results_3opt.second, "TSP_output_003");
 
@@ -216,6 +223,7 @@ void TrojanMap::PrintMenu() {
       menu = "**************************************************************\n";
       std::cout << menu;
       std::cout << "The distance of the path is:" << results.first << " miles" << std::endl;
+      std::cout << "The distance of the path is(Brute Force):" << results_bf.first << " miles" << std::endl;
       std::cout << "The distance of the path is(2-opt):" << results_2opt.first << " miles" << std::endl;
       std::cout << "The distance of the path is(3-opt):" << results_3opt.first << " miles" << std::endl;
       PlotPath(results.second[results.second.size()-1]);
@@ -228,6 +236,7 @@ void TrojanMap::PrintMenu() {
            "You could find your animation at src/lib/output.avi.          \n";
     std::cout << menu;
     std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl << std::endl;
+    std::cout << "Time taken by function(Brute Force): " << duration_bf.count() << " microseconds" << std::endl << std::endl;
     std::cout << "Time taken by function(2-opt): " << duration_2opt.count() << " microseconds" << std::endl << std::endl;
     std::cout << "Time taken by function(3-opt): " << duration_3opt.count() << " microseconds" << std::endl << std::endl;
     PrintMenu();
@@ -993,9 +1002,9 @@ std::vector<std::vector<double>> TrojanMap::CreateAdjMatrix(std::vector<std::str
   return adjacent_matrix;
 }
 
-void TrojanMap::Backtracking(const std::vector<std::vector<double>> &adjacent_matrix, std::vector<std::vector<std::string>> &paths, std::vector<std::string> &path, std::vector<bool> &visit, double &mincost, double cost, int current, const std::vector<std::string> &location_ids){
-	if(cost > mincost) return; // early break
+void TrojanMap::Backtracking(const std::vector<std::vector<double>> &adjacent_matrix, std::vector<std::vector<std::string>> &paths, std::vector<std::string> &path, std::vector<bool> &visit, double &mincost, double cost, int current, const std::vector<std::string> &location_ids, int &count){
   if(path.size() == adjacent_matrix.size()){
+    ++count;
 		cost += adjacent_matrix[0][current];
 		if(cost < mincost){
 			mincost = cost;
@@ -1007,17 +1016,18 @@ void TrojanMap::Backtracking(const std::vector<std::vector<double>> &adjacent_ma
 	}
 	for(int i = 0; i < adjacent_matrix.size(); ++i){
 		if(!visit[i]){
-			if(cost + adjacent_matrix[i][current] > mincost) return; // 
+			if(cost + adjacent_matrix[i][current] > mincost) continue; // early break
 			visit[i] = true;
 			path.emplace_back(location_ids[i]);
-			Backtracking(adjacent_matrix, paths, path, visit, mincost, cost + adjacent_matrix[i][current], i, location_ids);
+			Backtracking(adjacent_matrix, paths, path, visit, mincost, cost + adjacent_matrix[i][current], i, location_ids, count);
 			visit[i] = false;
 			path.pop_back();
 		}
 	}
 }
 
-std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan(std::vector<std::string> &location_ids) {
+std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan(std::vector<std::string> &location_ids){
+  
   std::pair<double, std::vector<std::vector<std::string>>> results;
   
   int n = location_ids.size();
@@ -1030,8 +1040,55 @@ std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTr
 	std::vector<std::string> path;
 	path.emplace_back(location_ids[0]);
 	double mincost = std::numeric_limits<double>::max();
-	Backtracking(adjacent_matrix, paths, path, visit, mincost, 0, 0, location_ids);
+  int count = 0;
+	Backtracking(adjacent_matrix, paths, path, visit, mincost, 0, 0, location_ids, count);
 	results = make_pair(mincost, paths);
+  std::cout << "the backtracking have iterated " << count << " times." << std::endl; 
+  return results;
+}
+
+void TrojanMap::Brute_Force(const std::vector<std::vector<double>> &adjacent_matrix, std::vector<std::vector<std::string>> &paths, std::vector<std::string> &path, std::vector<bool> &visit, double &mincost, double cost, int current, const std::vector<std::string> &location_ids, int &count){
+  if(path.size() == adjacent_matrix.size()){
+    ++count;
+		cost += adjacent_matrix[0][current];
+		if(cost < mincost){
+			mincost = cost;
+			path.emplace_back(location_ids[0]); 
+			paths.emplace_back(path);
+			path.pop_back();
+		} 
+		return;
+	}
+	for(int i = 0; i < adjacent_matrix.size(); ++i){
+		if(!visit[i]){
+			visit[i] = true;
+			path.emplace_back(location_ids[i]);
+			Brute_Force(adjacent_matrix, paths, path, visit, mincost, cost + adjacent_matrix[i][current], i, location_ids, count);
+			visit[i] = false;
+			path.pop_back();
+		}
+	}
+}
+
+
+std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan_Brute_force(
+      std::vector<std::string> &location_ids){
+  std::pair<double, std::vector<std::vector<std::string>>> results;
+
+  int n = location_ids.size();
+  //creat a matrix to store the distance between evey node
+  std::vector<std::vector<double>> adjacent_matrix = CreateAdjMatrix(location_ids);
+
+	std::vector<bool> visit(n);
+	visit[0] = true;
+	std::vector<std::vector<std::string>> paths;
+	std::vector<std::string> path;
+	path.emplace_back(location_ids[0]);
+	double mincost = std::numeric_limits<double>::max();
+  int count = 0;
+	Brute_Force(adjacent_matrix, paths, path, visit, mincost, 0, 0, location_ids, count);
+	results = make_pair(mincost, paths);
+  std::cout << "the brute_force have iterated " << count << " times." << std::endl; 
   return results;
 }
 
@@ -1047,6 +1104,7 @@ double TrojanMap::CalculatePathDis(const std::vector<std::vector<double>> &adjac
   }
   return distance;
 }
+
 // time complexity: k*n^2
 std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan_2opt(
       std::vector<std::string> &location_ids){
@@ -1076,8 +1134,12 @@ void TrojanMap::TPS_2opt(const std::vector<std::vector<double>> &adjacent_matrix
     improve = false;
     for(int start = 1; start < n - 1; ++start){
       for(int end = start + 1; end < n; ++end){
-        double d1 = CalculateDistance(path_copy[start-1], path_copy[start]) + CalculateDistance(path_copy[end-1], path_copy[end]);
-        double d2 = CalculateDistance(path_copy[start-1], path_copy[end-1]) + CalculateDistance(path_copy[start], path_copy[end]);
+        int start_0 = id2index[path_copy[start-1]], start_1 = id2index[path_copy[start]];
+        int end_0 = id2index[path_copy[end-1]], end_1 = id2index[path_copy[end]];
+        //double d1 = CalculateDistance(path_copy[start-1], path_copy[start]) + CalculateDistance(path_copy[end-1], path_copy[end]);
+        //double d2 = CalculateDistance(path_copy[start-1], path_copy[end-1]) + CalculateDistance(path_copy[start], path_copy[end]);
+        double d1 = adjacent_matrix[start_0][start_1] + adjacent_matrix[end_0][end_1];
+        double d2 = adjacent_matrix[start_0][end_0] + adjacent_matrix[start_1][end_1];
         if(d2 < d1){
           std::reverse(path_copy.begin() + start, path_copy.begin() + end);
           paths.emplace_back(path_copy);
@@ -1121,25 +1183,24 @@ void TrojanMap::TPS_3opt(const std::vector<std::vector<double>> &adjacent_matrix
     for(int start = 1; start < n - 2; ++start){
       for(int mid = start + 1; mid < n - 1; ++mid){
         for(int end = mid + 1; end < n; ++end){
-          double d0 = CalculateDistance(path_copy[start-1], path_copy[start]) + 
-                      CalculateDistance(path_copy[mid-1], path_copy[mid]) + 
-                      CalculateDistance(path_copy[end-1], path_copy[end]);
+          int start_0 = id2index[path_copy[start-1]], start_1 = id2index[path_copy[start]];
+          int mid_0 = id2index[path_copy[mid-1]], mid_1 = id2index[path_copy[mid]];
+          int end_0 = id2index[path_copy[end-1]], end_1 = id2index[path_copy[end]];
+          //double d0 = CalculateDistance(path_copy[start-1], path_copy[start]) + CalculateDistance(path_copy[mid-1], path_copy[mid]) + CalculateDistance(path_copy[end-1], path_copy[end]);
+          double d0 = adjacent_matrix[start_0][start_1] + adjacent_matrix[mid_0][mid_1] + adjacent_matrix[end_0][end_1];
 
-          double d1 = CalculateDistance(path_copy[start-1], path_copy[mid-1]) + 
-                      CalculateDistance(path_copy[start], path_copy[end-1]) + 
-                      CalculateDistance(path_copy[mid], path_copy[end]);
+          //double d1 = CalculateDistance(path_copy[start-1], path_copy[mid-1]) + CalculateDistance(path_copy[start], path_copy[end-1]) + CalculateDistance(path_copy[mid], path_copy[end]);
+          double d1 = adjacent_matrix[start_0][mid_0] + adjacent_matrix[start_1][end_0] + adjacent_matrix[mid_1][end_1];
 
-          double d2 = CalculateDistance(path_copy[start-1], path_copy[mid]) + 
-                      CalculateDistance(path_copy[end-1], path_copy[mid-1]) + 
-                      CalculateDistance(path_copy[start], path_copy[end]);
+          //double d2 = CalculateDistance(path_copy[start-1], path_copy[mid]) + CalculateDistance(path_copy[end-1], path_copy[mid-1]) + CalculateDistance(path_copy[start], path_copy[end]);
+          double d2 = adjacent_matrix[start_0][mid_1] + adjacent_matrix[end_0][mid_0] + adjacent_matrix[start_1][end_1];
 
-          double d3 = CalculateDistance(path_copy[start-1], path_copy[end-1]) + 
-                      CalculateDistance(path_copy[mid], path_copy[start]) + 
-                      CalculateDistance(path_copy[mid-1], path_copy[end]);
+          //double d3 = CalculateDistance(path_copy[start-1], path_copy[end-1]) + CalculateDistance(path_copy[mid], path_copy[start]) + CalculateDistance(path_copy[mid-1], path_copy[end]);
+          double d3 = adjacent_matrix[start_0][end_0] + adjacent_matrix[mid_1][start_1] + adjacent_matrix[mid_0][end_1];
 
-          double d4 = CalculateDistance(path_copy[start-1], path_copy[mid]) + 
-                      CalculateDistance(path_copy[end-1], path_copy[start]) + 
-                      CalculateDistance(path_copy[mid-1], path_copy[end]);
+          //double d4 = CalculateDistance(path_copy[start-1], path_copy[mid]) + CalculateDistance(path_copy[end-1], path_copy[start]) + CalculateDistance(path_copy[mid-1], path_copy[end]);
+          double d4 = adjacent_matrix[start_0][mid_1] + adjacent_matrix[end_0][start_1] + adjacent_matrix[mid_0][end_1];
+
           std::vector<double> dist{d0, d1, d2, d3, d4};
           int min_change = std::min_element(dist.begin(), dist.end()) - dist.begin();
           if(min_change == 0){
@@ -1242,6 +1303,7 @@ std::vector<std::string> TrojanMap::DeliveringTrojan(std::vector<std::string> &l
 
   std::unordered_map<int, std::vector<int>> DAG;
   std::vector<bool> visit(n);
+  std::vector<bool> being_visited(n);
 
   for(auto &dependency : dependencies){
     int i = loc2index[dependency[0]], j = loc2index[dependency[1]];
@@ -1260,8 +1322,7 @@ std::vector<std::string> TrojanMap::DeliveringTrojan(std::vector<std::string> &l
   std::vector<int> topo_list;
   for(auto &start_loc : start_locations){
     if(!visit[start_loc]){
-      visit[start_loc] = true;
-      TopoSort(DAG, visit, start_loc, topo_list);
+      if(TopoSort(DAG, visit, being_visited, start_loc, topo_list) == true) return result; // if there is a cycle
     }
   } 
   if(topo_list.size() != n) return result; // if no feasible route exists
@@ -1269,15 +1330,20 @@ std::vector<std::string> TrojanMap::DeliveringTrojan(std::vector<std::string> &l
   return result;                                                     
 }
 
-void TrojanMap::TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::vector<bool> &visit, int cur, std::vector<int> &topo_list){
+bool TrojanMap::TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::vector<bool> &visit, std::vector<bool> &being_visited, int cur, std::vector<int> &topo_list){
   // DFS
+  being_visited[cur] = true;
   for(auto &loc : DAG[cur]){
+    if(being_visited[loc]) return true;
     if(!visit[loc]){
-      visit[loc] = true;
-      TopoSort(DAG, visit, loc, topo_list);
+      being_visited[loc] = true;
+      if(TopoSort(DAG, visit, being_visited, loc, topo_list) == true) return true;
+      being_visited[loc] = false;
     }
   }
+  visit[cur] = true;
   topo_list.emplace_back(cur);
+  return false;
 }
 
 /**

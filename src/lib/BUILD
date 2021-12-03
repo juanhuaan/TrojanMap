@@ -7,6 +7,9 @@ cc_library(
     deps = ["@opencv//:opencv"],
     data = ["map.csv", 
     "input.jpg", 
-    "output.avi"],
+    "output0.avi",
+    "TSP_output_001.avi",
+    "TSP_output_002.avi",
+    "TSP_output_003.avi"],
     visibility = ["//visibility:public"],
 )

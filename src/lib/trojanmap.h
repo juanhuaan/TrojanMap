@@ -146,7 +146,7 @@ class TrojanMap {
 
   // Given a vector of location names, it should return a sorting of nodes
   // that satisfies the given dependencies.
-  void TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::vector<bool> &visit, int cur, std::vector<int> &topo_list);
+  bool TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::vector<bool> &visit, std::vector<bool> &being_visited, int cur, std::vector<int> &topo_list);
 
   std::vector<std::string> DeliveringTrojan(std::vector<std::string> &location_names,
                                             std::vector<std::vector<std::string>> &dependencies);
@@ -158,9 +158,12 @@ class TrojanMap {
   // (Notice that we don't find the optimal answer. You can return an estimated
   // path.)
   std::vector<std::vector<double>> CreateAdjMatrix(std::vector<std::string> &location_ids);
-  void Backtracking(const std::vector<std::vector<double>> &adjacent_matrix, std::vector<std::vector<std::string>> &paths, std::vector<std::string> &path, std::vector<bool> &visit, double &mincost, double cost, int current, const std::vector<std::string> &location_ids);
+  void Backtracking(const std::vector<std::vector<double>> &adjacent_matrix, std::vector<std::vector<std::string>> &paths, std::vector<std::string> &path, std::vector<bool> &visit, double &mincost, double cost, int current, const std::vector<std::string> &location_ids, int &count);
   std::pair<double, std::vector<std::vector<std::string>>> TravellingTrojan(std::vector<std::string> &location_ids);
-
+  
+  void Brute_Force(const std::vector<std::vector<double>> &adjacent_matrix, std::vector<std::vector<std::string>> &paths, std::vector<std::string> &path, std::vector<bool> &visit, double &mincost, double cost, int current, const std::vector<std::string> &location_ids, int &count);
+  std::pair<double, std::vector<std::vector<std::string>>> TravellingTrojan_Brute_force(
+      std::vector<std::string> &location_ids);
   double CalculatePathDis(const std::vector<std::vector<double>> &adjacent_matrix, std::unordered_map<std::string, int> &id2index, std::vector<std::string> &path);
   
   void TPS_2opt(const std::vector<std::vector<double>> &adjacent_matrix, 
