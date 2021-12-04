@@ -1431,11 +1431,11 @@ bool TrojanMap::TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::ve
  */
 bool TrojanMap::CycleDetection(std::vector<double> &square) {
 //establish an map with all node in square
-  std::unordered_map<std::string,std::vector<std::string>> adj;
+  //std::unordered_map<std::string,std::vector<std::string>> adj;
   std::unordered_map<std::string, int> insquare;
   for(auto &item:data){
     if(item.second.lon>=square[0] && item.second.lon<=square[1] && item.second.lat<=square[2] && item.second.lat>=square[3]){
-      adj[item.first]=item.second.neighbors;
+      //adj[item.first]=item.second.neighbors;
       insquare[item.first] = 1;
     }
   }
@@ -1447,9 +1447,9 @@ bool TrojanMap::CycleDetection(std::vector<double> &square) {
   for(auto &items:local_ids){
     isvisited[items]=false;
   }
-  for(auto &node:adj){
+  for(auto &node:data){
     if(isvisited[node.first]==false && insquare[node.first] ==1 ){
-      if(IsCyclicUtil(node.first,isvisited,"",adj,store_node,insquare)==true){ 
+      if(IsCyclicUtil(node.first,isvisited,"",store_node,insquare)==true){ 
         int n = store_node.size();
         std::string lst=store_node[n-1];
         auto it = std::find(store_node.begin(),store_node.end(),lst);
@@ -1467,13 +1467,13 @@ bool TrojanMap::CycleDetection(std::vector<double> &square) {
 
 //using DFS to find cycle
  bool TrojanMap::IsCyclicUtil(std::string node,std::map<std::string,bool>&isvisited,
-     std::string parent,std::unordered_map<std::string,std::vector<std::string>>& adj,std::vector<std::string>&store_node, std::unordered_map<std::string,int>& insquare){
+     std::string parent,std::vector<std::string>&store_node, std::unordered_map<std::string,int>& insquare){
   isvisited[node]=true;
   store_node.push_back(node);
-  for(auto &nei:adj[node]){
+  for(auto &nei:data[node].neighbors){
     if(insquare[nei]==0) continue;
     if (isvisited[nei]==false){
-      if(IsCyclicUtil(nei,isvisited,node,adj,store_node,insquare)==true) return true;
+      if(IsCyclicUtil(nei,isvisited,node,store_node,insquare)==true) return true;
     }else if(isvisited[nei]==true && nei!=parent ) {
       store_node.push_back(nei);
       return true; 
