@@ -173,7 +173,8 @@ Given 2 locations A and B, find the best route from A to B.(A is src location an
 | 952 | 64 | Ralphs | 7Eleven | 1.3303 | 20,467 | 12,772,751 | 41,484,131 | 
 | 1907| 101 | Metro 40 | Driveway | 1.77417 | 47,998 | 12,234,771 | 39,619,284 |
 
-
+<p align="center"><img src="report/3_DJchart.png" alt="DJchart" width="500"/></p>
+<p align="center"><img src="report/3_barchart.png" alt="bar chart" width="500"/></p>
 
 
 
