@@ -138,11 +138,18 @@ void TrojanMap::PrintMenu() {
     auto results2 = CalculateShortestPath_Bellman_Ford(input1, input2);
     auto stop2 = std::chrono::high_resolution_clock::now();
     auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(stop2 - start2);
+
+    auto start3 = std::chrono::high_resolution_clock::now();
+    auto results3 = CalculateShortestPath_Bellman_Ford_no_dfs(input1, input2);
+    auto stop3 = std::chrono::high_resolution_clock::now();
+    auto duration3 = std::chrono::duration_cast<std::chrono::microseconds>(stop3 - start3);
+
+    
     menu = "*************************Results******************************\n";
     std::cout << menu;
     if (results.size() != 0) {
       for(int i = 0; i < results.size(); ++i){
-        std::cout << results[i] << "\t" << results2[i] << std::endl;
+        std::cout << results[i] << "\t" << results2[i] <<"\t" << results3[i] << std::endl;
       }
       std::cout << "The distance of the path(DJ) is:" << CalculatePathLength(results) << " miles" << std::endl;
       PlotPath(results);
@@ -158,10 +165,19 @@ void TrojanMap::PrintMenu() {
       std::cout << "No route from the start point to the destination."
                 << std::endl;
     }
+
+    if (results3.size() != 0) {
+      
+      std::cout << "The distance of the path(BF) without_dfs is:" << CalculatePathLength(results3) << " miles" << std::endl;
+    } else {
+      std::cout << "No route from the start point to the destination."
+                << std::endl;
+    }
     menu = "**************************************************************\n";
     std::cout << menu;
     std::cout << "Time taken by function Dijkstra: " << duration.count() << " microseconds" << std::endl << std::endl;
     std::cout << "Time taken by function Bellman_Ford: " << duration2.count() << " microseconds" << std::endl << std::endl;
+    std::cout << "Time taken by function Bellman_Ford(no_dfs): " << duration3.count() << " microseconds" << std::endl << std::endl;
     PrintMenu();
     break;
   }
@@ -187,17 +203,18 @@ void TrojanMap::PrintMenu() {
     for (int i = 0; i < num; i++)
       locations.push_back(keys[rand() % keys.size()]);
     PlotPoints(locations);
-    std::cout << "Calculating (using Backtracking)..." << std::endl;
-    auto start = std::chrono::high_resolution_clock::now();
-    auto results = TravellingTrojan(locations);
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-
+    
     std::cout << "Calculating (using Brute_Force)..." << std::endl;
-    start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
     auto results_bf = TravellingTrojan_Brute_force(locations);
-    stop = std::chrono::high_resolution_clock::now();
+    auto stop = std::chrono::high_resolution_clock::now();
     auto duration_bf = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+    std::cout << "Calculating (using Backtracking)..." << std::endl;
+    start = std::chrono::high_resolution_clock::now();
+    auto results = TravellingTrojan(locations);
+    stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
     std::cout << "Calculating (using 2-opt)..." << std::endl;
     start = std::chrono::high_resolution_clock::now();
@@ -211,8 +228,8 @@ void TrojanMap::PrintMenu() {
     stop = std::chrono::high_resolution_clock::now();
     auto duration_3opt = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
-    CreateAnimation(results.second, "output0");
-    CreateAnimation(results_bf.second, "TSP_output_001");
+    CreateAnimation(results_bf.second, "output0");
+    CreateAnimation(results.second, "TSP_output_001");
     CreateAnimation(results_2opt.second, "TSP_output_002");
     CreateAnimation(results_3opt.second, "TSP_output_003");
 
@@ -222,8 +239,8 @@ void TrojanMap::PrintMenu() {
       for (auto x : results.second[results.second.size()-1]) std::cout << x << std::endl;
       menu = "**************************************************************\n";
       std::cout << menu;
-      std::cout << "The distance of the path is:" << results.first << " miles" << std::endl;
       std::cout << "The distance of the path is(Brute Force):" << results_bf.first << " miles" << std::endl;
+      std::cout << "The distance of the path is:" << results.first << " miles" << std::endl;
       std::cout << "The distance of the path is(2-opt):" << results_2opt.first << " miles" << std::endl;
       std::cout << "The distance of the path is(3-opt):" << results_3opt.first << " miles" << std::endl;
       PlotPath(results.second[results.second.size()-1]);
@@ -235,8 +252,8 @@ void TrojanMap::PrintMenu() {
     menu = "**************************************************************\n"
            "You could find your animation at src/lib/output.avi.          \n";
     std::cout << menu;
-    std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl << std::endl;
     std::cout << "Time taken by function(Brute Force): " << duration_bf.count() << " microseconds" << std::endl << std::endl;
+    std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl << std::endl;
     std::cout << "Time taken by function(2-opt): " << duration_2opt.count() << " microseconds" << std::endl << std::endl;
     std::cout << "Time taken by function(3-opt): " << duration_3opt.count() << " microseconds" << std::endl << std::endl;
     PrintMenu();
@@ -877,41 +894,29 @@ void TrojanMap::Bellman_bfs(std::string loca,std::string locb,
     }
   }
 }
-std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford(
+std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford_no_dfs(
                 std::string location1_name, std::string location2_name){
   std::string loc1_id=GetID(location1_name);
   std::string loc2_id=GetID(location2_name);
   std::vector<std::string> path;
   std::unordered_map<std::string,bool> visited;
-  std::unordered_map<std::string,std::unordered_map<std::string,double>>mp;
+  //std::unordered_map<std::string,std::unordered_map<std::string,double>>mp;
   std::vector<std::string> node_store;//store the ids of dfs
-  // Bellman_bfs(loc1_id,loc2_id,mp);
-  // Bellman_dfs(loc1_id,visited,mp);
-  if(visited[loc2_id]==false) return path;
-  //int i=mp.size();
-  
   std::unordered_map<std::string,double>distance;//store the distance from the source to every node;
   std::unordered_map<std::string,std::string>prev;//store the prev node of the shortest path;
   //initialize
-
-  for(auto &items:mp){
-      distance[items.first]=std::numeric_limits<double>::max();
-      //prev[items.first]=NULL;
+  for(auto &items:data){
+    distance[items.second.id]=std::numeric_limits<double>::max();
   }
   distance[loc1_id]=0.0;
-  //distance[loc2_id]=std::numeric_limits<double>::max();
-  for(int i=0;i<mp.size()-1;i++){
-    for(auto &u:mp){
-      for(auto &item:u.second){
-        if(distance[item.first]+mp[u.first][item.first]<distance[u.first]){
-          distance[u.first]=distance[item.first]+mp[u.first][item.first];
-          prev[u.first]=item.first;
+  for(int i=0;i<data.size()-1;i++){
+    for(auto &u:data){
+      for(auto &item:u.second.neighbors){
+        double d= CalculateDistance(u.second.id,item);
+        if(distance[item]+d<distance[u.second.id]){
+          distance[u.second.id]=distance[item]+d;
+          prev[u.second.id]=item;
         }
-        // else if(distance[u.first]+mp[u.first][item.first]<distance[item.first]){
-        //   distance[item.first]=distance[u.first]+mp[u.first][item.first];
-        //   prev[item.first]=u.first;
-        // }
-      
       }
     }
   }
@@ -922,11 +927,49 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford(
     temp=prev[temp];
   }
   std::reverse(path.begin(),path.end());
- 
-  // double sum1=Bellman_helper(loc1_id,i,loc2_id,mp,path);
-  // std::reverse(path.begin(),path.end());  
   return path;
 }
+
+std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford(
+                std::string location1_name, std::string location2_name){
+  std::string loc1_id=GetID(location1_name);
+  std::string loc2_id=GetID(location2_name);
+  std::vector<std::string> path;
+  std::unordered_map<std::string,bool> visited;
+  std::unordered_map<std::string,std::unordered_map<std::string,double>>mp;
+  std::vector<std::string> node_store;//store the ids of dfs
+  // Bellman_bfs(loc1_id,loc2_id,mp);
+  //using dfs to create a subgraph
+  Bellman_dfs(loc1_id,visited,mp);
+  if(visited[loc2_id]==false) return path;  
+  std::unordered_map<std::string,double>distance;//store the distance from the source to every node;
+  std::unordered_map<std::string,std::string>prev;//store the prev node of the shortest path;
+  //initialize
+  for(auto &items:mp){
+    distance[items.first]=std::numeric_limits<double>::max();
+  }
+  distance[loc1_id]=0.0;
+  for(int i=0;i<mp.size()-1;i++){
+    for(auto &u:mp){
+      for(auto &item:u.second){
+        if(distance[item.first]+mp[u.first][item.first]<distance[u.first]){
+          distance[u.first]=distance[item.first]+mp[u.first][item.first];
+          prev[u.first]=item.first;
+        }
+      }
+    }
+  }
+  path.push_back(loc2_id);
+  std::string temp=loc2_id;
+  while(temp!=loc1_id){
+    path.push_back(prev[temp]);
+    temp=prev[temp];
+  }
+  std::reverse(path.begin(),path.end());
+  return path;
+}
+
+//not used
 std::unordered_map<std::string,std::vector<std::string>>TrojanMap::Getpredecessor(std::string u,
     std::unordered_map<std::string,std::unordered_map<std::string,double>>mp){
     std::unordered_map<std::string,std::vector<std::string>>prev;
@@ -934,8 +977,8 @@ std::unordered_map<std::string,std::vector<std::string>>TrojanMap::Getpredecesso
       prev[u].push_back(it.first);
     }
     return prev;
-    
- }
+}
+//not used
 double TrojanMap::Bellman_helper(std::string s,int i,std::string v,
     std::unordered_map<std::string,std::unordered_map<std::string,double>>mp,
     std::vector<std::string>&path){
@@ -964,7 +1007,6 @@ double TrojanMap::Bellman_helper(std::string s,int i,std::string v,
       path.push_back(p); 
     }
     return std::min(d,Bellman_helper(s,i-1,v,mp,path));
-
   }
 }
 
@@ -1354,32 +1396,34 @@ bool TrojanMap::TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::ve
  */
 bool TrojanMap::CycleDetection(std::vector<double> &square) {
 //establish an map with all node in square
-std::unordered_map<std::string,std::vector<std::string>> adj;
-for(auto &item:data){
-  if(item.second.lon>=square[0] && item.second.lon<=square[1] && item.second.lat<=square[2] && item.second.lat>=square[3]){
-    adj[item.first]=item.second.neighbors;
-  }
-}
-//see the node on the map
-std::vector<std::string>local_ids;
-for(auto items:adj){
-  local_ids.push_back(items.first);
-}
-PlotPointsandEdges(local_ids,square);
-//some preparation
-std::map<std::string,bool>isvisited;
-for(auto &items:local_ids){
-  isvisited[items]=false;
-}
-//
-for(auto &node:adj){
-  if(isvisited[node.first]==false){
-    if(IsCyclicUtil(node.first,isvisited,"",adj)==true){
-      return true;
+  std::unordered_map<std::string,std::vector<std::string>> adj;
+  for(auto &item:data){
+    if(item.second.lon>=square[0] && item.second.lon<=square[1] && item.second.lat<=square[2] && item.second.lat>=square[3]){
+      adj[item.first]=item.second.neighbors;
     }
   }
-}
-return false;
+  //stored the visited nodes on the map
+  std::vector<std::string>local_ids;
+  //some preparation
+  std::map<std::string,bool>isvisited;
+  for(auto &items:local_ids){
+    isvisited[items]=false;
+  }
+  for(auto &node:adj){
+    if(isvisited[node.first]==false){
+      if(IsCyclicUtil(node.first,isvisited,"",adj)==true){ 
+        return true;
+      }
+    }
+  }
+  return false;
+  //plot the graph
+  for(auto items:isvisited){
+    if(items.second==true){
+      local_ids.push_back(items.first);
+      PlotPointsandEdges(local_ids,square);
+    }
+  }
 }
 
 //using DFS to find cycle

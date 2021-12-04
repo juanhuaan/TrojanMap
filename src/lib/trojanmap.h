@@ -124,6 +124,8 @@ class TrojanMap {
                                                  std::string location2_name);
   std::vector<std::string> CalculateShortestPath_Bellman_Ford(std::string location1_name,
                                                  std::string location2_name);
+  std::vector<std::string> CalculateShortestPath_Bellman_Ford_no_dfs(
+                std::string location1_name, std::string location2_name);
   void Bellman_dfs(std::string u,std::unordered_map<std::string,bool>&visited,
               std::unordered_map<std::string,std::unordered_map<std::string,double>>&mp);
   std::unordered_map<std::string,std::vector<std::string>> Getpredecessor(std::string u,
