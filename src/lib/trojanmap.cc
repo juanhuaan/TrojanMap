@@ -1440,7 +1440,7 @@ bool TrojanMap::CycleDetection(std::vector<double> &square) {
 
 //using DFS to find cycle
  bool TrojanMap::IsCyclicUtil(std::string node,std::map<std::string,bool>&isvisited,
-     std::string parent,std::unordered_map<std::string,std::vector<std::string>> adj,std::vector<std::string>store_node){
+     std::string parent,std::unordered_map<std::string,std::vector<std::string>> adj,std::vector<std::string>&store_node){
   isvisited[node]=true;
   store_node.push_back(node);
   for(auto &nei:adj[node]){

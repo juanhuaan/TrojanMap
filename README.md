@@ -160,25 +160,25 @@ Given 2 locations A and B, find the best route from A to B.(A is src location an
 <p align="center"><img src="report/3_Bellman_mp.png" alt="3_Bellman_mp" width="500"/></p>
 
 ### Runtime Comparison
-| # locs | Src Loc | Dst Loc | Dist(miles) | DJ-runtime(usec)| BF-runtime(usec) |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| 9 | 7Eleven |  Popeyes Louisiana Kitchen| 0.107757 | 489 | 15,032,881 |
-| 17 | Tap Two Blue | 7Eleven | 0.259747 | 994 | 14,186068 |
-| 23 | CVS | Target | 0.351751 | 1,844 | 14,708,495 |
-| 29 | Target | Ralphs | 0.839235 | 21,308 | 14,822,822 |
-| 39 | 7Eleven | CVS | 0.463025 | 4,338 | 13,974,720 |
-| 53 | 7Eleven | Target | 0.788389 | 7,976 | 15,537,051 |
-| 49 | Ralphs | CVS | 1.14497 | 9,330 | 14,655,557 |
-| 54 | Tap Two Blue | CVS | 0.684286 | 4,782 | 14,463,257 |
-| 64 | Ralphs | 7Eleven | 1.3303 | 14,042 | 15,988,243 |
-| 101 | Metro 40 | Driveway | 1.77417 | 54,777 | 15,715,079 |
+| # locs | Src Loc | Dst Loc | Dist(miles) | DJ-runtime(usec)| BF-runtime(usec) |BF_no_dfs(usec) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 9 | 7Eleven |  Popeyes Louisiana Kitchen| 0.107757 | 722 | 12,010,664 | 34,690,787 |
+| 17 | Tap Two Blue | 7Eleven | 0.259747 | 1,729 | 12,012,578 | 41,464,945 |
+| 23 | CVS | Target | 0.351751 | 5,397 | 12,235,143 | 42,523,282 |
+| 29 | Target | Ralphs | 0.839235 | 17,468 | 18,147,834 | 41,360,928 |
+| 39 | 7Eleven | CVS | 0.463025 | 7,734 | 15,828,401 | 40,427,852 |
+| 53 | 7Eleven | Target | 0.788389 | 17,312 | 11,406,505 | 33,134,819 |
+| 49 | Ralphs | CVS | 1.14497 | 20,561 | 11,798,791 | 36,381,823 |
+| 54 | Tap Two Blue | CVS | 0.684286 | 7472 | 12,601,368 | 40,832,393 |
+| 64 | Ralphs | 7Eleven | 1.3303 | 20,467 | 12,772,751 | 41,484,131 |
+| 101 | Metro 40 | Driveway | 1.77417 | 47,998 | 12,234,771 | 39,619,284 |
 
 From the table above, we could found that the speed of Dijkstra is exceeded Bellman Ford to great extent. That is because Bellman ford need to iterate each node in the data using DFS to find the graph. However, Dijstra doesn't need to do that. Dijstra using priority_queue to find the shortest distance, it only need to sort the relevant node.
 
 ### Time Complxity
 CalculateShortestPath_Dijkstra: O(m+nlogn) the number of total edge in the graph is m, the number of the total nodes we need is n. We use the heap to store DJNodes, therefore the time complexity of picking the shortest Node is logn. Thus, the total time complexity is O(m+nlogn).
 
-CalculateShortestPath_Bellman_Ford: O(m*n+m+n) the number of total edge in the graph is m, the number of the total nodes is n. Firstly, we use DFS to find the graph, we visited all the node relevant with source node, and we wisited all the children of each node, thus the time complexity is O(m+n). The we use Bellman Ford to find the shortest path. We visit all the edge. After we visited each edge O(m), we renew all of the nodes O(n). Therefore, the time complexity of Bellman-Ford is O(m*n).
+CalculateShortestPath_Bellman_Ford: O(m*n+m+n) the number of total edge in the graph is m, the number of the total nodes is n. Firstly, we use DFS to find the graph, we visited all the node relevant with source node, and we wisited all the children of each node, thus the time complexity is O(m+n). The we use Bellman Ford to find the shortest path. We visit all the edge. After we visited each edge O(m), we renew all of the nodes O(n). Therefore, the time complexity of Bellman-Ford is O(m*n). Since CalculateDistance is a costy function, we add dfs to shorten the points to decrease the time of calling CalculateDistance. We can learn from the table that using dfs to decrease the points will shorten the run time to great extent.
 
 ### Sample Sreenshot
 <p align="center"><img src="report/3_1.png" alt="3_1" width="500"/></p>
