@@ -175,6 +175,8 @@ Given 2 locations A and B, find the best route from A to B.(A is src location an
 
 
 
+
+
 From the table above, we could found that the speed of Dijkstra is exceeded Bellman Ford to great extent. That is because Bellman ford need to iterate each node in the data using DFS to find the graph. However, Dijstra doesn't need to do that. Dijstra using priority_queue to find the shortest distance, it only need to sort the relevant node.
 
 ### Time Complxity
@@ -271,7 +273,7 @@ For a few locations, all the 3 methods can find the optimal result in an accepta
 <p align="center"><img src="report/TSP_6loc.png" alt="Visualization" width="500"/></p>
 
 Case 2: 9 locations
-When the locations become more, the time increase of Brute Force/Backtracking is greater than 2-opt and 3-opt, the time cost by 3-opt is slightly longer than 2-opt.
+When the locations become more, the time increase of Brute Force/Backtracking is greater than 2-opt and 3-opt, the time cost by 3-opt is dlightly longer than 2-opt.
 <p align="center"><img src="report/TSP_9.png" alt="Runtime" width="800"/></p>
 <p align="center"><img src="report/TSP_9loc.png" alt="Visualization" width="500"/></p>
 
@@ -374,9 +376,7 @@ Case2:
 Case3:The Full map
 <p align="center"><img src="report/5_fullmap.png" alt="5_fullmap" width="500"/></p>
 <p align="center"><img src="report/5_fullmap2.png" alt="5_fullmap2" width="500"/></p>
-Case4:No cycle
-<p align="center"><img src="report/5_no_cycle.png" alt="5_no_cycle" width="500"/></p>
-<p align="center"><img src="report/5_no_cycle2.png" alt="5_no_cycle2" width="500"/></p>
+
 
 ### Time complexity: 
 Iterate the data to find the nodes in the square O(N), DFS recursive using relevant nodes and the children 0(n+m); Total complexity: O(N+n+m);
