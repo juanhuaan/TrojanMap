@@ -257,12 +257,11 @@ void TrojanMap::TPS_3opt(const std::vector<std::vector<double>> &adjacent_matrix
 ```
 <p align="center"><img src="report/TSP_3_opt.jpeg" alt="3-opt" width="600"/></p>
 
-
-Please report and compare the time spent by these 2 algorithms. 2-opt algorithm may not get the optimal solution. Please show how far your solution is from the optimal solution.
-
-Show the routes on the map. For each intermediate solution, create a new plot. Your final video presentation should include the changes to your solution.
-
-We will randomly select N points in the map and run your program.
+### Examples
+output0.avi -> the changes of the path in Brute Force  
+TSP_output_001.avi -> the changes of the path in Backtracking(actually it is the same as Brute Force)  
+TSP_output_002.avi -> the changes of the path in 2-opt  
+TSP_output_003.avi -> the changes of the path in 3-opt  
 
 Case 1: 6 locations
 For a few locations, all the 3 methods can find the optimal result in an acceptable time. These two heuristic algorithms have to do some redundant iterators, so in this case they cost more time than Brute Force/Backtracking.
@@ -276,17 +275,17 @@ When the locations become more, the time increase of Brute Force/Backtracking is
 
 Case 3: 13 locations
 At this case, the time cost by Brute Force is gradually unacceptable, the early break helps Backtracking save a lot of time. But the two heuristic algorithms can dramatically decrease the time consumption，and can get the same or very close results.
-<p align="center"><img src="report/TSP_12.png" alt="Runtime" width="800"/></p>
-<p align="center"><img src="report/TSP_12loc.png" alt="Visualization" width="500"/></p>
+<p align="center"><img src="report/TSP_13.png" alt="Runtime" width="800"/></p>
+<p align="center"><img src="report/TSP_13loc.png" alt="Visualization" width="500"/></p>
 
 | Algorithm | 6 locations | 9 locations | 13 locations |
 | :---: | :---: | :---: | :---: |
 | `Brute Force` | <img src="report/TSP_6_bf.gif" alt="TSP_6_bf videos" width="300"/> | <img src="report/TSP_9_bf.gif" alt="TSP_9_bf videos" width="300"/> |
 | `Backtracking` | <img src="report/TSP_6.gif" alt="TSP_6 videos" width="300"/> | <img src="report/TSP_9.gif" alt="TSP_9 videos" width="300"/> | <img src="report/TSP_13.gif" alt="TSP_13 videos" width="300"/> |
-| `2-opt` |  <img src="report/TSP_9loc.gif" alt="TSP_9loc videos" width="300"/> |
-| `3-opt` | <img src="report/TSP_9loc.gif" alt="TSP_9loc videos" width="300"/> | <img src="report/TSP_9loc_2opt.gif" alt="TSP_9loc_2opt videos" width="300"/> | <img src="report/TSP_9loc_3opt.gif" alt="TSP_9loc_3opt videos" width="300"/> |
+| `2-opt` | <img src="report/TSP_6.gif" alt="TSP_6loc videos" width="300"/> | <img src="report/TSP_9_2opt.gif" alt="TSP_9loc_2opt videos" width="300"/> | <img src="report/TSP_13_3opt.gif" alt="TSP_13loc_3opt videos" width="300"/> |
+| `3-opt` | <img src="report/TSP_6.gif" alt="TSP_6loc videos" width="300"/> | <img src="report/TSP_9_2opt.gif" alt="TSP_9loc_2opt videos" width="300"/> | <img src="report/TSP_13_3opt.gif" alt="TSP_13loc_3opt videos" width="300"/> |
 
-### Examples (dis: miles, time: microseconds) - after doing the optimization for 2-opt&3-opt
+### Examples Table (dis: miles, time: microseconds) - after doing the optimization for 2-opt&3-opt
 | # of the places | dis<br />(Brute Force) | time<br />iterations<br />(Brute Force) | dis<br />(Backtracking) | time<br />iterations<br />(Backtracking) | dis<br />(2-opt) | time<br />(2-opt) | dis<br />(3-opt) | time<br />(3-opt) |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 4 | 2.36379 | 46<br />6 | 2.36379 | 20<br />5 | 2.36379 | 31 | 2.36379 | 30 |
@@ -308,7 +307,10 @@ At this case, the time cost by Brute Force is gradually unacceptable, the early 
 | 14 | | | 5.5684 | 1849229<br />3151 | 5.5684 | 774 | 5.5684 | 1815 |
 | 15 | | | 6.03345 | 151461534<br />559696 | <font color=red>6.28012</font> | 1362 | 6.03345 | 3588 |
 
-### Examples (dis: miles, time: microseconds) - before doing the optimization for 2-opt&3-opt
+The bar chart of the data: 
+<p align="center"><img src="report/TSP_barchart.png" alt="bar chart" width="800"/></p>
+
+### Examples Table (dis: miles, time: microseconds) - before doing the optimization for 2-opt&3-opt
 | # of the places | dis(Backtracking) | time(Backtracking) | dis(2-opt) | time(2-opt) | dis(3-opt) | time(3-opt) |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 4 | 2.68747 | 33 | 2.68747 | 59 | 2.68747 | 115 |
@@ -334,12 +336,13 @@ At this case, the time cost by Brute Force is gradually unacceptable, the early 
 | 15 | 5.16767 | 1624167 | 5.18942 | 3359 | 5.16767 | 14690 |
 
 ### Runtime Comparison
-1. When the number of locations is larger than 13, the time cost by Backtracking is more than 50 times than 2-opt, while 2-opt/3-opt can have very close or the same results.
-2. In addition, from the cases with the same number of locations, we can find the early break can decrease dramatically the time in some special cases. For example, the last four cases all have 15 locations, but the runtime is different. I think the reason is that when the edges between locations are similar, it would rarely have a chance to get an early break, so it would be degraded to the brute force, on the contrary, if there are some edges long, some edges short, the early break can decrease the time consumption dramatically. 2-opt and 3-opt would not have some very large changes for the same scale cases.
+1. When the number of locations is larger than 11, the time cost by Backtracking is almost 1000 times as much as time cost by 2-opt, while 2-opt/3-opt can have very close or the same results.
+2. In addition, from the cases with the same number of locations, we can find the early break can decrease dramatically the time in many cases compared with brute foce.
+3. 3-opt spent more time than 2-opt, while usually can get more precise results than 2-opt. 
 
 ### Time complexity
 Let n be the number of the locations. 
-1. For the Backtracking, we need to iterate every path, so it is O(n!), while in fact, due to the early break, the time it cost practically would be less than O(n!);
+1. For the Brute Force, we need to iterate every path, so it is O(n!), while for Backtracking, due to the early break, the time it cost practically would be less than O(n!);
 2. Let the K be the number of iterations until the iteration cannot improve the cost, for every iteration, we have O(n^2) ways to choose two locations to reverse the path, so the whole time complexity is (K*n^2).
 3. Similarly to 2-opt, for every iteration, we have O(n^3) ways to choose three locations to change the path in 4 pattern, so the whole time complexity is (K*n^3). 
 
@@ -395,6 +398,9 @@ Case 2: 7 locations
 Case 3: 12 locations
 <p align="center"><img src="report/6_5.png" alt="TopoSort_12loc" width="500"/></p>
 <p align="center"><img src="report/6_6.png" alt="TopoSort_12loc" width="500"/></p>
+Case 4: No fesible(there is a cycle)
+<p align="center"><img src="report/6_7.png" alt="TopoSort_cycle" width="500"/></p>
+<p align="center"><img src="report/6_8.png" alt="TopoSort_cycle" width="500"/></p>
 
 ### Time complexity
 Let V be the number of locations, E be the number of dependencies. Because it just is similar to the DFS, and I use a adjencent list(map) to store all the edge, so the time complexity is O(V+E)
