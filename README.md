@@ -1,10 +1,9 @@
-# EE538 Final Project - Fall 2021 - TrojanMap
+# EE538 Final Project - Fall 2021 - TrojanMap Report
 
-## Deadline: 
+## Authors: 
 
-Video Presentation: Friday, December 3 by 2 pm
-
-Code submission: Monday, December 5 by 23:59 pm
+### Zeyu Liu
+### Juanhua An
 
 ## Task List
 | Task Name | Functions | Tests |
@@ -368,6 +367,8 @@ Firstly, we iterate the  ```data``` to find out all the node inside the
 Then using DFS to find is there remains a cycle, call the recursive function ```IsCyclicUtil()```
 If there is a cycle return true, and  path will appears on the map. Otherwise return false.
 
+Remarks: The green lines plot all the nodes with their neighbors in the first cycle we found.  The blue lines only plot the nodes of the first cycle we found.
+
 Case1:
 <p align="center"><img src="report/5_1.png" alt="5_1" width="500"/></p>
 <p align="center"><img src="report/5_2.png" alt="5_2" width="500"/></p>
@@ -377,6 +378,7 @@ Case2:
 Case3:The Full map
 <p align="center"><img src="report/5_fullmap.png" alt="5_fullmap" width="500"/></p>
 <p align="center"><img src="report/5_fullmap2.png" alt="5_fullmap2" width="500"/></p>
+
 
 
 ### Time complexity: 
