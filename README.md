@@ -292,6 +292,9 @@ At this case, the time cost by backtracking is gradually unacceptable, the two h
 | <img src="report/TSP_15loc.gif" alt="TSP_15loc videos" width="300"/> | <img src="report/TSP_15loc_2opt.gif" alt="TSP_15loc_2opt videos" width="300"/> | <img src="report/TSP_15loc_3opt.gif" alt="TSP_15loc_3opt videos" width="300"/> |
 
 ### Examples (dis: miles, time: microseconds)
+| # of the places | dis(Brute Force) | time(Brute Force)<br />iterations | dis(Backtracking) | time(Backtracking)<br />iterations | dis(2-opt) | time(2-opt) | dis(3-opt) | time(3-opt) |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+
 | # of the places | dis(Backtracking) | time(Backtracking) | dis(2-opt) | time(2-opt) | dis(3-opt) | time(3-opt) |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 4 | 2.68747 | 33 | 2.68747 | 59 | 2.68747 | 115 |

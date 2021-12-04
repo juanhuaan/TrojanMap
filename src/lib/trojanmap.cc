@@ -187,17 +187,18 @@ void TrojanMap::PrintMenu() {
     for (int i = 0; i < num; i++)
       locations.push_back(keys[rand() % keys.size()]);
     PlotPoints(locations);
-    std::cout << "Calculating (using Backtracking)..." << std::endl;
-    auto start = std::chrono::high_resolution_clock::now();
-    auto results = TravellingTrojan(locations);
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-
+    
     std::cout << "Calculating (using Brute_Force)..." << std::endl;
-    start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
     auto results_bf = TravellingTrojan_Brute_force(locations);
-    stop = std::chrono::high_resolution_clock::now();
+    auto stop = std::chrono::high_resolution_clock::now();
     auto duration_bf = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+    std::cout << "Calculating (using Backtracking)..." << std::endl;
+    start = std::chrono::high_resolution_clock::now();
+    auto results = TravellingTrojan(locations);
+    stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
     std::cout << "Calculating (using 2-opt)..." << std::endl;
     start = std::chrono::high_resolution_clock::now();
@@ -211,8 +212,8 @@ void TrojanMap::PrintMenu() {
     stop = std::chrono::high_resolution_clock::now();
     auto duration_3opt = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
-    CreateAnimation(results.second, "output0");
-    CreateAnimation(results_bf.second, "TSP_output_001");
+    CreateAnimation(results_bf.second, "output0");
+    CreateAnimation(results.second, "TSP_output_001");
     CreateAnimation(results_2opt.second, "TSP_output_002");
     CreateAnimation(results_3opt.second, "TSP_output_003");
 
@@ -222,8 +223,8 @@ void TrojanMap::PrintMenu() {
       for (auto x : results.second[results.second.size()-1]) std::cout << x << std::endl;
       menu = "**************************************************************\n";
       std::cout << menu;
-      std::cout << "The distance of the path is:" << results.first << " miles" << std::endl;
       std::cout << "The distance of the path is(Brute Force):" << results_bf.first << " miles" << std::endl;
+      std::cout << "The distance of the path is:" << results.first << " miles" << std::endl;
       std::cout << "The distance of the path is(2-opt):" << results_2opt.first << " miles" << std::endl;
       std::cout << "The distance of the path is(3-opt):" << results_3opt.first << " miles" << std::endl;
       PlotPath(results.second[results.second.size()-1]);
@@ -235,8 +236,8 @@ void TrojanMap::PrintMenu() {
     menu = "**************************************************************\n"
            "You could find your animation at src/lib/output.avi.          \n";
     std::cout << menu;
-    std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl << std::endl;
     std::cout << "Time taken by function(Brute Force): " << duration_bf.count() << " microseconds" << std::endl << std::endl;
+    std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl << std::endl;
     std::cout << "Time taken by function(2-opt): " << duration_2opt.count() << " microseconds" << std::endl << std::endl;
     std::cout << "Time taken by function(3-opt): " << duration_3opt.count() << " microseconds" << std::endl << std::endl;
     PrintMenu();
