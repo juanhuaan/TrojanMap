@@ -522,6 +522,29 @@ void TrojanMap::PlotPoints(std::vector<std::string> &location_ids) {
  * @param  {std::vector<std::string>} location_ids : points inside square
  * @param  {std::vector<double>} square : boundary
  */
+// void TrojanMap::PlotPointsandEdges(std::vector<std::string> &location_ids, std::vector<double> &square) {
+//   std::string image_path = cv::samples::findFile("src/lib/input.jpg");
+//   cv::Mat img = cv::imread(image_path, cv::IMREAD_COLOR);
+//   auto upperleft = GetPlotLocation(square[2], square[0]);
+//   auto lowerright = GetPlotLocation(square[3], square[1]);
+//   cv::Point pt1(int(upperleft.first), int(upperleft.second));
+//   cv::Point pt2(int(lowerright.first), int(lowerright.second));
+//   cv::rectangle(img, pt2, pt1, cv::Scalar(0, 0, 255));
+//   for (auto x : location_ids) {
+//     auto result = GetPlotLocation(data[x].lat, data[x].lon);
+//     cv::circle(img, cv::Point(result.first, result.second), DOT_SIZE,
+//                cv::Scalar(0, 0, 255), cv::FILLED);
+//     for(auto y : data[x].neighbors) {
+//       auto start = GetPlotLocation(data[x].lat, data[x].lon);
+//       auto end = GetPlotLocation(data[y].lat, data[y].lon);
+//       cv::line(img, cv::Point(int(start.first), int(start.second)),
+//               cv::Point(int(end.first), int(end.second)), cv::Scalar(0, 255, 0),
+//               LINE_WIDTH);
+//     }
+//   }
+//   cv::imshow("TrojanMap", img);
+//   cv::waitKey(1);
+// }
 void TrojanMap::PlotPointsandEdges(std::vector<std::string> &location_ids, std::vector<double> &square) {
   std::string image_path = cv::samples::findFile("src/lib/input.jpg");
   cv::Mat img = cv::imread(image_path, cv::IMREAD_COLOR);
@@ -531,9 +554,6 @@ void TrojanMap::PlotPointsandEdges(std::vector<std::string> &location_ids, std::
   cv::Point pt2(int(lowerright.first), int(lowerright.second));
   cv::rectangle(img, pt2, pt1, cv::Scalar(0, 0, 255));
   for (auto x : location_ids) {
-    auto result = GetPlotLocation(data[x].lat, data[x].lon);
-    cv::circle(img, cv::Point(result.first, result.second), DOT_SIZE,
-               cv::Scalar(0, 0, 255), cv::FILLED);
     for(auto y : data[x].neighbors) {
       auto start = GetPlotLocation(data[x].lat, data[x].lon);
       auto end = GetPlotLocation(data[y].lat, data[y].lon);
@@ -541,6 +561,15 @@ void TrojanMap::PlotPointsandEdges(std::vector<std::string> &location_ids, std::
               cv::Point(int(end.first), int(end.second)), cv::Scalar(0, 255, 0),
               LINE_WIDTH);
     }
+  }
+  for(int i = 1; i < location_ids.size(); ++i){
+    auto result0 = GetPlotLocation(data[location_ids[i-1]].lat, data[location_ids[i-1]].lon);
+    auto result1 = GetPlotLocation(data[location_ids[i]].lat, data[location_ids[i]].lon);
+    cv::line(img, cv::Point(int(result0.first), int(result0.second)),
+              cv::Point(int(result1.first), int(result1.second)), cv::Scalar(255,0,0),
+              2);
+    cv::circle(img, cv::Point(result0.first, result0.second), DOT_SIZE - 2,
+        cv::Scalar(0, 0, 255), cv::FILLED);
   }
   cv::imshow("TrojanMap", img);
   cv::waitKey(1);
@@ -1403,9 +1432,11 @@ bool TrojanMap::TopoSort(std::unordered_map<int, std::vector<int>> &DAG, std::ve
 bool TrojanMap::CycleDetection(std::vector<double> &square) {
 //establish an map with all node in square
   std::unordered_map<std::string,std::vector<std::string>> adj;
+  std::unordered_map<std::string, int> insquare;
   for(auto &item:data){
     if(item.second.lon>=square[0] && item.second.lon<=square[1] && item.second.lat<=square[2] && item.second.lat>=square[3]){
       adj[item.first]=item.second.neighbors;
+      insquare[item.first] = 1;
     }
   }
   //stored the visited nodes on the map
@@ -1417,15 +1448,12 @@ bool TrojanMap::CycleDetection(std::vector<double> &square) {
     isvisited[items]=false;
   }
   for(auto &node:adj){
-    if(isvisited[node.first]==false){
-      if(IsCyclicUtil(node.first,isvisited,"",adj,store_node)==true){ 
+    if(isvisited[node.first]==false && insquare[node.first] ==1 ){
+      if(IsCyclicUtil(node.first,isvisited,"",adj,store_node,insquare)==true){ 
         int n = store_node.size();
         std::string lst=store_node[n-1];
         auto it = std::find(store_node.begin(),store_node.end(),lst);
-        int index;
-        if(it != store_node.end()){
-          index = it - store_node.begin();
-        }
+        int index = it - store_node.begin();
         for(int i =index; i<n; i++){
           local_ids.push_back(store_node[i]);
         }
@@ -1435,22 +1463,26 @@ bool TrojanMap::CycleDetection(std::vector<double> &square) {
     }
   }
   return false;
-
 }
 
 //using DFS to find cycle
  bool TrojanMap::IsCyclicUtil(std::string node,std::map<std::string,bool>&isvisited,
-     std::string parent,std::unordered_map<std::string,std::vector<std::string>> adj,std::vector<std::string>&store_node){
+     std::string parent,std::unordered_map<std::string,std::vector<std::string>>& adj,std::vector<std::string>&store_node, std::unordered_map<std::string,int>& insquare){
   isvisited[node]=true;
   store_node.push_back(node);
   for(auto &nei:adj[node]){
+    if(insquare[nei]==0) continue;
     if (isvisited[nei]==false){
-      if(IsCyclicUtil(nei,isvisited,node,adj,store_node)==true) return true;
-    }else if(isvisited[nei]==true && nei!=parent ) return true;  
+      if(IsCyclicUtil(nei,isvisited,node,adj,store_node,insquare)==true) return true;
+    }else if(isvisited[nei]==true && nei!=parent ) {
+      store_node.push_back(nei);
+      return true; 
+    } 
   }
+  store_node.pop_back();
   return false;
  }
-//O(n^2)
+
 
 
 /**
