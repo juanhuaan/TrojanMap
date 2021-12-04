@@ -2,8 +2,7 @@
 
 ## Authors: 
 
-### Zeyu Liu
-### Juanhua An
+ Zeyu Liu and Juanhua An
 
 ## Task List
 | Task Name | Functions | Tests |
