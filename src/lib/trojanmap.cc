@@ -206,7 +206,7 @@ void TrojanMap::PrintMenu() {
     
     std::cout << "Calculating (using Brute_Force)..." << std::endl;
     auto start = std::chrono::high_resolution_clock::now();
-    auto results_bf = TravellingTrojan_Brute_force(locations);
+    //auto results_bf = TravellingTrojan_Brute_force(locations);
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration_bf = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
@@ -228,7 +228,7 @@ void TrojanMap::PrintMenu() {
     stop = std::chrono::high_resolution_clock::now();
     auto duration_3opt = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
-    CreateAnimation(results_bf.second, "output0");
+    //CreateAnimation(results_bf.second, "output0");
     CreateAnimation(results.second, "TSP_output_001");
     CreateAnimation(results_2opt.second, "TSP_output_002");
     CreateAnimation(results_3opt.second, "TSP_output_003");
@@ -239,7 +239,7 @@ void TrojanMap::PrintMenu() {
       for (auto x : results.second[results.second.size()-1]) std::cout << x << std::endl;
       menu = "**************************************************************\n";
       std::cout << menu;
-      std::cout << "The distance of the path is(Brute Force):" << results_bf.first << " miles" << std::endl;
+      //std::cout << "The distance of the path is(Brute Force):" << results_bf.first << " miles" << std::endl;
       std::cout << "The distance of the path is:" << results.first << " miles" << std::endl;
       std::cout << "The distance of the path is(2-opt):" << results_2opt.first << " miles" << std::endl;
       std::cout << "The distance of the path is(3-opt):" << results_3opt.first << " miles" << std::endl;
@@ -848,6 +848,8 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
   }
   path.emplace_back(a_id);
   std::reverse(path.begin(),path.end());
+  // check how many locations 
+  std::cout << "The number of locations used in Dijkstra is: " << dist.size() << std::endl;
   return path;
 
 }
