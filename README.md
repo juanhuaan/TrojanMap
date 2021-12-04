@@ -265,33 +265,28 @@ Show the routes on the map. For each intermediate solution, create a new plot. Y
 We will randomly select N points in the map and run your program.
 
 Case 1: 6 locations
-For a few locations, all the 3 methods can find the optimal result in an acceptable time. These two heuristic algorithms have to do some redundant iterators, so in this case they cost more time than Backtracking.
+For a few locations, all the 3 methods can find the optimal result in an acceptable time. These two heuristic algorithms have to do some redundant iterators, so in this case they cost more time than Brute Force/Backtracking.
 <p align="center"><img src="report/TSP_6.png" alt="Runtime" width="800"/></p>
 <p align="center"><img src="report/TSP_6loc.png" alt="Visualization" width="500"/></p>
 
 Case 2: 9 locations
-When the locations become more, the time increase of Backtracking is greater than 2-opt and 3-opt, the time cost by Backtracking and 3-opt is silimar.
+When the locations become more, the time increase of Brute Force/Backtracking is greater than 2-opt and 3-opt, the time cost by 3-opt is dlightly longer than 2-opt.
 <p align="center"><img src="report/TSP_9.png" alt="Runtime" width="800"/></p>
 <p align="center"><img src="report/TSP_9loc.png" alt="Visualization" width="500"/></p>
 
-Case 3: 12 locations
-When the locations become more, 2-opt and 3-opt gradually show their advantages in time consumption. 
+Case 3: 13 locations
+At this case, the time cost by Brute Force is gradually unacceptable, the early break helps Backtracking save a lot of time. But the two heuristic algorithms can dramatically decrease the time consumption，and can get the same or very close results.
 <p align="center"><img src="report/TSP_12.png" alt="Runtime" width="800"/></p>
 <p align="center"><img src="report/TSP_12loc.png" alt="Visualization" width="500"/></p>
 
-Case 4: 15 locations
-At this case, the time cost by backtracking is gradually unacceptable, the two heuristic algorithms can dramatically decrease the time consumption，and can get the same or very close results.
-<p align="center"><img src="report/TSP_15.png" alt="Runtime"  width="800"/></p>
-<p align="center"><img src="report/TSP_15loc.png" alt="Visualization" width="500"/></p>
+| Algorithm | 6 locations | 9 locations | 13 locations |
+| :---: | :---: | :---: | :---: |
+| `Brute Force` | <img src="report/TSP_6_bf.gif" alt="TSP_6_bf videos" width="300"/> | <img src="report/TSP_9_bf.gif" alt="TSP_9_bf videos" width="300"/> |
+| `Backtracking` | <img src="report/TSP_6.gif" alt="TSP_6 videos" width="300"/> | <img src="report/TSP_9.gif" alt="TSP_9 videos" width="300"/> | <img src="report/TSP_13.gif" alt="TSP_13 videos" width="300"/> |
+| `2-opt` |  <img src="report/TSP_9loc.gif" alt="TSP_9loc videos" width="300"/> |
+| `3-opt` | <img src="report/TSP_9loc.gif" alt="TSP_9loc videos" width="300"/> | <img src="report/TSP_9loc_2opt.gif" alt="TSP_9loc_2opt videos" width="300"/> | <img src="report/TSP_9loc_3opt.gif" alt="TSP_9loc_3opt videos" width="300"/> |
 
-| `Backtracking` | `2-opt` | `3-opt` |
-| :---: | :---: | :---: |
-| <img src="report/TSP_6loc.gif" alt="TSP_6loc videos" width="300"/> | <img src="report/TSP_6loc_2opt.gif" alt="TSP_6loc_2opt videos" width="300"/> | <img src="report/TSP_6loc_3opt.gif" alt="TSP_6loc_3opt videos" width="300"/> |
-| <img src="report/TSP_9loc.gif" alt="TSP_9loc videos" width="300"/> | <img src="report/TSP_9loc_2opt.gif" alt="TSP_9loc_2opt videos" width="300"/> | <img src="report/TSP_9loc_3opt.gif" alt="TSP_9loc_3opt videos" width="300"/> |
-| <img src="report/TSP_12loc.gif" alt="TSP_12loc videos" width="300"/> | <img src="report/TSP_12loc_2opt.gif" alt="TSP_12loc_2opt videos" width="300"/> | <img src="report/TSP_12loc_3opt.gif" alt="TSP_12loc_3opt videos" width="300"/> |
-| <img src="report/TSP_15loc.gif" alt="TSP_15loc videos" width="300"/> | <img src="report/TSP_15loc_2opt.gif" alt="TSP_15loc_2opt videos" width="300"/> | <img src="report/TSP_15loc_3opt.gif" alt="TSP_15loc_3opt videos" width="300"/> |
-
-### Examples (dis: miles, time: microseconds)
+### Examples (dis: miles, time: microseconds) - after doing the optimization for 2-opt&3-opt
 | # of the places | dis<br />(Brute Force) | time<br />iterations<br />(Brute Force) | dis<br />(Backtracking) | time<br />iterations<br />(Backtracking) | dis<br />(2-opt) | time<br />(2-opt) | dis<br />(3-opt) | time<br />(3-opt) |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 4 | 2.36379 | 46<br />6 | 2.36379 | 20<br />5 | 2.36379 | 31 | 2.36379 | 30 |
@@ -303,16 +298,17 @@ At this case, the time cost by backtracking is gradually unacceptable, the two h
 | 9 | 3.89691 | 22069<br />40320 | 3.89691 | 3190<br />334 | 3.89691 | 127 | 3.89691 | 237 |
 | 9 | 3.39499 | 22956<br />40320 | 3.39499 | 4805<br />937 | 3.39499 | 177 | 3.39499 | 247 |
 | 10 | 5.45658 | 163086<br />362880 | 5.45658 | 22571<br />1172 | 5.45658 | 223 | 5.45658 | 434 |
-| 11 | 4.95825 | 1600596<br />3628800 | 4.95825 | 179087<br />5886 | 5.21335 | 219 | 4.95825 | 689 |
+| 11 | 4.95825 | 1600596<br />3628800 | 4.95825 | 179087<br />5886 | <font color=red>5.21335</font> | 219 | 4.95825 | 689 |
 | 12 | 5.39257 | 18185282<br />39916800 | 5.39257 | 476434<br />1922 | 5.39257 | 540 | 5.39257 | 1075 |
 | 12 | 5.18202 | 18106181<br />39916800 | 5.18202 | 464337<br />10683 | 5.18202 | 756 | 5.18202 | 1267 |
 | 12 | 5.39343 | 18093739<br />39916800 | 5.39343 | 306171<br />1890 | 5.39343 | 656 | 5.39343 | 1125 |
-| 13 | 5.96574 | 226582679<br />479001600 | 5.96574 | 6358201<br />5780 | 6.4214 | 533 | 5.96574 | 2245 |
-| 13 | | | 4.9367 | 6348433<br />6623 | 5.13741 | 341 | 4.9367 | 668 |
+| 13 | 5.96574 | 226582679<br />479001600 | 5.96574 | 6358201<br />5780 | <font color=red>6.4214</font> | 533 | 5.96574 | 2245 |
+| 13 | | | 4.9367 | 6348433<br />6623 | <font color=red>5.13741</font> | 341 | 4.9367 | 668 |
 | 13 | | | 4.90256 | 899208<br />15724 | 4.90256 | 703 | 4.90256 | 2118 |
 | 14 | | | 5.5684 | 1849229<br />3151 | 5.5684 | 774 | 5.5684 | 1815 |
-| 15 | | | 6.03345 | 151461534<br />559696 | 6.28012 | 1362 | 6.03345 | 3588 |
+| 15 | | | 6.03345 | 151461534<br />559696 | <font color=red>6.28012</font> | 1362 | 6.03345 | 3588 |
 
+### Examples (dis: miles, time: microseconds) - before doing the optimization for 2-opt&3-opt
 | # of the places | dis(Backtracking) | time(Backtracking) | dis(2-opt) | time(2-opt) | dis(3-opt) | time(3-opt) |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 4 | 2.68747 | 33 | 2.68747 | 59 | 2.68747 | 115 |
