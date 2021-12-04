@@ -922,6 +922,10 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford_no_dfs(
   }
   path.push_back(loc2_id);
   std::string temp=loc2_id;
+  // if(prev.count(loc2_id)==0){
+  //   path.pop_back;
+  //   return path; 
+  // }
   while(temp!=loc1_id){
     path.push_back(prev[temp]);
     temp=prev[temp];
@@ -1406,33 +1410,40 @@ bool TrojanMap::CycleDetection(std::vector<double> &square) {
   std::vector<std::string>local_ids;
   //some preparation
   std::map<std::string,bool>isvisited;
+  std::vector<std::string>store_node;
   for(auto &items:local_ids){
     isvisited[items]=false;
   }
   for(auto &node:adj){
     if(isvisited[node.first]==false){
-      if(IsCyclicUtil(node.first,isvisited,"",adj)==true){ 
+      if(IsCyclicUtil(node.first,isvisited,"",adj,store_node)==true){ 
+        int n = store_node.size();
+        std::string lst=store_node[n-1];
+        auto it = std::find(store_node.begin(),store_node.end(),lst);
+        int index;
+        if(it != store_node.end()){
+          index = it - store_node.begin();
+        }
+        for(int i =index; i<n; i++){
+          local_ids.push_back(store_node[i]);
+        }
+        PlotPointsandEdges(local_ids,square);
         return true;
       }
     }
   }
   return false;
-  //plot the graph
-  for(auto items:isvisited){
-    if(items.second==true){
-      local_ids.push_back(items.first);
-      PlotPointsandEdges(local_ids,square);
-    }
-  }
+
 }
 
 //using DFS to find cycle
  bool TrojanMap::IsCyclicUtil(std::string node,std::map<std::string,bool>&isvisited,
-     std::string parent,std::unordered_map<std::string,std::vector<std::string>> adj){
+     std::string parent,std::unordered_map<std::string,std::vector<std::string>> adj,std::vector<std::string>store_node){
   isvisited[node]=true;
+  store_node.push_back(node);
   for(auto &nei:adj[node]){
     if (isvisited[nei]==false){
-      if(IsCyclicUtil(nei,isvisited,node,adj)==true) return true;
+      if(IsCyclicUtil(nei,isvisited,node,adj,store_node)==true) return true;
     }else if(isvisited[nei]==true && nei!=parent ) return true;  
   }
   return false;

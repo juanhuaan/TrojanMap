@@ -184,7 +184,7 @@ class TrojanMap {
   bool CycleDetection(std::vector<double> &square);
   //bool IsCyclicUtil(std::string u,std::map<std::string,int>&visited,std::string parent);
   bool IsCyclicUtil(std::string node,std::map<std::string,bool>&isvisited,
-     std::string parent,std::unordered_map<std::string,std::vector<std::string>> adj);
+     std::string parent,std::unordered_map<std::string,std::vector<std::string>> adj,std::vector<std::string>store_node);
   // Given a location id and k, find the k closest points on the map
   std::vector<std::string> FindKClosestPoints(std::string name, int k);
   void FindNodes_DFS(std::string u,std::unordered_map<std::string,bool>&visited,
