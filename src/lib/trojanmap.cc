@@ -848,6 +848,8 @@ std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
   }
   path.emplace_back(a_id);
   std::reverse(path.begin(),path.end());
+  // check how many locations 
+  std::cout << "The number of locations used in Dijkstra is: " << dist.size() << std::endl;
   return path;
 
 }
