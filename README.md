@@ -204,6 +204,7 @@ We will use the following algorithms:
 - Backtracking
 ```c++
 std::vector<std::vector<double>> CreateAdjMatrix(std::vector<std::string> &location_ids); // create the weights matrix for all locations
+void Brute_Force(...); // do the backtracking to get the optimal result without early break
 void Backtracking(...); // do the backtracking to get the optimal result, and every time getting a shorter path, push it in paths, the detailed parameters are shown in the following diagram
 std::pair<double, std::vector<std::vector<std::string>>> TravellingTrojan(std::vector<std::string> &location_ids);
 ```
@@ -219,6 +220,7 @@ std::pair<double, std::vector<std::vector<std::string>>> TravellingTrojan(std::v
 | `int current` | Store the index of current location |
 | `const std::vector<std::string> &location_ids` | The input vector to map location's index to its id |
 | `std::unordered_map<std::string, int> &id2index` | A unordered_map to map location's id to its index |
+| `count` | show the number of iterations that the Brute Force/Backtracking reach the end of a recursion |
 
 - [2-opt Heuristic](https://en.wikipedia.org/wiki/2-opt). Also see [this paper](http://cs.indstate.edu/~zeeshan/aman.pdf)
 - 3-opt
@@ -300,15 +302,15 @@ At this case, the time cost by Brute Force is gradually unacceptable, the early 
 | 9 | 3.89691 | 22069<br />40320 | 3.89691 | 3190<br />334 | 3.89691 | 127 | 3.89691 | 237 |
 | 9 | 3.39499 | 22956<br />40320 | 3.39499 | 4805<br />937 | 3.39499 | 177 | 3.39499 | 247 |
 | 10 | 5.45658 | 163086<br />362880 | 5.45658 | 22571<br />1172 | 5.45658 | 223 | 5.45658 | 434 |
-| 11 | 4.95825 | 1600596<br />3628800 | 4.95825 | 179087<br />5886 | <font color=red>5.21335</font> | 219 | 4.95825 | 689 |
+| 11 | 4.95825 | 1600596<br />3628800 | 4.95825 | 179087<br />5886 | ***5.21335*** | 219 | 4.95825 | 689 |
 | 12 | 5.39257 | 18185282<br />39916800 | 5.39257 | 476434<br />1922 | 5.39257 | 540 | 5.39257 | 1075 |
 | 12 | 5.18202 | 18106181<br />39916800 | 5.18202 | 464337<br />10683 | 5.18202 | 756 | 5.18202 | 1267 |
 | 12 | 5.39343 | 18093739<br />39916800 | 5.39343 | 306171<br />1890 | 5.39343 | 656 | 5.39343 | 1125 |
-| 13 | 5.96574 | 226582679<br />479001600 | 5.96574 | 6358201<br />5780 | <font color=red>6.4214</font> | 533 | 5.96574 | 2245 |
-| 13 | | | 4.9367 | 6348433<br />6623 | <font color=red>5.13741</font> | 341 | 4.9367 | 668 |
+| 13 | 5.96574 | 226582679<br />479001600 | 5.96574 | 6358201<br />5780 | ***6.4214*** | 533 | 5.96574 | 2245 |
+| 13 | | | 4.9367 | 6348433<br />6623 | ***5.13741*** | 341 | 4.9367 | 668 |
 | 13 | | | 4.90256 | 899208<br />15724 | 4.90256 | 703 | 4.90256 | 2118 |
 | 14 | | | 5.5684 | 1849229<br />3151 | 5.5684 | 774 | 5.5684 | 1815 |
-| 15 | | | 6.03345 | 151461534<br />559696 | <font color=red>6.28012</font> | 1362 | 6.03345 | 3588 |
+| 15 | | | 6.03345 | 151461534<br />559696 | ***6.28012*** | 1362 | 6.03345 | 3588 |
 
 The bar chart of the data: 
 <p align="center"><img src="report/TSP_barchart.png" alt="bar chart" width="800"/></p>

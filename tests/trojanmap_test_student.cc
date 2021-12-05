@@ -287,7 +287,7 @@ TEST(TrojanMapTest, CycleDetection3) {
   // Test case 1
   std::vector<double> square1 = {-118.280, -118.275, 34.025, 34.023};
   bool result1 = m.CycleDetection(square1);
-  EXPECT_EQ(result1, true);
+  EXPECT_EQ(result1, false);
 }
 
 /**
